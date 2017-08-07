@@ -1,18 +1,26 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900");
-$dark : #222;
-$light : #FFF;
+* {
+    box-sizing: inherit;
+}
+
+html {
+    margin: 0;
+    box-sizing: border-box;
+}
+
 .container {
-    position: relative;
-    z-index: 0;
+    display: flex;
+    flex-direction: row;
+    height: 90vh;
+
     & .panel {
-        background-color: $dark;
-        color: $light;
+        flex: 0 0;
+        margin-right: 10px;
+        padding: 10px;
         width: 250px;
     }
-    & .viz {
-        margin-left: 250px;
-        width: 700px;
-        height: 500px;
-    }
 
+    & .viz-wrapper {
+        flex: 1 0;
+        padding: 10px;
+    }
 }
