@@ -3,7 +3,6 @@ import React, { Component } from "react";
 // Selector year
 class YearSelector extends Component {
 
-
     render(){
         const interval = interval_years(this.props.since, this.props.until);
         return(

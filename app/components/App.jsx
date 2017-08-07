@@ -2,6 +2,8 @@ import React, { Component } from "react";
 //import Data from 'data/bulk.json';
 import Countries from 'data/countries.json';
 import YearSelector from "components/YearSelector";
+import Selector from "components/Selector";
+import VizBuilder from "components/VizBuilder";
 import { Treemap, Donut } from "d3plus-react";
 import './App.css';
 
@@ -51,51 +53,6 @@ class App extends Component {
                     <VizBuilder type={this.state.viz} config={{ data }} />
                 </div>
             </div>
-        );
-    }
-}
-
-class VizBuilder extends Component {
-
-    constructor () {
-        super()
-        this.getVizBuilderComponent = this.getVizBuilderComponent.bind(this)
-    }
-
-    getVizBuilderComponent(viz) {
-        switch (viz.type) {
-            case 'treemap':
-                return <Treemap config={ viz.config } />;
-            case 'donut':
-                return <Donut config={ viz.config } />;
-        }
-    }
-
-    render() {
-        const options = this.props;
-        return(
-            this.getVizBuilderComponent(options)
-        );
-    }
-}
-
-// Dinamic selector
-class Selector extends Component {
-
-    handleChange(event){
-        var option = event.target.value;
-        console.log(option)
-        this.props.handleChange(option)
-    }
-
-    render() {
-        const { callback, options, selected } = this.props;
-        return (
-            <select onChange={this.props.handleChange}>
-                {options.map(opt =>
-                    <option value={opt.id.toLowerCase()} type={opt.name.toLowerCase()}>{opt.name}</option>
-                )}
-            </select>
         );
     }
 }
