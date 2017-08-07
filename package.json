@@ -1,0 +1,20 @@
+{
+  "name": "datawheel-vizbuilder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "canon-dev",
+    "build": "canon-build",
+    "start": "canon-start"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "datawheel-canon": "^0.9.4",
+    "url-loader": "^0.5.9"
+  },
+  "devDependencies": {
+    "file-loader": "^0.11.2"
+  }
+}
