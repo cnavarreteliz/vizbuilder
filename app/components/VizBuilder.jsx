@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Treemap, Donut } from "d3plus-react";
+
 class VizBuilder extends Component {
 
     constructor () {
