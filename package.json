@@ -10,11 +10,9 @@
   },
   "author": "",
   "license": "MIT",
-  "dependencies": {
-    "datawheel-canon": "^0.9.4",
-    "url-loader": "^0.5.9"
-  },
   "devDependencies": {
-    "file-loader": "^0.11.2"
+    "datawheel-canon": "^0.9.4",
+    "file-loader": "^0.11.2",
+    "url-loader": "^0.5.9"
   }
 }

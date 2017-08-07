@@ -1,26 +1,26 @@
 * {
-    box-sizing: inherit;
+	box-sizing: inherit;
 }
 
 html {
-    margin: 0;
-    box-sizing: border-box;
+	margin: 0;
+	box-sizing: border-box;
 }
 
 .container {
-    display: flex;
-    flex-direction: row;
-    height: 90vh;
+	display: flex;
+	flex-direction: row;
+	height: 90vh;
 
-    & .panel {
-        flex: 0 0;
-        margin-right: 10px;
-        padding: 10px;
-        width: 250px;
-    }
+	& .panel {
+		flex: 0 0;
+		margin-right: 10px;
+		padding: 10px;
+		width: 250px;
+	}
 
-    & .viz-wrapper {
-        flex: 1 0;
-        padding: 10px;
-    }
+	& .viz-wrapper {
+		flex: 1 0;
+		padding: 10px;
+	}
 }
