@@ -9,7 +9,32 @@ class VizSelector extends Component {
 		var option = event.target.value;
 		var event = "donut";
 		console.log(event);
-		this.props.handleChange(event);
+		this.props.handleChangeViz(event);
+	}
+
+	getCustomPanel = (panel) => {
+		switch(panel) {
+			case true:
+				return( 
+					<div className="panel">
+						Custom panel options:
+						<select name="" id="">
+							<option value="">Test</option>
+						</select>
+					</div>
+				);
+			case false:
+				return <div></div>;
+		}
+	}
+
+	getAxiSelect = (data) => {
+		return(
+			<label htmlFor="">
+				{data} Axis
+				<input type="text"/>
+			</label>
+		)
 	}
 
 	render() {
@@ -22,14 +47,16 @@ class VizSelector extends Component {
 							className="icon"
 							src={"/images/viz/icon-" + icon.name + ".svg"}
 							onClick={() => {
-								this.props.handleChange(icon.name);
+								this.props.handleChangeViz(icon);
 							}}
 						/>
 					)}
 				</div>
+				{this.getCustomPanel(this.props.panel)}
 			</div>
 		);
 	}
+	
 }
 
 export default VizSelector;

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Treemap, Donut } from "d3plus-react";
 
 import countries from "data/countries.json";
 import testdata from "data/bulk.json";
@@ -19,22 +18,28 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			viz: "treemap",
+			viz: {
+				type: "treemap",
+				panel: false
+			},
 			filters: [],
 			reducers: [],
-			value: null
+			value: null,
 		};
 
-		this.handleChange = this.handleChange.bind(this);
+		this.handleChangeViz = this.handleChangeViz.bind(this);
 		this.handleFilterAdd = this.handleFilterAdd.bind(this);
 		this.handleFilterUpdate = this.handleFilterUpdate.bind(this);
 	}
 
-	handleChange(event) {
+	handleChangeViz(event) {
 		console.log(event);
 		this.setState({
 			value: event,
-			viz: event
+			viz: {
+				type: event.name,
+				panel: event.panel
+			}
 		});
 	}
 
@@ -80,7 +85,7 @@ class App extends Component {
 			<div className="wrapper">
 				<div className="container">
 					<div className="panel">
-						<VizSelector handleChange={this.handleChange} />
+						<VizSelector handleChangeViz={this.handleChangeViz} panel={this.state.viz.panel} />
 						{/* <Selector options={countries} type={"country"} />
 						<YearSelector since={1990} until={2010} /> */}
 						{this.renderFilters(this.state.filters, this.handleFilterUpdate)}
@@ -88,7 +93,7 @@ class App extends Component {
 					</div>
 					<div className="viz-wrapper">
 						<VizBuilder
-							type={this.state.viz}
+							type={this.state.viz.type}
 							config={{
 								data: applyReducers(
 									applyFilters(testdata, this.state.filters),

@@ -2,11 +2,19 @@
     {
         "title": "Treemap",
         "format": "svg",
-        "name": "treemap"
+        "name": "treemap",
+        "panel": false
     },
     {
         "title": "Donut",
         "format": "svg",
-        "name": "donut"
+        "name": "donut",
+        "panel": true
+    },
+    {
+        "title": "Pie",
+        "format": "svg",
+        "name": "pie",
+        "panel": false
     }
 ]
