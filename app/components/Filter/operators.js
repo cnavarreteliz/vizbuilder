@@ -1,0 +1,9 @@
+export default {
+	EQUAL: 1,
+	LOWER: 2,
+	LOWEREQUAL: 3,
+	HIGHER: 4,
+	HIGHEREQUAL: 5,
+	NOTEQUAL: 6,
+	CONTAINS: 8
+};

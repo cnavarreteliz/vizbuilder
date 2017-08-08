@@ -1,0 +1,5 @@
+.reducer {
+	&-element {
+		border: 1px solid #ccc;
+	}
+}

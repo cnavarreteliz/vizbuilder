@@ -1,58 +1,101 @@
 import React, { Component } from "react";
-//import Data from 'data/bulk.json';
-import Countries from "data/countries.json";
-import YearSelector from "components/YearSelector";
-import Selector from "components/Selector";
-import VizBuilder from "components/VizBuilder";
-import VizSelector from "components/VizSelector";
 import { Treemap, Donut } from "d3plus-react";
+
+import countries from "data/countries.json";
+import testdata from "data/bulk.json";
+
+import Filter, { defaultFilter, applyFilters } from "components/Filter";
+import Reducer, { defaultReducer, applyReducers } from "components/Reducer";
+
+import Selector from "components/Selector";
+import VizSelector from "components/VizSelector";
+import YearSelector from "components/YearSelector";
+import VizBuilder from "components/VizBuilder";
 
 import "./App.css";
 
 class App extends Component {
 	constructor(props) {
 		super(props);
+
 		this.state = {
 			viz: "treemap",
+			filters: [],
+			reducers: [],
 			value: null
 		};
+
 		this.handleChange = this.handleChange.bind(this);
+		this.handleFilterAdd = this.handleFilterAdd.bind(this);
+		this.handleFilterUpdate = this.handleFilterUpdate.bind(this);
 	}
 
 	handleChange(event) {
-		console.log(event)
+		console.log(event);
 		this.setState({
 			value: event,
 			viz: event
 		});
-		//this.forceUpdate() event.target.value
+	}
+
+	handleFilterAdd() {
+		this.setState({
+			filters: [].concat(this.state.filters, defaultFilter)
+		});
+	}
+
+	handleFilterUpdate(index, props) {
+		let filters = [].concat(this.state.filters);
+
+		filters[index] = Object.assign({}, filters[index], props);
+
+		this.setState({
+			filters
+		});
+	}
+
+	renderFilters(filters, onChange) {
+		let columns = Object.keys(testdata[0]);
+
+		return filters.map((filter, idx) =>
+			<Filter
+				key={idx}
+				columns={columns}
+				property={filter.property}
+				operator={filter.operator}
+				value={filter.value}
+				index={idx}
+				onChange={onChange}
+			/>
+		);
 	}
 
 	render() {
-		const data = [
-			{ parent: "Group 1", id: "alpha", value: 29 },
-			{ parent: "Group 1", id: "beta", value: 10 },
-			{ parent: "Group 1", id: "gamma", value: 2 },
-			{ parent: "Group 2", id: "delta", value: 29 },
-			{ parent: "Group 2", id: "eta", value: 25 }
-		];
-
 		const viz_types = [
 			{ name: "Treemap", id: "treemap" },
 			{ name: "Donut", id: "donut" }
 		];
-		const { children } = this.props;
 
 		return (
 			<div className="wrapper">
 				<div className="container">
 					<div className="panel">
-						<VizSelector handleChange={this.handleChange}/>
-						<Selector options={Countries} type={"country"} />
-						<YearSelector since={1990} until={2010} />
+						<VizSelector handleChange={this.handleChange} />
+						{/* <Selector options={countries} type={"country"} />
+						<YearSelector since={1990} until={2010} /> */}
+						{this.renderFilters(this.state.filters, this.handleFilterUpdate)}
+						<button onClick={this.handleFilterAdd}>Add filter</button>
 					</div>
 					<div className="viz-wrapper">
-						<VizBuilder type={this.state.viz} config={{ data }} />
+						<VizBuilder
+							type={this.state.viz}
+							config={{
+								data: applyReducers(
+									applyFilters(testdata, this.state.filters),
+									this.state.reducers
+								)
+							}}
+						/>
 					</div>
 				</div>
 				<div className="timeline" />

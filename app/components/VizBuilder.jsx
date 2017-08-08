@@ -2,23 +2,22 @@ import React, { Component } from "react";
 import { Treemap, Donut } from "d3plus-react";
 
 class VizBuilder extends Component {
-	constructor() {
-		super();
-		this.getVizBuilderComponent = this.getVizBuilderComponent.bind(this);
+	constructor(props) {
+		super(props);
 	}
 
-	getVizBuilderComponent(viz) {
-		switch (viz.type) {
+	getVizBuilderComponent(type, config) {
+		switch (type) {
 			case "treemap":
-				return <Treemap config={viz.config} />;
+				return <Treemap config={config} />;
+
 			case "donut":
-				return <Donut config={viz.config} />;
+				return <Donut config={config} />;
 		}
 	}
 
 	render() {
-		const options = this.props;
-		return this.getVizBuilderComponent(options);
+		return this.getVizBuilderComponent(this.props.type, this.props.config);
 	}
 }
 
