@@ -4,7 +4,6 @@ import React, { Component } from "react";
 class Selector extends Component {
 	handleChange(event) {
 		var option = event.target.value;
-		console.log(option);
 		this.props.handleChange(option);
 	}
 

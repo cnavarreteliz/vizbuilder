@@ -1,0 +1,17 @@
+.viz-selector-wrapper {
+    background-color: #eee;
+    padding: 10px;
+    & .title {
+        font-size: 18px;
+    }
+
+    & .icons {
+        & .icon {
+            padding: 5px;
+            width: 50px;
+            &:hover {
+                background-color: #ccc;
+            }
+        }
+    }
+}

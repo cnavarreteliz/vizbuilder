@@ -4,6 +4,7 @@ import Countries from "data/countries.json";
 import YearSelector from "components/YearSelector";
 import Selector from "components/Selector";
 import VizBuilder from "components/VizBuilder";
+import VizSelector from "components/VizSelector";
 import { Treemap, Donut } from "d3plus-react";
 
 import "./App.css";
@@ -19,12 +20,12 @@ class App extends Component {
 	}
 
 	handleChange(event) {
-		event.preventDefault();
+		console.log(event)
 		this.setState({
-			value: event.target.value,
-			viz: event.target.value
+			value: event,
+			viz: event
 		});
-		//this.forceUpdate()
+		//this.forceUpdate() event.target.value
 	}
 
 	render() {
@@ -46,11 +47,7 @@ class App extends Component {
 			<div className="wrapper">
 				<div className="container">
 					<div className="panel">
-						<Selector
-							handleChange={this.handleChange}
-							options={viz_types}
-							type={this.state.viz}
-						/>
+						<VizSelector handleChange={this.handleChange}/>
 						<Selector options={Countries} type={"country"} />
 						<YearSelector since={1990} until={2010} />
 					</div>

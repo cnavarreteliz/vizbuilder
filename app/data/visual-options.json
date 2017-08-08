@@ -1,0 +1,12 @@
+[
+    {
+        "title": "Treemap",
+        "format": "svg",
+        "name": "treemap"
+    },
+    {
+        "title": "Donut",
+        "format": "svg",
+        "name": "donut"
+    }
+]
