@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Treemap, Donut, Pie, BarChart } from "d3plus-react";
+import './VizBuilder.css'
 
 class VizBuilder extends Component {
 	constructor(props) {
@@ -7,7 +8,6 @@ class VizBuilder extends Component {
 	}
 
 	getVizBuilderComponent(type, config) {
-		console.log(config)
 		switch (type) {
 			case "treemap":
 				return <Treemap config={config} />;

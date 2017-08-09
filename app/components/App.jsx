@@ -24,7 +24,7 @@ class App extends Component {
 			},
 			filters: [],
 			reducers: [],
-			value: null,
+			value: null
 		};
 
 		this.handleChangeViz = this.handleChangeViz.bind(this);
@@ -85,7 +85,10 @@ class App extends Component {
 			<div className="wrapper">
 				<div className="container">
 					<div className="panel">
-						<VizSelector handleChangeViz={this.handleChangeViz} panel={this.state.viz.panel} />
+						<VizSelector
+							handleChangeViz={this.handleChangeViz}
+							config={this.state.viz}
+						/>
 						{/* <Selector options={countries} type={"country"} />
 						<YearSelector since={1990} until={2010} /> */}
 						{this.renderFilters(this.state.filters, this.handleFilterUpdate)}
@@ -98,7 +101,8 @@ class App extends Component {
 								data: applyReducers(
 									applyFilters(testdata, this.state.filters),
 									this.state.reducers
-								)
+								),
+								title: "Hello"
 							}}
 						/>
 					</div>

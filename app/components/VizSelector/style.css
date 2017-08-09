@@ -1,5 +1,5 @@
 .viz-selector-wrapper {
-    background-color: #eee;
+    background-color: #fff;
     padding: 10px;
     & .title {
         font-size: 18px;
@@ -10,7 +10,10 @@
             padding: 5px;
             width: 50px;
             &:hover {
-                background-color: #ccc;
+                background-color: #E3F2FD;
+            }
+            &.active {
+                background-color: #E8EAF6;
             }
         }
     }

@@ -16,5 +16,11 @@
         "format": "svg",
         "name": "pie",
         "panel": false
+    },
+    {
+        "title": "Bubble",
+        "format": "svg",
+        "name": "bubble",
+        "panel": true
     }
 ]

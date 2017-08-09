@@ -7,6 +7,10 @@ html {
 	box-sizing: border-box;
 }
 
+body {
+	background-color: #eee;
+}
+
 .container {
 	display: flex;
 	flex-direction: row;
@@ -15,7 +19,7 @@ html {
 	& .panel {
 		flex: 0 0 auto;
 		padding: 10px;
-		width: 300px;
+		width: 250px;
 	}
 
 	& .viz-wrapper {
@@ -23,3 +27,4 @@ html {
 		padding: 10px;
 	}
 }
+

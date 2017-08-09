@@ -37,6 +37,10 @@ class VizSelector extends Component {
 		)
 	}
 
+	getActiveTabComponent(activeTab, currentTab) {
+		return activeTab == currentTab ? 'icon active' : 'icon';
+	}
+
 	render() {
 		return (
 			<div className="viz-selector-wrapper">
@@ -44,7 +48,8 @@ class VizSelector extends Component {
 				<div className="icons">
 					{icons.map(icon =>
 						<img
-							className="icon"
+							title={icon.title}
+							className={this.getActiveTabComponent(this.props.config.type, icon.name)}
 							src={"/images/viz/icon-" + icon.name + ".svg"}
 							onClick={() => {
 								this.props.handleChangeViz(icon);
@@ -52,7 +57,7 @@ class VizSelector extends Component {
 						/>
 					)}
 				</div>
-				{this.getCustomPanel(this.props.panel)}
+				{this.getCustomPanel(this.props.config.panel)}
 			</div>
 		);
 	}
