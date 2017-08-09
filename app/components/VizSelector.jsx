@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 
 import icons from "data/visual-options.json";
-import "./style.css";
+import "./VizSelector.css";
 
 class VizSelector extends Component {
 	handleChange(event) {

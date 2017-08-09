@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import "./style.css";
+import "./Reducer.css";
 
 class Reducer extends Component {
 	constructor(props) {
