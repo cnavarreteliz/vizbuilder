@@ -3,7 +3,7 @@
         "title": "Treemap",
         "format": "svg",
         "name": "treemap",
-        "panel": false
+        "panel": true
     },
     {
         "title": "Donut",

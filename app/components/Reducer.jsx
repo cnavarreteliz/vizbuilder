@@ -51,11 +51,11 @@ class Reducer extends Component {
 	}
 }
 
-export function applyReducers(items, reducers) {
+export function applyReducers(items, reducers, source) {
 	let reduction = items
-		.filter(item => !!item.location)
+		.filter(item => !!item[source])
 		.reduce((output, item) => {
-			let property = item.location;
+			let property = item[source];
 
 			if (!output.hasOwnProperty(property)) output[property] = 0;
 

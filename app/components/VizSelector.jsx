@@ -12,33 +12,39 @@ class VizSelector extends Component {
 		this.props.handleChangeViz(event);
 	}
 
-	getCustomPanel = (panel) => {
-		switch(panel) {
+	getCustomPanel = (props) => {
+		switch (props.config.panel) {
 			case true:
-				return( 
+				return (
 					<div className="panel">
-						Custom panel options:
-						<select name="" id="">
-							<option value="">Test</option>
+						<label>Axis:</label>
+						<select value={props.source} onChange={props.handleChangeAxis}>
+							{props.axis.map(filter =>
+								<option
+									value={filter}
+								>
+									{filter}
+								</option>
+							)}
 						</select>
 					</div>
 				);
 			case false:
-				return <div></div>;
+				return <div />;
 		}
-	}
+	};
 
-	getAxiSelect = (data) => {
-		return(
+	getAxiSelect = data => {
+		return (
 			<label htmlFor="">
 				{data} Axis
-				<input type="text"/>
+				<input type="text" />
 			</label>
-		)
-	}
+		);
+	};
 
 	getActiveTabComponent(activeTab, currentTab) {
-		return activeTab == currentTab ? 'icon active' : 'icon';
+		return activeTab == currentTab ? "icon active" : "icon";
 	}
 
 	render() {
@@ -49,7 +55,10 @@ class VizSelector extends Component {
 					{icons.map(icon =>
 						<img
 							title={icon.title}
-							className={this.getActiveTabComponent(this.props.config.type, icon.name)}
+							className={this.getActiveTabComponent(
+								this.props.config.type,
+								icon.name
+							)}
 							src={"/images/viz/icon-" + icon.name + ".svg"}
 							onClick={() => {
 								this.props.handleChangeViz(icon);
@@ -57,11 +66,10 @@ class VizSelector extends Component {
 						/>
 					)}
 				</div>
-				{this.getCustomPanel(this.props.config.panel)}
+				{this.getCustomPanel(this.props)}
 			</div>
 		);
 	}
-	
 }
 
 export default VizSelector;

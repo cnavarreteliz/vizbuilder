@@ -20,20 +20,29 @@ class App extends Component {
 		this.state = {
 			viz: {
 				type: "treemap",
-				panel: false
+				panel: true
 			},
 			filters: [],
 			reducers: [],
-			value: null
+			source: "location",
+			value: null,
+			axis: ['gender', 'location']
 		};
 
 		this.handleChangeViz = this.handleChangeViz.bind(this);
+		this.handleChangeAxis = this.handleChangeAxis.bind(this);
 		this.handleFilterAdd = this.handleFilterAdd.bind(this);
 		this.handleFilterUpdate = this.handleFilterUpdate.bind(this);
 	}
 
+	handleChangeAxis(event) {
+		console.log(event)
+		this.setState({
+			source: event.target.value
+		});
+	}
+
 	handleChangeViz(event) {
-		console.log(event);
 		this.setState({
 			value: event,
 			viz: {
@@ -87,7 +96,10 @@ class App extends Component {
 					<div className="panel">
 						<VizSelector
 							handleChangeViz={this.handleChangeViz}
+							handleChangeAxis={this.handleChangeAxis}
 							config={this.state.viz}
+							axis={this.state.axis}
+							source={this.state.source}
 						/>
 						{/* <Selector options={countries} type={"country"} />
 						<YearSelector since={1990} until={2010} /> */}
@@ -100,7 +112,8 @@ class App extends Component {
 							config={{
 								data: applyReducers(
 									applyFilters(testdata, this.state.filters),
-									this.state.reducers
+									this.state.reducers,
+									this.state.source
 								),
 								title: "Hello"
 							}}
