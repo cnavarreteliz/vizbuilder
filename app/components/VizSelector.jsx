@@ -5,47 +5,48 @@ import icons from "data/visual-options.json";
 import "./VizSelector.css";
 
 class VizSelector extends Component {
-	handleChange(event) {
-		var option = event.target.value;
-		var event = "donut";
-		console.log(event);
-		this.props.handleChangeViz(event);
-	}
-
-	getCustomPanel = (props) => {
+	getCustomPanel = props => {
 		switch (props.config.panel) {
 			case true:
 				return (
-					<div className="panel">
-						<label>Axis:</label>
-						<select value={props.source} onChange={props.handleChangeAxis}>
-							{props.axis.map(filter =>
-								<option
-									value={filter}
-								>
-									{filter}
-								</option>
-							)}
-						</select>
-						<label>Size:</label>
-						<select value={props.size} onChange={props.handleChangeSize}>
-							{props.size_items.map(filter =>
-								<option
-									value={filter}
-								>
-									{filter}
-								</option>
-							)}
-						</select>
+					<div>
+						<div className="panel">
+							<label htmlFor="axis-options">Axis:</label>
+							<select
+								id="axis-options"
+								value={props.source}
+								onChange={props.handleChangeAxis}
+							>
+								{props.axis.map(filter =>
+									<option value={filter}>
+										{filter}
+									</option>
+								)}
+							</select>
+						</div>
+						<div className="panel">
+							<label>Size:</label>
+							<select value={props.size} onChange={props.handleChangeSize}>
+								{props.size_options.map(filter =>
+									<option value={filter}>
+										{filter}
+									</option>
+								)}
+							</select>
+						</div>
 					</div>
 				);
 			case false:
 				return (
 					<div className="panel">
 						<label>X Axis</label>
-						<select name="" id=""><option></option></select>
+						<select name="" id="">
+							<option />
+						</select>
 						<label>Y Axis</label>
-						<select name="" id=""><option></option></select>
+						<select name="" id="">
+							<option />
+						</select>
 					</div>
 				);
 		}
@@ -84,8 +85,8 @@ class VizSelector extends Component {
 					)}
 				</div>
 				<div className="panel-options">
-				<div>Options</div>
-				{this.getCustomPanel(this.props)}
+					<div className="title">Options</div>
+					{this.getCustomPanel(this.props)}
 				</div>
 			</div>
 		);

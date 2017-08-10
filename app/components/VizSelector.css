@@ -1,11 +1,34 @@
 .viz-selector-wrapper {
+    border: 1px solid #C5CAE9;
     background-color: #fff;
-    padding: 10px;
     & .title {
         font-size: 18px;
+        padding: 5px 10px;
+    }
+    
+    & .panel-options {
+        & .title {
+            background-color: #C5CAE9;
+            padding: 1px 10px;
+            font-size: 14px;
+        }
+
+        & .panel {
+            padding: 5px 10px;
+            & label {
+                display: block;
+                position: relative;
+            }
+            & select {
+                width: 210px;
+                margin-bottom: 5px;
+                padding: 5px;
+            }
+        }
     }
 
     & .icons {
+        padding: 5px 10px;
         & .icon {
             cursor: pointer;
             padding: 5px;

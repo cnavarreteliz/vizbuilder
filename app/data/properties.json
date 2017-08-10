@@ -1,0 +1,30 @@
+[
+    {
+        "property": "gender",
+        "category": "axis"
+    },
+    {
+        "property": "country",
+        "category": "axis"
+    },
+    {
+        "property": "export_1",
+        "category": "size"
+    },
+    {
+        "property": "export_2",
+        "category": "size"
+    },
+    {
+        "property": "export_3",
+        "category": "size"
+    },
+    {
+        "property": "export_4",
+        "category": "size"
+    },
+    {
+        "property": "year",
+        "category": "time"
+    }
+]

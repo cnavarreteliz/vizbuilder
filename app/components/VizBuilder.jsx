@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import { Treemap, Donut, Pie, BarChart } from "d3plus-react";
+import Table from "components/Table"
 import './VizBuilder.css'
 
 class VizBuilder extends Component {
-	constructor(props) {
-		super(props);
-	}
 
 	getVizBuilderComponent(type, config) {
 		switch (type) {
@@ -20,6 +18,9 @@ class VizBuilder extends Component {
 
 			case "bubble":
 				return <BarChart config={config} />;
+			
+			case "table":
+				return <Table config={config} />;
 		}
 	}
 

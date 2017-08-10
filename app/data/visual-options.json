@@ -22,5 +22,11 @@
         "format": "svg",
         "name": "bubble",
         "panel": false
+    },
+    {
+        "title": "Table",
+        "format": "svg",
+        "name": "table",
+        "panel": true
     }
 ]
