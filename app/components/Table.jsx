@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import FileSaver from "file-saver";
+import './Table.css';
 
 // Dinamic selector
 class Table extends Component {
@@ -12,7 +13,6 @@ class Table extends Component {
 
 	downloadFile(event, ext, extension) {
 		let data = JSON.stringify(event)
-		console.log(event)
 		console.log(ext)
 		
         if (extension) {
@@ -47,21 +47,21 @@ class Table extends Component {
 						<i className="fa fa-download" />
 					</button>
 				</div>
-				<table>
-					<tr>
-						<th>#</th>
-						<th>Value</th>
-					</tr>
-					{options.config.data.map(row =>
+				<table className="table">
+					<thead>
 						<tr>
-							<td>
-								{row.id}
-							</td>
-							<td>
-								{row.value}
-							</td>
+							<th>#</th>
+							<th>Value</th>
 						</tr>
-					)}
+					</thead>
+					<tbody>
+						{options.config.data.map(row =>
+							<tr>
+								<td>{row.id}</td>
+								<td>{row.value}</td>
+							</tr>
+						)}
+					</tbody>
 				</table>
 			</div>
 		);

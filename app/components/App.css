@@ -31,13 +31,13 @@ body {
 .btn {
 	margin-top: 10px;
 	width: 100%;
-	background-color: #C5CAE9;
+	background-color: var(--dark);
 	border-width: 0px;
 	border-radius: 3px;
 	padding: 5px;
 	cursor: pointer;
 	&:hover {
-		background-color: #9FA8DA;
+		background-color: var(--dark);
 	}
 }
 

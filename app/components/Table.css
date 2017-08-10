@@ -1,0 +1,11 @@
+.download {
+    padding: 10px;
+}
+
+.table {
+    border-width: 0px;
+    width: 100%;
+    & > thead {
+        background-color: var(--dark);
+    }
+}
