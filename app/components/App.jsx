@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import deepExtend from "deep-extend";
 
 import countries from "data/countries.json";
 import testdata from "data/bulk.json";
@@ -36,6 +37,7 @@ class App extends Component {
 		this.handleChangeAxis = this.handleChangeAxis.bind(this);
 		this.handleChangeSize = this.handleChangeSize.bind(this);
 		this.handleFilterAdd = this.handleFilterAdd.bind(this);
+		this.handleFilterRemove = this.handleFilterRemove.bind(this);
 		this.handleFilterUpdate = this.handleFilterUpdate.bind(this);
 	}
 
@@ -79,17 +81,23 @@ class App extends Component {
 		});
 	}
 
+	handleFilterRemove(index) {
+		let filters = [].concat(this.state.filters);
+
+		filters.splice(index, 1);
+
+		this.setState({ filters });
+	}
+
 	handleFilterUpdate(index, props) {
 		let filters = [].concat(this.state.filters);
 
-		filters[index] = Object.assign({}, filters[index], props);
+		filters[index] = deepExtend({}, filters[index], props);
 
-		this.setState({
-			filters
-		});
+		this.setState({ filters });
 	}
 
-	renderFilters(filters, onChange) {
+	renderFilters(filters, onChange, onDelete) {
 		let columns = Object.keys(testdata[0]);
 
 		return filters.map((filter, idx) =>
@@ -101,6 +109,7 @@ class App extends Component {
 				value={filter.value}
 				index={idx}
 				onChange={onChange}
+				onDelete={onDelete}
 			/>
 		);
 	}
@@ -125,10 +134,19 @@ class App extends Component {
 							size={this.state.size}
 							source={this.state.source}
 						/>
+<<<<<<< HEAD
 						{/* <Selector options={countries} type={"country"} />
 						<YearSelector since={1990} until={2010} /> */}
 						{this.renderFilters(this.state.filters, this.handleFilterUpdate)}
 						<button className="btn" onClick={this.handleFilterAdd}>Add filter</button>
+=======
+						{this.renderFilters(
+							this.state.filters,
+							this.handleFilterUpdate,
+							this.handleFilterRemove
+						)}
+						<button onClick={this.handleFilterAdd}>Add filter</button>
+>>>>>>> 76e6843bf1a6d7e02f5607586b81e7443687bfdd
 					</div>
 					<div className="viz-wrapper">
 						<VizBuilder
