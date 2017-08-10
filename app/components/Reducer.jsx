@@ -51,7 +51,7 @@ class Reducer extends Component {
 	}
 }
 
-export function applyReducers(items, reducers, source) {
+export function applyReducers(items, reducers, source, size) {
 	let reduction = items
 		.filter(item => !!item[source])
 		.reduce((output, item) => {
@@ -59,7 +59,7 @@ export function applyReducers(items, reducers, source) {
 
 			if (!output.hasOwnProperty(property)) output[property] = 0;
 
-			output[property] += 1;
+			output[property] += item[size];
 
 			return output;
 		}, {});

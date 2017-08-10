@@ -24,13 +24,16 @@ class App extends Component {
 			},
 			filters: [],
 			reducers: [],
-			source: "location",
+			source: "country",
 			value: null,
-			axis: ['gender', 'location']
+			size: "export_1",
+			axis: ['gender', 'country'],
+			size_items: ['export_1', 'export_2', 'export_3']
 		};
 
 		this.handleChangeViz = this.handleChangeViz.bind(this);
 		this.handleChangeAxis = this.handleChangeAxis.bind(this);
+		this.handleChangeSize = this.handleChangeSize.bind(this);
 		this.handleFilterAdd = this.handleFilterAdd.bind(this);
 		this.handleFilterUpdate = this.handleFilterUpdate.bind(this);
 	}
@@ -39,6 +42,13 @@ class App extends Component {
 		console.log(event)
 		this.setState({
 			source: event.target.value
+		});
+	}
+
+	handleChangeSize(event) {
+		console.log(event)
+		this.setState({
+			size: event.target.value
 		});
 	}
 
@@ -97,8 +107,10 @@ class App extends Component {
 						<VizSelector
 							handleChangeViz={this.handleChangeViz}
 							handleChangeAxis={this.handleChangeAxis}
+							handleChangeSize={this.handleChangeSize}
 							config={this.state.viz}
 							axis={this.state.axis}
+							size_items={this.state.size_items}
 							source={this.state.source}
 						/>
 						{/* <Selector options={countries} type={"country"} />
@@ -113,9 +125,11 @@ class App extends Component {
 								data: applyReducers(
 									applyFilters(testdata, this.state.filters),
 									this.state.reducers,
-									this.state.source
+									this.state.source,
+									this.state.size
 								),
-								title: "Hello"
+								title: "Hello",
+								size: "export_2"
 							}}
 						/>
 					</div>

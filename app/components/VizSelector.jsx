@@ -27,10 +27,27 @@ class VizSelector extends Component {
 								</option>
 							)}
 						</select>
+						<label>Size:</label>
+						<select value={props.size} onChange={props.handleChangeSize}>
+							{props.size_items.map(filter =>
+								<option
+									value={filter}
+								>
+									{filter}
+								</option>
+							)}
+						</select>
 					</div>
 				);
 			case false:
-				return <div />;
+				return (
+					<div className="panel">
+						<label>X Axis</label>
+						<select name="" id=""><option></option></select>
+						<label>Y Axis</label>
+						<select name="" id=""><option></option></select>
+					</div>
+				);
 		}
 	};
 
@@ -66,7 +83,10 @@ class VizSelector extends Component {
 						/>
 					)}
 				</div>
+				<div className="panel-options">
+				<div>Options</div>
 				{this.getCustomPanel(this.props)}
+				</div>
 			</div>
 		);
 	}

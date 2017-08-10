@@ -25,7 +25,11 @@ class VizBuilder extends Component {
 
 	render() {
 		const options = this.props
-		return this.getVizBuilderComponent(options.type, options.config);
+		return(
+			<div>
+				{this.getVizBuilderComponent(options.type, options.config)}
+			</div>
+		); 
 	}
 }
 
