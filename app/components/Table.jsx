@@ -6,18 +6,18 @@ class Table extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {
-			extension: 'json'
-		};
-
         //this.updateExtension = this.updateExtension.bind(this);
 		//this.downloadFile = this.downloadFile.bind(this);
 	}
 
-	downloadFile(data, extension) {
+	downloadFile(event, ext, extension) {
+		let data = JSON.stringify(event)
+		console.log(event)
+		console.log(ext)
+		
         if (extension) {
             var blob = new Blob([data], { type: "text/plain;charset=utf-8" });
-            FileSaver.saveAs(blob, `data.${extension}`);
+            FileSaver.saveAs(blob, `data.json`);
         }
     }
     
@@ -38,7 +38,8 @@ class Table extends Component {
 						<option value="json">JSON</option>
 					</select>
 					<button
-						onClick={this.downloadFile(
+						onClick={this.downloadFile.bind(
+							this,
 							options.config.data,
 							'json'
 						)}

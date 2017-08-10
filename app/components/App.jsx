@@ -134,19 +134,12 @@ class App extends Component {
 							size={this.state.size}
 							source={this.state.source}
 						/>
-<<<<<<< HEAD
-						{/* <Selector options={countries} type={"country"} />
-						<YearSelector since={1990} until={2010} /> */}
-						{this.renderFilters(this.state.filters, this.handleFilterUpdate)}
-						<button className="btn" onClick={this.handleFilterAdd}>Add filter</button>
-=======
 						{this.renderFilters(
 							this.state.filters,
 							this.handleFilterUpdate,
 							this.handleFilterRemove
 						)}
-						<button onClick={this.handleFilterAdd}>Add filter</button>
->>>>>>> 76e6843bf1a6d7e02f5607586b81e7443687bfdd
+						<button className="btn" onClick={this.handleFilterAdd}>Add filter</button>
 					</div>
 					<div className="viz-wrapper">
 						<VizBuilder
