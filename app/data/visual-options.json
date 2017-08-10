@@ -15,12 +15,12 @@
         "title": "Pie",
         "format": "svg",
         "name": "pie",
-        "panel": false
+        "panel": true
     },
     {
         "title": "Bubble",
         "format": "svg",
         "name": "bubble",
-        "panel": true
+        "panel": false
     }
 ]
