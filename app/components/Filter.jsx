@@ -1,17 +1,18 @@
 import React, { Component } from "react";
 
-import OPERATOR from "./operators";
+import OPERATOR from "assets/operators";
 
-import "./style.css";
+import "./Filter.css";
 
 class Filter extends Component {
 	constructor(props) {
 		super(props);
 
 		this.handleChange = this.handleChange.bind(this);
-		this.handleChangeProperty = this.handleChangeProperty.bind(this);
 		this.handleChangeOperator = this.handleChangeOperator.bind(this);
+		this.handleChangeProperty = this.handleChangeProperty.bind(this);
 		this.handleChangeValue = this.handleChangeValue.bind(this);
+		this.handleDelete = this.handleDelete.bind(this);
 
 		this.renderPropertyOptions = this.renderPropertyOptions.bind(this);
 		// this.renderOperatorOptions = this.renderOperatorOptions.bind(this);
@@ -48,6 +49,10 @@ class Filter extends Component {
 
 		this.handleChange({ value });
 		this.setState({ type });
+	}
+
+	handleDelete() {
+		this.props.onDelete(this.props.index);
 	}
 
 	renderPropertyOptions() {
@@ -89,6 +94,7 @@ class Filter extends Component {
 					value={this.props.value}
 					onChange={this.handleChangeValue}
 				/>
+				<button className="filter-delete" onClick={this.handleDelete}>&times;</button>
 			</div>
 		);
 	}
