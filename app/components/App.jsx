@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import countries from "data/countries.json";
 import testdata from "data/bulk.json";
+import properties from "data/properties.json";
 
 import Filter, { defaultFilter, applyFilters } from "components/Filter";
 import Reducer, { defaultReducer, applyReducers } from "components/Reducer";
@@ -27,8 +28,8 @@ class App extends Component {
 			source: "country",
 			value: null,
 			size: "export_1",
-			axis: ['gender', 'country'],
-			size_items: ['export_1', 'export_2', 'export_3']
+			axis_options: this.getProperty(properties, 'axis'),
+			size_options: this.getProperty(properties, 'size')
 		};
 
 		this.handleChangeViz = this.handleChangeViz.bind(this);
@@ -36,6 +37,17 @@ class App extends Component {
 		this.handleChangeSize = this.handleChangeSize.bind(this);
 		this.handleFilterAdd = this.handleFilterAdd.bind(this);
 		this.handleFilterUpdate = this.handleFilterUpdate.bind(this);
+	}
+
+	getProperty(data, attribute) {
+		var output = []
+		data.map(e =>
+			{if(e.category == attribute) {
+				output.push(e.property)
+			}}
+		)
+		console.log(output)
+		return output
 	}
 
 	handleChangeAxis(event) {
@@ -46,7 +58,6 @@ class App extends Component {
 	}
 
 	handleChangeSize(event) {
-		console.log(event)
 		this.setState({
 			size: event.target.value
 		});
@@ -103,20 +114,21 @@ class App extends Component {
 		return (
 			<div className="wrapper">
 				<div className="container">
-					<div className="panel">
+					<div className="main-panel">
 						<VizSelector
 							handleChangeViz={this.handleChangeViz}
 							handleChangeAxis={this.handleChangeAxis}
 							handleChangeSize={this.handleChangeSize}
 							config={this.state.viz}
-							axis={this.state.axis}
-							size_items={this.state.size_items}
+							axis={this.state.axis_options}
+							size_options={this.state.size_options}
+							size={this.state.size}
 							source={this.state.source}
 						/>
 						{/* <Selector options={countries} type={"country"} />
 						<YearSelector since={1990} until={2010} /> */}
 						{this.renderFilters(this.state.filters, this.handleFilterUpdate)}
-						<button onClick={this.handleFilterAdd}>Add filter</button>
+						<button className="btn" onClick={this.handleFilterAdd}>Add filter</button>
 					</div>
 					<div className="viz-wrapper">
 						<VizBuilder
@@ -129,7 +141,7 @@ class App extends Component {
 									this.state.size
 								),
 								title: "Hello",
-								size: "export_2"
+								size: this.state.size
 							}}
 						/>
 					</div>

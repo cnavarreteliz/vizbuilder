@@ -16,15 +16,28 @@ body {
 	flex-direction: row;
 	height: 90vh;
 
-	& .panel {
+	& .main-panel {
 		flex: 0 0 auto;
-		padding: 10px;
 		width: 250px;
+		padding: 10px;
 	}
 
 	& .viz-wrapper {
 		flex: 1 1;
 		padding: 10px;
+	}
+}
+
+.btn {
+	margin-top: 10px;
+	width: 100%;
+	background-color: #C5CAE9;
+	border-width: 0px;
+	border-radius: 3px;
+	padding: 5px;
+	cursor: pointer;
+	&:hover {
+		background-color: #9FA8DA;
 	}
 }
 
