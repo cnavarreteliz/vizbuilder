@@ -22,7 +22,6 @@ class Table extends Component {
     }
     
     updateExtension(event) {
-        console.log(event.target.value)
         this.setState({
             extension: event.target.value
         })
