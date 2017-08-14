@@ -1,68 +1,35 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
+
+import VizSelectorPanel from "components/VizSelectorPanel";
 
 import icons from "data/visual-options.json";
 import "./VizSelector.css";
 
 class VizSelector extends Component {
-	getCustomPanel = props => {
-		switch (props.config.panel) {
-			case true:
-				return (
-					<div>
-						<div className="panel">
-							<label htmlFor="axis-options">Axis:</label>
-							<select
-								id="axis-options"
-								value={props.source}
-								onChange={props.handleChangeAxis}
-							>
-								{props.axis.map(filter =>
-									<option value={filter}>
-										{filter}
-									</option>
-								)}
-							</select>
-						</div>
-						<div className="panel">
-							<label>Size:</label>
-							<select value={props.size} onChange={props.handleChangeSize}>
-								{props.size_options.map(filter =>
-									<option value={filter}>
-										{filter}
-									</option>
-								)}
-							</select>
-						</div>
-					</div>
-				);
-			case false:
-				return (
-					<div className="panel">
-						<label>X Axis</label>
-						<select name="" id="">
-							<option />
-						</select>
-						<label>Y Axis</label>
-						<select name="" id="">
-							<option />
-						</select>
-					</div>
-				);
-		}
-	};
-
-	getAxiSelect = data => {
-		return (
-			<label htmlFor="">
-				{data} Axis
-				<input type="text" />
-			</label>
-		);
-	};
-
 	getActiveTabComponent(activeTab, currentTab) {
 		return activeTab == currentTab ? "icon active" : "icon";
+	}
+
+	renderPanelOptions(props) {
+		if (props.config.panel) {
+			return (
+				<div className="panel-options">
+					<p className="title">Options</p>
+					<VizSelectorPanel
+						label="Axis"
+						onChange={props.handleChangeViz}
+						options={props.axis}
+						value={props.source}
+					/>
+					<VizSelectorPanel
+						label="Size"
+						onChange={props.handleChangeSize}
+						options={props.size_options}
+						value={props.size}
+					/>
+				</div>
+			);
+		}
 	}
 
 	render() {
@@ -84,14 +51,10 @@ class VizSelector extends Component {
 						/>
 					)}
 				</div>
-				<div className="panel-options">
-					<div className="title">Options</div>
-					{this.getCustomPanel(this.props)}
-				</div>
+				{this.renderPanelOptions(this.props)}
 			</div>
 		);
 	}
 }
-
 
 export default VizSelector;
