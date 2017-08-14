@@ -4,6 +4,7 @@ import deepExtend from "deep-extend";
 import countries from "data/countries.json";
 import testdata from "data/bulk.json";
 import properties from "data/properties.json";
+import { getData } from "helpers/stats";
 
 import Filter, { defaultFilter, applyFilters } from "components/Filter";
 import Reducer, { defaultReducer, applyReducers } from "components/Reducer";
@@ -20,17 +21,18 @@ class App extends Component {
 		super(props);
 
 		this.state = {
+			data: testdata,
 			viz: {
 				type: "treemap",
 				panel: true
 			},
 			filters: [],
 			reducers: [],
-			source: "country",
+			source: "occupation",
 			value: null,
-			size: "export_1",
-			axis_options: this.getProperty(properties, 'axis'),
-			size_options: this.getProperty(properties, 'size')
+			size: "SalarySum",
+			axis_options: this.getProperty(properties, "axis"),
+			size_options: this.getProperty(properties, "size")
 		};
 
 		this.handleChangeViz = this.handleChangeViz.bind(this);
@@ -39,21 +41,46 @@ class App extends Component {
 		this.handleFilterAdd = this.handleFilterAdd.bind(this);
 		this.handleFilterRemove = this.handleFilterRemove.bind(this);
 		this.handleFilterUpdate = this.handleFilterUpdate.bind(this);
+		this.renderFilters = this.renderFilters.bind(this);
+		this.getKSAdata = this.getKSAdata.bind(this);
+
+		this.getKSAdata();
+	}
+
+	async getKSAdata() {
+		let datatest2 = await getData("Employee Records").promise;
+		console.log(datatest2);
+		const data = datatest2[1].values.map((level1, i) => {
+			return {
+				year: 2016,
+				value: level1[0][0],
+				id: 1,
+				occupation: datatest2[1].axes[2].members[i].name,
+				gender: "Male",
+				SalarySum: level1[0][0],
+				SalaryMedian: level1[0][1],
+				export_3: 10065,
+				export_4: 95648
+			};
+		});
+		this.setState({
+			data: data
+		});
 	}
 
 	getProperty(data, attribute) {
-		var output = []
-		data.map(e =>
-			{if(e.category == attribute) {
-				output.push(e.property)
-			}}
-		)
-		console.log(output)
-		return output
+		var output = [];
+		data.map(e => {
+			if (e.category == attribute) {
+				output.push(e.property);
+			}
+		});
+		console.log(output);
+		return output;
 	}
 
 	handleChangeAxis(event) {
-		console.log(event)
+		console.log(event);
 		this.setState({
 			source: event.target.value
 		});
@@ -98,7 +125,7 @@ class App extends Component {
 	}
 
 	renderFilters(filters, onChange, onDelete) {
-		let columns = Object.keys(testdata[0]);
+		let columns = Object.keys(this.state.data[0]);
 
 		return filters.map((filter, idx) =>
 			<Filter
@@ -139,14 +166,16 @@ class App extends Component {
 							this.handleFilterUpdate,
 							this.handleFilterRemove
 						)}
-						<button className="btn" onClick={this.handleFilterAdd}>Add filter</button>
+						<button className="btn" onClick={this.handleFilterAdd}>
+							Add filter
+						</button>
 					</div>
 					<div className="viz-wrapper">
 						<VizBuilder
 							type={this.state.viz.type}
 							config={{
 								data: applyReducers(
-									applyFilters(testdata, this.state.filters),
+									applyFilters(this.state.data, this.state.filters),
 									this.state.reducers,
 									this.state.source,
 									this.state.size

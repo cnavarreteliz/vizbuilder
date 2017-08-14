@@ -4,15 +4,15 @@
         "category": "axis"
     },
     {
-        "property": "country",
+        "property": "occupation",
         "category": "axis"
     },
     {
-        "property": "export_1",
+        "property": "SalarySum",
         "category": "size"
     },
     {
-        "property": "export_2",
+        "property": "SalaryMedian",
         "category": "size"
     },
     {
