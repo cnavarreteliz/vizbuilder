@@ -1,16 +1,25 @@
 import mondrianClient from "helpers/mondrian";
 
-export function getData(cubeName) {
+function setDrilldownDim(dimensions) {
+    switch(dimensions) {
+        case 'occupation':
+            return { output1: 'Occupation', output2: 'Occupation', output3: 'Occupation group' }
+        case 'gender':
+            return { output1: 'Gender', output2: 'Gender', output3: 'Gender' }
+    }
+}
+
+export function getData(cubeName, dimension, metric="Salary Sum") {
     
     const prm = mondrianClient
         .cube(cubeName)
         .then(cube => {
-            console.log(cube)
+            let drilldownOpt = setDrilldownDim(dimension)
             let prmValues = mondrianClient.query(
                 cube.query
                     .drilldown("Year", "Year") // Second dimension
-                    .drilldown("Occupation", "Occupation", "Occupation group") // Third dimension
-                    .measure("Salary Sum") // First dimension
+                    .drilldown(drilldownOpt.output1, drilldownOpt.output2, drilldownOpt.output3) // Third dimension
+                    .measure(metric) // First dimension
                     .measure("Salary Median")
                     .cut("[Year].[Year].[Year].&[2016]")
             ).then(res => res.data)

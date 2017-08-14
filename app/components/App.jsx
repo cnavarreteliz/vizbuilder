@@ -29,43 +29,43 @@ class App extends Component {
 			},
 			filters: [],
 			reducers: [],
-			source: "occupation",
+			dimension: "occupation",
 			value: null,
-			size: "SalarySum",
+			measure: "Salary Sum",
 			axis_options: this.getProperty(properties, "axis"),
 			size_options: this.getProperty(properties, "size")
 		};
 
 		this.handleChangeViz = this.handleChangeViz.bind(this);
 		this.handleChangeAxis = this.handleChangeAxis.bind(this);
-		this.handleChangeSize = this.handleChangeSize.bind(this);
+		this.handleChangeMeasure = this.handleChangeMeasure.bind(this);
 		this.handleFilterAdd = this.handleFilterAdd.bind(this);
 		this.handleFilterRemove = this.handleFilterRemove.bind(this);
 		this.handleFilterUpdate = this.handleFilterUpdate.bind(this);
 		this.renderFilters = this.renderFilters.bind(this);
 		this.getKSAdata = this.getKSAdata.bind(this);
 
-		this.getKSAdata();
+		this.getKSAdata("Employee Records", this.state.dimension, this.state.measure)
+		
 	}
 
-	async getKSAdata() {
-		let datatest2 = await getData("Employee Records").promise;
-		console.log(datatest2);
-		const data = datatest2[1].values.map((level1, i) => {
-			return {
-				year: 2016,
-				value: level1[0][0],
-				id: 1,
-				occupation: datatest2[1].axes[2].members[i].name,
-				gender: "Male",
-				SalarySum: level1[0][0],
-				SalaryMedian: level1[0][1],
-				export_3: 10065,
-				export_4: 95648
-			};
-		});
-		this.setState({
-			data: data
+	
+
+	getKSAdata(cubeName, dimension, measure) {
+		console.log(dimension)
+		// Experiments
+		getData(cubeName, dimension, measure).promise.then(data => {
+			const ksa_data = data[1].values.map((level1, i) => {
+				return {
+					year: 2016,
+					value: parseFloat(level1[0][0]),
+					id: i + 1,
+					name: data[1].axes[2].members[i].name
+				};
+			});
+			this.setState({
+				data: ksa_data
+			});
 		});
 	}
 
@@ -83,14 +83,16 @@ class App extends Component {
 	handleChangeAxis(event) {
 		console.log(event);
 		this.setState({
-			source: event.target.value
+			dimension: event.target.value
 		});
+		this.getKSAdata("Employee Records", event.target.value, this.state.measure)
 	}
 
-	handleChangeSize(event) {
+	handleChangeMeasure(event) {
 		this.setState({
-			size: event.target.value
+			measure: event.target.value
 		});
+		this.getKSAdata("Employee Records", this.state.dimension, event.target.value)
 	}
 
 	handleChangeViz(event) {
@@ -143,11 +145,7 @@ class App extends Component {
 	}
 
 	render() {
-		const viz_types = [
-			{ name: "Treemap", id: "treemap" },
-			{ name: "Donut", id: "donut" }
-		];
-
+		
 		return (
 			<div className="wrapper">
 				<div className="container">
@@ -155,12 +153,12 @@ class App extends Component {
 						<VizSelector
 							handleChangeViz={this.handleChangeViz}
 							handleChangeAxis={this.handleChangeAxis}
-							handleChangeSize={this.handleChangeSize}
+							handleChangeMeasure={this.handleChangeMeasure}
 							config={this.state.viz}
 							axis={this.state.axis_options}
 							size_options={this.state.size_options}
-							size={this.state.size}
-							source={this.state.source}
+							size={this.state.measure}
+							dimension={this.state.dimension}
 						/>
 						{this.renderFilters(
 							this.state.filters,
@@ -182,11 +180,11 @@ class App extends Component {
 								data: applyReducers(
 									applyFilters(this.state.data, this.state.filters),
 									this.state.reducers,
-									this.state.source,
-									this.state.size
+									this.state.dimension,
+									this.state.measure
 								),
 								title: "Hello",
-								size: this.state.size
+								size: this.state.measure
 							}}
 						/>
 					</div>

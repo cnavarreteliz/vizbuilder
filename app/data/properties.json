@@ -8,19 +8,15 @@
         "category": "axis"
     },
     {
-        "property": "SalarySum",
+        "property": "Salary Sum",
         "category": "size"
     },
     {
-        "property": "SalaryMedian",
+        "property": "Salary Median",
         "category": "size"
     },
     {
-        "property": "export_3",
-        "category": "size"
-    },
-    {
-        "property": "export_4",
+        "property": "Salary Average",
         "category": "size"
     },
     {

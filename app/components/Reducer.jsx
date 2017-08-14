@@ -53,13 +53,13 @@ class Reducer extends Component {
 
 export function applyReducers(items, reducers, source, size) {
 	let reduction = items
-		.filter(item => !!item[source])
+		.filter(item => !!item.name)
 		.reduce((output, item) => {
-			let property = item[source];
+			let property = item.name;
 
 			if (!output.hasOwnProperty(property)) output[property] = 0;
 
-			output[property] += item[size];
+			output[property] += item.value;
 
 			return output;
 		}, {});
