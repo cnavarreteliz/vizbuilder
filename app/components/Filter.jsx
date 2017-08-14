@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import { Button } from "@blueprintjs/core";
 
 import OPERATOR from "assets/operators";
+import KINDS from "data/properties.json";
 
 import "./Filter.css";
 
@@ -15,21 +17,28 @@ class Filter extends Component {
 		this.handleDelete = this.handleDelete.bind(this);
 
 		this.renderPropertyOptions = this.renderPropertyOptions.bind(this);
+		this.renderValueInput = this.renderValueInput.bind(this);
+		this.renderDataList = this.renderDataList.bind(this);
 		// this.renderOperatorOptions = this.renderOperatorOptions.bind(this);
 
-		this.state = {
-			type: this.inferValueType(props.value)
-		};
+		this._uid = Math.random().toString(36).substr(2, 5);
 	}
 
-	inferValueType(value) {
-		let isnumber = !isNaN(parseFloat(value)) && isFinite(value);
-		return isnumber ? "number" : "text";
+	calculateType(property, value) {
+		let kind = KINDS.find(obj => obj.property == property);
+
+		if (!kind) {
+			let isnumber = !isNaN(parseFloat(value)) && isFinite(value);
+			kind = { category: isnumber ? "size" : "axis" };
+		}
+
+		kind = kind.category;
+
+		return kind == "size" ? "range" : kind == "time" ? "range" : "text";
 	}
 
 	handleChange(newState) {
 		this.props.onChange(this.props.index, newState);
-		// this.setState(newState);
 	}
 
 	handleChangeProperty(event) {
@@ -41,14 +50,8 @@ class Filter extends Component {
 	}
 
 	handleChangeValue(event) {
-		let value = event.target.value,
-			type = this.inferValueType(value);
-
-		// If value is number, convert to number
-		if (type == "number") value *= 1;
-
-		this.handleChange({ value });
-		this.setState({ type });
+		let value = event.target.value;
+		this.handleChange({ value: value * 1 || value });
 	}
 
 	handleDelete() {
@@ -71,30 +74,73 @@ class Filter extends Component {
 		);
 	}
 
+	renderValueInput() {
+		let attributes = {
+			className: "filter-value pt-input pt-fill",
+			dir: "auto",
+			type: this._type,
+			onChange: this.handleChangeValue,
+			value: this.props.value
+		};
+
+		if (attributes.type == "range") {
+			attributes.min = 0;
+			attributes.max = this.props.max;
+			attributes.list = this._uid;
+		}
+
+		return React.createElement("input", attributes);
+	}
+
+	renderDataList() {
+		if (this._type == "range") {
+			let steps = this.props.steps || [];
+			return (
+				<datalist id={this._uid}>
+					{steps.map(step =>
+						<option>
+							{step}
+						</option>
+					)}
+				</datalist>
+			);
+		}
+	}
+
 	render() {
+		this._type = this.calculateType(this.props.property, this.props.value);
+
 		return (
 			<div className="filter-element">
-				<select
-					value={this.props.property}
-					className="filter-property"
-					onChange={this.handleChangeProperty}
-				>
-					{this.renderPropertyOptions()}
-				</select>
-				<select
-					value={this.props.operator}
-					className="filter-operator"
-					onChange={this.handleChangeOperator}
-				>
-					{this.renderOperatorOptions()}
-				</select>
-				<input
-					className="filter-value"
-					type={this.state.type}
-					value={this.props.value}
-					onChange={this.handleChangeValue}
+				<div className="pt-control-group pt-vertical">
+					<div className="pt-control-group">
+						<div className="pt-select pt-fill">
+							<select
+								value={this.props.property}
+								className="filter-property"
+								onChange={this.handleChangeProperty}
+							>
+								{this.renderPropertyOptions()}
+							</select>
+						</div>
+						<div className="pt-select pt-fill">
+							<select
+								value={this.props.operator}
+								className="filter-operator"
+								onChange={this.handleChangeOperator}
+							>
+								{this.renderOperatorOptions()}
+							</select>
+						</div>
+					</div>
+					{this.renderValueInput()}
+					{this.renderDataList()}
+				</div>
+				<Button
+					className="filter-delete pt-intent-danger pt-minimal"
+					iconName="delete"
+					onClick={this.handleDelete}
 				/>
-				<button className="filter-delete" onClick={this.handleDelete}>&times;</button>
 			</div>
 		);
 	}

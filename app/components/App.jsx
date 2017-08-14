@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Button } from "@blueprintjs/core";
 import deepExtend from "deep-extend";
 
 import countries from "data/countries.json";
@@ -166,9 +167,13 @@ class App extends Component {
 							this.handleFilterUpdate,
 							this.handleFilterRemove
 						)}
-						<button className="btn" onClick={this.handleFilterAdd}>
+						<Button
+							className="pt-fill"
+							iconName="add"
+							onClick={this.handleFilterAdd}
+						>
 							Add filter
-						</button>
+						</Button>
 					</div>
 					<div className="viz-wrapper">
 						<VizBuilder
