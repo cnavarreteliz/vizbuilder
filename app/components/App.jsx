@@ -33,7 +33,8 @@ class App extends Component {
 			value: null,
 			measure: "Salary Sum",
 			axis_options: this.getProperty(properties, "axis"),
-			size_options: this.getProperty(properties, "size")
+			size_options: []
+			//size_options: this.getProperty(properties, "size")
 		};
 
 		this.handleChangeViz = this.handleChangeViz.bind(this);
@@ -46,10 +47,21 @@ class App extends Component {
 		this.getKSAdata = this.getKSAdata.bind(this);
 
 		this.getKSAdata("Employee Records", this.state.dimension, this.state.measure)
+
+		this.getDataOptions("Employee Records", 'occupation', 'Salary Sum').then(data =>
+			this.setState({
+				size_options: data
+			})
+		)
 		
 	}
 
-	
+	async getDataOptions(cubeName, dimension, measure) {
+		let axis = await getData(cubeName, dimension, measure).promise
+		let data = axis[0].measures.map(item => item.name)
+		console.log(data)
+		return data
+	}	
 
 	getKSAdata(cubeName, dimension, measure) {
 		// Experiments
