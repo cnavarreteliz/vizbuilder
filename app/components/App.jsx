@@ -52,15 +52,16 @@ class App extends Component {
 	
 
 	getKSAdata(cubeName, dimension, measure) {
-		console.log(dimension)
 		// Experiments
 		getData(cubeName, dimension, measure).promise.then(data => {
+			console.log(data)
 			const ksa_data = data[1].values.map((level1, i) => {
 				return {
 					year: 2016,
 					value: parseFloat(level1[0][0]),
 					id: i + 1,
-					name: data[1].axes[2].members[i].name
+					name: data[1].axes[2].members[i].name,
+					group: data[1].axes[2].members[i].name[0]
 				};
 			});
 			this.setState({
@@ -184,7 +185,8 @@ class App extends Component {
 									this.state.measure
 								),
 								title: "Hello",
-								size: this.state.measure
+								size: this.state.measure,
+								groupBy: ["group", "name"]
 							}}
 						/>
 					</div>

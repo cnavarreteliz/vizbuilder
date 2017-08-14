@@ -20,7 +20,6 @@ export function getData(cubeName, dimension, metric="Salary Sum") {
                     .drilldown("Year", "Year") // Second dimension
                     .drilldown(drilldownOpt.output1, drilldownOpt.output2, drilldownOpt.output3) // Third dimension
                     .measure(metric) // First dimension
-                    .measure("Salary Median")
                     .cut("[Year].[Year].[Year].&[2016]")
             ).then(res => res.data)
             return Promise.all([cube, prmValues])

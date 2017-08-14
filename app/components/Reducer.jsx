@@ -53,7 +53,7 @@ class Reducer extends Component {
 
 export function applyReducers(items, reducers, source, size) {
 	let reduction = items
-		.filter(item => !!item.name)
+		/*.filter(item => !!item.name)
 		.reduce((output, item) => {
 			let property = item.name;
 
@@ -62,10 +62,15 @@ export function applyReducers(items, reducers, source, size) {
 			output[property] += item.value;
 
 			return output;
-		}, {});
+		}, {});*/
 
-	return Object.keys(reduction).map(item => ({
-		id: item,
-		value: reduction[item]
-	}));
+	return reduction
+
+	/*return Object.keys(reduction).map(item => ({
+		id: item.id,
+		//value: reduction[item]
+		value: item.value,
+		group: item.group,
+		name: item.name
+	}));*/
 }
