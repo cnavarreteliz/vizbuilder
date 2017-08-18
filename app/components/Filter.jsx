@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from 'prop-types';
 import { Button } from "@blueprintjs/core";
 
 import OPERATOR from "assets/operators";
@@ -15,11 +16,6 @@ class Filter extends Component {
 		this.handleChangeProperty = this.handleChangeProperty.bind(this);
 		this.handleChangeValue = this.handleChangeValue.bind(this);
 		this.handleDelete = this.handleDelete.bind(this);
-
-		this.renderPropertyOptions = this.renderPropertyOptions.bind(this);
-		this.renderValueInput = this.renderValueInput.bind(this);
-		this.renderDataList = this.renderDataList.bind(this);
-		// this.renderOperatorOptions = this.renderOperatorOptions.bind(this);
 
 		this._uid = Math.random().toString(36).substr(2, 5);
 	}
@@ -120,7 +116,7 @@ class Filter extends Component {
 								className="filter-property"
 								onChange={this.handleChangeProperty}
 							>
-								{this.renderPropertyOptions()}
+								{this.renderPropertyOptions.call(this)}
 							</select>
 						</div>
 						<div className="pt-select pt-fill">
@@ -129,12 +125,12 @@ class Filter extends Component {
 								className="filter-operator"
 								onChange={this.handleChangeOperator}
 							>
-								{this.renderOperatorOptions()}
+								{this.renderOperatorOptions.call(this)}
 							</select>
 						</div>
 					</div>
-					{this.renderValueInput()}
-					{this.renderDataList()}
+					{this.renderValueInput.call(this)}
+					{this.renderDataList.call(this)}
 				</div>
 				<Button
 					className="filter-delete pt-intent-danger pt-minimal"
@@ -146,11 +142,25 @@ class Filter extends Component {
 	}
 }
 
-export const defaultFilter = {
-	property: "id",
-	operator: OPERATOR.LOWEREQUAL,
-	value: "20"
-};
+Filter.propTypes = {
+	index: PropTypes.number.isRequired,
+	columns: PropTypes.array,
+	value: PropTypes.string.isRequired,
+	max: PropTypes.number.isRequired,
+	steps: PropTypes.number.isRequired,
+	property: PropTypes.string.isRequired,
+	operator: PropTypes.number.isRequired,
+	onChange: PropTypes.func.isRequired,
+	onDelete: PropTypes.func.isRequired,
+}
+
+export function defaultFilter() {
+	return {
+		property: "id",
+		operator: OPERATOR.LOWEREQUAL,
+		value: "20"
+	};
+}
 
 export const operators = OPERATOR;
 
