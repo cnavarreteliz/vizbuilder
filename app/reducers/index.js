@@ -1,7 +1,7 @@
-import { combineReducers } from "redux";
+import dataReducer from "./data";
+import filtersReducer from "./filters";
 
-import filtersReducer from "./filtersReducer";
-
-export default combineReducers({
-	filters: filtersReducer
-});
+export default {
+	data: dataReducer,
+	filters: filtersReducer,
+};
