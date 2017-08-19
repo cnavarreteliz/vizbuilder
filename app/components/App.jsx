@@ -1,14 +1,12 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Button } from "@blueprintjs/core";
-import deepExtend from "deep-extend";
 
 import countries from "data/countries.json";
-import testdata from "data/bulk.json";
 import properties from "data/properties.json";
 import { getData } from "helpers/stats";
 
 import Filter, { defaultFilter, applyFilters } from "components/Filter";
-import Reducer, { defaultReducer, applyReducers } from "components/Reducer";
 
 import Selector from "components/Selector";
 import VizSelector from "components/VizSelector";
@@ -22,13 +20,11 @@ class App extends Component {
 		super(props);
 
 		this.state = {
-			data: testdata,
+			data: [],
 			viz: {
 				type: "treemap",
 				panel: true
 			},
-			filters: [],
-			reducers: [],
 			dimension: "occupation",
 			value: null,
 			measure: "Salary Sum",
@@ -40,33 +36,39 @@ class App extends Component {
 		this.handleChangeViz = this.handleChangeViz.bind(this);
 		this.handleChangeAxis = this.handleChangeAxis.bind(this);
 		this.handleChangeMeasure = this.handleChangeMeasure.bind(this);
-		this.handleFilterAdd = this.handleFilterAdd.bind(this);
-		this.handleFilterRemove = this.handleFilterRemove.bind(this);
-		this.handleFilterUpdate = this.handleFilterUpdate.bind(this);
-		this.renderFilters = this.renderFilters.bind(this);
 		this.getKSAdata = this.getKSAdata.bind(this);
+		this.handleFilterAdd = this.handleFilterAdd.bind(this);
+		this.handleFilterUpdate = this.handleFilterUpdate.bind(this);
+		this.handleFilterRemove = this.handleFilterRemove.bind(this);
 
-		this.getKSAdata("Employee Records", this.state.dimension, this.state.measure)
+		this.getKSAdata(
+			"Employee Records",
+			this.state.dimension,
+			this.state.measure
+		);
 
-		this.getDataOptions("Employee Records", 'occupation', 'Salary Sum').then(data =>
+		this.getDataOptions(
+			"Employee Records",
+			"occupation",
+			"Salary Sum"
+		).then(data =>
 			this.setState({
 				size_options: data
 			})
-		)
-		
+		);
 	}
 
 	async getDataOptions(cubeName, dimension, measure) {
-		let axis = await getData(cubeName, dimension, measure).promise
-		let data = axis[0].measures.map(item => item.name)
-		console.log(data)
-		return data
-	}	
+		let axis = await getData(cubeName, dimension, measure).promise;
+		let data = axis[0].measures.map(item => item.name);
+		// console.log(data);
+		return data;
+	}
 
 	getKSAdata(cubeName, dimension, measure) {
 		// Experiments
 		getData(cubeName, dimension, measure).promise.then(data => {
-			console.log(data)
+			// console.log(data);
 			const ksa_data = data[1].values.map((level1, i) => {
 				return {
 					year: 2016,
@@ -89,23 +91,27 @@ class App extends Component {
 				output.push(e.property);
 			}
 		});
-		console.log(output);
+		// console.log(output);
 		return output;
 	}
 
 	handleChangeAxis(event) {
-		console.log(event);
+		// console.log(event);
 		this.setState({
 			dimension: event.target.value
 		});
-		this.getKSAdata("Employee Records", event.target.value, this.state.measure)
+		this.getKSAdata("Employee Records", event.target.value, this.state.measure);
 	}
 
 	handleChangeMeasure(event) {
 		this.setState({
 			measure: event.target.value
 		});
-		this.getKSAdata("Employee Records", this.state.dimension, event.target.value)
+		this.getKSAdata(
+			"Employee Records",
+			this.state.dimension,
+			event.target.value
+		);
 	}
 
 	handleChangeViz(event) {
@@ -119,46 +125,36 @@ class App extends Component {
 	}
 
 	handleFilterAdd() {
-		this.setState({
-			filters: [].concat(this.state.filters, defaultFilter)
-		});
+		this.props.dispatch({ type: "FILTER_ADD", payload: defaultFilter() });
+	}
+
+	handleFilterUpdate(id, props) {
+		this.props.dispatch({ type: "FILTER_UPDATE", payload: { ...props, _id: id } });
 	}
 
 	handleFilterRemove(index) {
-		let filters = [].concat(this.state.filters);
-
-		filters.splice(index, 1);
-
-		this.setState({ filters });
+		this.props.dispatch({ type: "FILTER_DELETE", payload: index });
 	}
 
-	handleFilterUpdate(index, props) {
-		let filters = [].concat(this.state.filters);
+	renderFilters() {
+		// let columns = Object.keys(this.state.data[0]);
+		let columns = [];
 
-		filters[index] = deepExtend({}, filters[index], props);
-
-		this.setState({ filters });
-	}
-
-	renderFilters(filters, onChange, onDelete) {
-		let columns = Object.keys(this.state.data[0]);
-
-		return filters.map((filter, idx) =>
-			<Filter
+		return this.props.filters.map(function(filter, idx) {
+			return <Filter
 				key={idx}
 				columns={columns}
 				property={filter.property}
 				operator={filter.operator}
 				value={filter.value}
 				index={idx}
-				onChange={onChange}
-				onDelete={onDelete}
+				onChange={this.handleFilterUpdate}
+				onDelete={this.handleFilterRemove}
 			/>
-		);
+		}, this);
 	}
 
 	render() {
-		
 		return (
 			<div className="wrapper">
 				<div className="container">
@@ -173,11 +169,7 @@ class App extends Component {
 							size={this.state.measure}
 							dimension={this.state.dimension}
 						/>
-						{this.renderFilters(
-							this.state.filters,
-							this.handleFilterUpdate,
-							this.handleFilterRemove
-						)}
+						{this.renderFilters.call(this)}
 						<Button
 							className="pt-fill"
 							iconName="add"
@@ -190,12 +182,7 @@ class App extends Component {
 						<VizBuilder
 							type={this.state.viz.type}
 							config={{
-								data: applyReducers(
-									applyFilters(this.state.data, this.state.filters),
-									this.state.reducers,
-									this.state.dimension,
-									this.state.measure
-								),
+								data: applyFilters(this.state.data, this.props.filters || []),
 								title: "Hello",
 								size: this.state.measure,
 								groupBy: ["group", "name"]
@@ -209,4 +196,11 @@ class App extends Component {
 	}
 }
 
-export default App;
+function mapStateToProps(state) {
+	return {
+		filters: state.filters
+	};
+}
+
+export default connect(mapStateToProps)(App);
+// export default App;
