@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Button } from "@blueprintjs/core/dist/components/button/buttons.js";
 
 import properties from "data/properties.json";
+import dataCubes from "data/cubes.json";
 import { getData } from "helpers/stats";
 
 import Filter, { defaultFilter, applyFilters } from "components/Filter";
@@ -22,44 +23,63 @@ class App extends Component {
 				type: "treemap",
 				panel: true
 			},
-			dimension: "occupation",
+			dimension: "Occupation",
 			value: null,
 			measure: "Salary Sum",
-			axis_options: this.getProperty(properties, "axis"),
+			cubeName: "Employee Records",
+			axis_options: [],
+			cube_options: this.getProperty(dataCubes, "name"),
+			defaultDimensions: this.getProperty(dataCubes, "defaultDimension"),
+			//axis_options: this.getProperty(properties, "axis"),
 			size_options: []
 			//size_options: this.getProperty(properties, "size")
 		};
 
 		this.handleChangeViz = this.handleChangeViz.bind(this);
 		this.handleChangeAxis = this.handleChangeAxis.bind(this);
+		this.handleChangeCube = this.handleChangeCube.bind(this);
 		this.handleChangeMeasure = this.handleChangeMeasure.bind(this);
 		this.getKSAdata = this.getKSAdata.bind(this);
 
 		this.getKSAdata(
-			"Employee Records",
+			this.state.cubeName,
 			this.state.dimension,
 			this.state.measure
 		);
 
 		this.getDataOptions(
-			"Employee Records",
-			"occupation",
-			"Salary Sum"
+			this.state.cubeName,
+			this.state.dimension,
+			this.state.measure
 		).then(data =>
 			this.setState({
 				size_options: data
 			})
 		);
+
+		this.getDataOptions(
+			this.state.cubeName,
+			this.state.dimension,
+			this.state.measure,
+			"dimensions"
+		).then(data =>
+			this.setState({
+				axis_options: data
+			})
+		);
 	}
 
-	async getDataOptions(cubeName, dimension, measure) {
+	async getDataOptions(cubeName, dimension, measure, key = "measures") {
+		// Get promise
 		let axis = await getData(cubeName, dimension, measure).promise;
-		let data = axis[0].measures.map(item => item.name);
+		let data = axis[0][key].map(item => item.name);
+		console.log(data);
 		return data;
 	}
 
 	async getKSAdata(cubeName, dimension, measure) {
 		let data = await getData(cubeName, dimension, measure).promise;
+		console.log(data);
 
 		let ksa_data = data[1].values.map((level1, i) => ({
 			year: 2016,
@@ -72,15 +92,10 @@ class App extends Component {
 		this.props.onDataLoad(ksa_data);
 	}
 
-	getProperty(data, attribute) {
-		var output = [];
-		data.map(e => {
-			if (e.category == attribute) {
-				output.push(e.property);
-			}
+	getProperty(data, key) {
+		return data.map(e => {
+			return e[key];
 		});
-		// console.log(output);
-		return output;
 	}
 
 	handleChangeAxis(event) {
@@ -88,7 +103,20 @@ class App extends Component {
 		this.setState({
 			dimension: event.target.value
 		});
-		this.getKSAdata("Employee Records", event.target.value, this.state.measure);
+		this.getKSAdata(
+			this.state.cubeName,
+			event.target.value,
+			this.state.measure
+		);
+	}
+
+	handleChangeCube(event) {
+		this.setState({
+			cubeName: event.target.value,
+			dimension: this.state.defaultDimensions[
+				this.state.cube_options.indexOf(event.target.value)
+			]
+		});
 	}
 
 	handleChangeMeasure(event) {
@@ -96,7 +124,7 @@ class App extends Component {
 			measure: event.target.value
 		});
 		this.getKSAdata(
-			"Employee Records",
+			this.state.cubeName,
 			this.state.dimension,
 			event.target.value
 		);
@@ -137,11 +165,14 @@ class App extends Component {
 						<VizSelector
 							handleChangeViz={this.handleChangeViz}
 							handleChangeAxis={this.handleChangeAxis}
+							handleChangeCube={this.handleChangeCube}
 							handleChangeMeasure={this.handleChangeMeasure}
 							config={this.state.viz}
 							axis={this.state.axis_options}
 							size_options={this.state.size_options}
+							cube_options={this.state.cube_options}
 							size={this.state.measure}
+							cubeName={this.state.cubeName}
 							dimension={this.state.dimension}
 						/>
 						{this.renderFilters(this.props)}

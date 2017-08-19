@@ -16,13 +16,19 @@ class VizSelector extends Component {
 				<div className="panel-options">
 					<p className="title">Options</p>
 					<VizSelectorPanel
-						label="Axis"
+						label="Cube"
+						onChange={props.handleChangeCube}
+						options={props.cube_options}
+						value={props.cubeName}
+					/>
+					<VizSelectorPanel
+						label="Dimension"
 						onChange={props.handleChangeAxis}
 						options={props.axis}
 						value={props.dimension}
 					/>
 					<VizSelectorPanel
-						label="Size"
+						label="Measure"
 						onChange={props.handleChangeMeasure}
 						options={props.size_options}
 						value={props.size}

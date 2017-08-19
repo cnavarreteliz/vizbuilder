@@ -9,7 +9,7 @@ export default function VizSelectorPanel(props) {
 						value={props.value}
 						onChange={props.onChange}
 					>
-						{props.options.map(filter =>
+						{props.options.map((filter, i) =>
 							<option value={filter}>
 								{filter}
 							</option>
