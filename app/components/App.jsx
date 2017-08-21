@@ -45,6 +45,13 @@ function App(props) {
 				<VizBuilder />
 				<Timeline />
 			</div>
+			<div className="side-panel">
+				<h2>Assistant</h2>
+				Hello, I'm Liz, your data analytics assistant.
+				<hr />
+				<h5>Suggested searchs:</h5>
+				<p></p>
+			</div>
 		</div>
 	);
 }
