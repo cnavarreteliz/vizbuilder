@@ -1,24 +1,30 @@
 const initialState = {
-	viz: {
-		type: "treemap",
-		panel: true,
-		groupBy: ["group", "name"]
-	},
-	rawData: [],
-	visualization: 'treemap',
+	values: [],
+	axes: [],
+	dimensions: [],
+
 	cube: "Employee Records",
-	dimension: "occupation",
-	measure: "Salary Sum"
+	dimension: "Occupation",
+	measure: "Salary Sum",
+	year: 2016,
 };
 
 export default function(state = initialState, action) {
 	switch (action.type) {
-		case "DATA_UPDATE": {
-			return { ...state, rawData: action.payload };
+		case "DATA_YEAR_UPDATE": {
+			return { ...state, year: action.payload };
 		}
 
-		case "VIZ_UPDATE": {
-			return { ...state, viz: { ...state.viz, ...action.payload } };
+		case "DATA_UPDATE": {
+			return { ...state, values: action.payload };
+		}
+
+		case "AXIS_UPDATE": {
+			let newState = { ...state };
+			if (action.cube) newState.cube = action.cube;
+			if (action.dimension) newState.dimension = action.dimension;
+			if (action.measure) newState.measure = action.measure;
+			return newState;
 		}
 
 		default:

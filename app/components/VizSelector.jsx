@@ -1,37 +1,66 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 
+import { requestCubes, requestQuery } from "actions/mondrian";
 import VizSelectorPanel from "components/VizSelectorPanel";
 
 import icons from "data/visual-options.json";
 import "./VizSelector.css";
 
 class VizSelector extends Component {
-	getActiveTabComponent(activeTab, currentTab) {
-		return activeTab == currentTab ? "icon active" : "icon";
+	componentDidMount() {
+		const { dispatch, cube, dimension, measure } = this.props;
+		dispatch(requestCubes());
+		dispatch(requestQuery(cube, dimension, measure));
+	}
+
+	componentDidUpdate(prev) {
+		const { dispatch, cube, dimension, measure } = this.props;
+		console.log(this.props, prev)
+		if (
+			cube != prev.cube ||
+			dimension != prev.dimension ||
+			measure != prev.measure
+		) {
+			dispatch(requestQuery(cube, dimension, measure));
+		}
+	}
+
+	renderVizOptions(props) {
+		return icons.map(icon =>
+			React.createElement("img", {
+				title: icon.title,
+				className: props.type == icon.name ? "icon active" : "icon",
+				src: "/images/viz/icon-" + icon.name + ".svg",
+				onClick() {
+					props.onChangeViz(icon.name);
+				}
+			})
+		);
 	}
 
 	renderPanelOptions(props) {
-		if (props.config.panel) {
+		if (props.panel) {
 			return (
 				<div className="panel-options">
 					<p className="title">Options</p>
 					<VizSelectorPanel
 						label="Cube"
-						onChange={props.handleChangeCube}
-						options={props.cube_options}
-						value={props.cubeName}
+						onChange={props.onChangeCube}
+						options={props.opt_cube}
+						value={props.cube}
 					/>
 					<VizSelectorPanel
 						label="Dimension"
-						onChange={props.handleChangeAxis}
-						options={props.axis}
+						onChange={props.onChangeDimension}
+						options={props.opt_dimension}
 						value={props.dimension}
 					/>
 					<VizSelectorPanel
 						label="Measure"
-						onChange={props.handleChangeMeasure}
-						options={props.size_options}
-						value={props.size}
+						onChange={props.onChangeMeasure}
+						options={props.opt_measure}
+						value={props.measure}
 					/>
 				</div>
 			);
@@ -39,23 +68,12 @@ class VizSelector extends Component {
 	}
 
 	render() {
+		console.log(this.props);
 		return (
 			<div className="viz-selector-wrapper">
 				<div className="title">Visualizations</div>
 				<div className="icons">
-					{icons.map(icon =>
-						<img
-							title={icon.title}
-							className={this.getActiveTabComponent(
-								this.props.config.type,
-								icon.name
-							)}
-							src={"/images/viz/icon-" + icon.name + ".svg"}
-							onClick={() => {
-								this.props.handleChangeViz(icon);
-							}}
-						/>
-					)}
+					{this.renderVizOptions(this.props)}
 				</div>
 				{this.renderPanelOptions(this.props)}
 			</div>
@@ -63,4 +81,42 @@ class VizSelector extends Component {
 	}
 }
 
-export default VizSelector;
+function mapStateToProps(state) {
+	return {
+		cube: state.data.cube,
+		dimension: state.data.dimension,
+		measure: state.data.measure,
+		year: state.data.year,
+		
+		opt_cube: state.options.cubes,
+		opt_dimension: state.options.dimensions,
+		opt_measure: state.options.measures,
+
+		type: state.visuals.type,
+		panel: state.visuals.type != 'bubble'
+	};
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		dispatch,
+		
+		onChangeCube(cube) {
+			dispatch({ type: "AXIS_UPDATE", cube });
+		},
+
+		onChangeDimension(dimension) {
+			dispatch({ type: "AXIS_UPDATE", dimension });
+		},
+
+		onChangeMeasure(measure) {
+			dispatch({ type: "AXIS_UPDATE", measure });
+		},
+
+		onChangeViz(type) {
+			dispatch({ type: "VIZ_TYPE_UPDATE", payload: type });
+		}
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(VizSelector);

@@ -9,9 +9,10 @@ import "./VizBuilder.css";
 
 function VizBuilder(props) {
 	let config = {
-		...props.viz,
+		type: props.type,
 		data: props.data,
 		title: props.title,
+		groupBy: props.groupBy,
 		size: props.measure
 	};
 
@@ -55,8 +56,9 @@ function VizBuilder(props) {
 
 function mapStateToProps(state) {
 	return {
-		viz: state.data.viz,
-		data: applyFilters(state.data.rawData, state.filters),
+		type: state.visuals.type,
+		groupBy: state.visuals.groupBy,
+		data: applyFilters(state.data.values, state.filters),
 		measure: state.measure
 	};
 }

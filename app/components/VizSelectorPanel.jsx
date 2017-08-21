@@ -7,7 +7,7 @@ export default function VizSelectorPanel(props) {
 					<select
 						id="axis-options"
 						value={props.value}
-						onChange={props.onChange}
+						onChange={evt => props.onChange(evt.target.value)}
 					>
 						{props.options.map((filter, i) =>
 							<option value={filter}>
