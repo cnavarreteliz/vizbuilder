@@ -8,6 +8,7 @@ import VizSelector from "components/VizSelector";
 import YearSelector from "components/YearSelector";
 import VizBuilder from "components/VizBuilder";
 import Timeline from "components/Timeline";
+import Assistant from "components/Assistant";
 
 import "./App.css";
 
@@ -33,11 +34,7 @@ function App(props) {
 			<div className="side-panel">
 				<VizSelector />
 				{filters}
-				<Button
-					className="pt-fill"
-					iconName="add"
-					onClick={props.onFilterAdd}
-				>
+				<Button className="pt-fill" iconName="add" onClick={props.onFilterAdd}>
 					Add filter
 				</Button>
 			</div>
@@ -50,7 +47,7 @@ function App(props) {
 				Hello, I'm Liz, your data analytics assistant.
 				<hr />
 				<h5>Suggested searchs:</h5>
-				<p></p>
+				<Assistant />
 			</div>
 		</div>
 	);

@@ -19,6 +19,10 @@ export default function(state = initialState, action) {
 			return { ...state, values: action.payload };
 		}
 
+		case "DATA_ASSISTANT_UPDATE": {
+			return { ...state, measure: action.payload };
+		}
+
 		case "AXIS_UPDATE": {
 			let newState = { ...state };
 			if (action.cube) newState.cube = action.cube;
