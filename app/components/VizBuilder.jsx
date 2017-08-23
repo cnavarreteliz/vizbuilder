@@ -3,7 +3,7 @@ import { Treemap, Donut, Pie, BarChart } from "d3plus-react";
 import WordCloud from "react-d3-cloud";
 
 import { applyFilters } from "components/Filter";
-import Table from "components/Table";
+import TableViz from "components/TableViz";
 
 import "./VizBuilder.css";
 
@@ -30,7 +30,7 @@ function VizBuilder(props) {
 			return <BarChart config={config} />;
 
 		case "table":
-			return <Table config={config} />;
+			return <TableViz config={config} />;
 
 		case "wordcloud":
 			config.data = config.data.map(obj => ({
