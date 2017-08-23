@@ -1,57 +1,36 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import AssistantPanel from "components/AssistantPanel";
 
-class Assistant extends Component {
-
-	renderAssistantElements(props) {
-		return (
-			<div className="assistant-options">
-				<AssistantPanel
-					onClick={props.onClickAssistant}
-					measure={"Salary Average"}
-					title={"Salary Average in Occupations"}
-				/>
-
-				<AssistantPanel
-					onClick={props.onClickAssistant}
-					measure={"Record Count"}
-					title={"Record Count in Occupations"}
-				/>
-                <div onClick={
-					props.onClickAssistant("Salary Average")
-				}> Test
-                </div>
-			
-			</div>
-		);
-	}
-	render() {
-		return (
-			<div className="assistant">
-				{this.renderAssistantElements(this.props)}
-			</div>
-		);
-	}
-}
-
-function mapStateToProps(state) {
-	return {
-		dimension: state.data.dimension,
-		measure: state.data.measure,
-		cube: state.data.cube
-	};
+function Assistant(props) {
+	return (
+		<div className="panel-assistant">
+			<h2>Assistant</h2>
+			<p>Hello, I'm Liz, your data analytics assistant.</p>
+			<hr />
+			<h5>Suggested searches:</h5>
+			<ul>
+				<li>
+					<a href="#" onClick={evt => props.onClickAssistant("Salary Average")}>
+						Salary Average in Occupations
+					</a>
+				</li>
+				<li>
+					<a href="#" onClick={evt => props.onClickAssistant("Record Count")}>
+						Record Count in Occupations
+					</a>
+				</li>
+			</ul>
+		</div>
+	);
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
-		dispatch,
-
 		onClickAssistant(measure) {
-            console.log('HOALAAAAAA')
-			dispatch({ type: "DATA_ASSISTANT_UPDATE", payload: measure });
+			dispatch({ type: "AXIS_UPDATE", measure });
+			return false;
 		}
 	};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Assistant);
+export default connect(null, mapDispatchToProps)(Assistant);

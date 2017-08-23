@@ -43,10 +43,6 @@ function App(props) {
 				<Timeline />
 			</div>
 			<div className="side-panel">
-				<h2>Assistant</h2>
-				Hello, I'm Liz, your data analytics assistant.
-				<hr />
-				<h5>Suggested searchs:</h5>
 				<Assistant />
 			</div>
 		</div>
@@ -64,10 +60,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		onDataLoad(data) {
-			dispatch({ type: "DATA_UPDATE", payload: data });
-		},
-
 		onFilterAdd() {
 			dispatch({ type: "FILTER_ADD", payload: defaultFilter() });
 		},
