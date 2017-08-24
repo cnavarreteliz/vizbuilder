@@ -1,66 +1,65 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import "./Assistant.css";
 
 function Assistant(props) {
 	return (
 		<div className="panel-assistant">
-			<h2>Assistant</h2>
-			<p>Hello, I'm Ann, your data analytics assistant.</p>
+			<div className="brand">
+				<img src="images/Annie.svg" alt="" />
+			</div>
+			<h4>Hi. I'm Anni.</h4>
+			<p className="subtitle">Your data analytics assistant.</p>
 			<hr />
 			<h5>Suggested searches:</h5>
-			<ul>
-				<li>
-					<a
-						href="#"
-						onClick={evt =>
-							props.onClickAssistant(
-								"Employee Records",
-								"Occupation",
-								"Salary Average"
-							)}
-					>
-						Salary Average in Occupations
-					</a>
-				</li>
-				<li>
-					<a
-						href="#"
-						onClick={evt =>
-							props.onClickAssistant(
-								"Employee Records",
-								"Occupation",
-								"Record Count"
-							)}
-					>
-						Record Count in Occupations
-					</a>
-				</li>
-				<li>
-					<a
-						href="#"
-						onClick={evt =>
-							props.onClickAssistant(
-								"Business Records",
-								"Industry",
-								"Business Count"
-							)}
-					>
-						Number of business by Industry
-					</a>
-				</li>
-				<li>
-					<a
-						href="#"
-						onClick={evt =>
-							props.onClickAssistant(
-								"Education Local",
-								"Degree",
-								"Student Count"
-							)}
-					>
-						Number of students by Degree
-					</a>
-				</li>
+			<ul className="search-list">
+				<a
+					href="#"
+					onClick={evt =>
+						props.onClickAssistant(
+							"Employee Records",
+							"Occupation",
+							"Salary Average"
+						)}
+				>
+					<li className="search-1">Salary Average in Occupations</li>
+				</a>
+
+				<a
+					href="#"
+					onClick={evt =>
+						props.onClickAssistant(
+							"Employee Records",
+							"Occupation",
+							"Record Count"
+						)}
+				>
+					<li className="search-2">People by Occupation</li>
+				</a>
+
+				<a
+					href="#"
+					onClick={evt =>
+						props.onClickAssistant(
+							"Business Records",
+							"Industry",
+							"Business Count"
+						)}
+				>
+					<li className="search-3">Number of business by Industry</li>
+				</a>
+
+				<a
+					href="#"
+					onClick={evt =>
+						props.onClickAssistant(
+							"Education Local",
+							"Degree",
+							"Student Count"
+						)}
+				>
+					<li className="search-4">Number of students by Degree</li>
+				</a>
 			</ul>
 		</div>
 	);
