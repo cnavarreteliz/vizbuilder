@@ -5,9 +5,9 @@ import { Button } from "@blueprintjs/core";
 import OPERATOR from "assets/operators";
 import KINDS from "data/properties.json";
 
-import "./Filter.css";
+import "styles/FilterItem.css";
 
-class Filter extends Component {
+class FilterItem extends Component {
 	constructor(props) {
 		super(props);
 
@@ -80,7 +80,7 @@ class Filter extends Component {
 		};
 
 		if (attributes.type == "range") {
-			attributes.min = 0;
+			attributes.min = this.props.min;
 			attributes.max = this.props.max;
 			attributes.list = this._uid;
 		}
@@ -142,7 +142,7 @@ class Filter extends Component {
 	}
 }
 
-Filter.propTypes = {
+FilterItem.propTypes = {
 	index: PropTypes.number.isRequired,
 	columns: PropTypes.array,
 	value: PropTypes.string.isRequired,
@@ -191,4 +191,4 @@ export function applyFilters(items, filters) {
 	}, items);
 }
 
-export default Filter;
+export default FilterItem

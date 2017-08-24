@@ -32,7 +32,6 @@ body {
 		flex: 1 1;
 		display: flex;
 		flex-direction: column;
-		padding: 10px;
 		height: 100vh;
 	}
 
@@ -52,17 +51,3 @@ body {
 		}
 	}
 }
-
-.btn {
-	margin-top: 10px;
-	width: 100%;
-	background-color: var(--dark);
-	border-width: 0px;
-	border-radius: 3px;
-	padding: 5px;
-	cursor: pointer;
-	&:hover {
-		background-color: var(--dark);
-	}
-}
-

@@ -6,8 +6,8 @@ const initialState = {
 	cube: "Employee Records",
 	dimension: "Occupation",
 	measure: "Salary Sum",
-	year: 2016,
-};
+	year: 2017,
+}; 
 
 export default function(state = initialState, action) {
 	switch (action.type) {

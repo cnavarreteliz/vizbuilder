@@ -1,6 +1,6 @@
 const initialState = {
 	type: "treemap",
-	groupBy: ["group", "name"]
+	groupBy: ["group", "name"],
 };
 
 export default function(state = initialState, action) {

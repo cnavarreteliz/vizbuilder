@@ -2,10 +2,10 @@ import { connect } from "react-redux";
 import { Treemap, Donut, Pie, BarChart } from "d3plus-react";
 import WordCloud from "react-d3-cloud";
 
-import { applyFilters } from "components/Filter";
+import { applyFilters } from "components/FilterItem";
 import TableViz from "components/TableViz";
 
-import "./VizBuilder.css";
+import "styles/VizBuilder.css";
 
 function VizBuilder(props) {
 	let config = {
