@@ -1,6 +1,6 @@
 module.exports = {
     link: [
-        {rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Nunito|Open+Sans"}
+        {rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Nunito|Palanquin|Pathway+Gothic+One"}
     ],
     meta: [
         {charset: "utf-8"},
