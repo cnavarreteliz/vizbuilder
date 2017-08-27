@@ -12,9 +12,9 @@ module.exports = {
         {name: "apple-mobile-web-app-status-bar-style", content: "black"},
         {name: "apple-mobile-web-app-title", content: "VizBuilder"},
         {property: "og:title", content: "VizBuilder"},
-        {property: "og:image", content: "https://dataafrica.io/images/africa-share.jpg"},
+        // {property: "og:image", content: "https://dataafrica.io/images/africa-share.jpg"},
         {property: "og:description", content: "An experiment for Canon."},
-        {property: "fb:app_id", content: "260789081071557"}
+        // {property: "fb:app_id", content: "260789081071557"}
     ],
     title: "Viz Builder Datawheel CANON"
 };

@@ -25,6 +25,7 @@ function ChartSelector(props) {
 						value={props.axis_x}
 						onChange={evt => props.onSetAxis("x", evt.target.value)}
 					>
+						<option>Select...</option>
 						{props.properties.map(item =>
 							<option value={item}>
 								{item}
@@ -40,6 +41,7 @@ function ChartSelector(props) {
 						value={props.axis_y}
 						onChange={evt => props.onSetAxis("y", evt.target.value)}
 					>
+						<option>Select...</option>
 						{props.properties.map(item =>
 							<option value={item}>
 								{item}

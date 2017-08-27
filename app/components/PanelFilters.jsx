@@ -39,8 +39,6 @@ function FilterArea(props) {
 }
 
 function mapStateToProps(state) {
-	// TODO: get properties from state.data.values
-	// TODO: reduce min and max values for ranges
 	return {
 		show: state.data.values.length > 0,
 		dataColumns: Object.keys(state.data.values[0] || {}),

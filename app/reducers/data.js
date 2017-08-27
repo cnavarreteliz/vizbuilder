@@ -2,11 +2,6 @@ const initialState = {
 	values: [],
 	axes: [],
 	dimensions: [],
-
-	cube: "Employee Records",
-	dimension: "Occupation",
-	measure: "Salary Sum",
-	year: 2017,
 }; 
 
 export default function(state = initialState, action) {
