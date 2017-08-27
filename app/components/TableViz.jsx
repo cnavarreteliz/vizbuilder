@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import FileSaver from "file-saver";
-import "./TableViz.css";
 import { Table, Column, Cell } from "@blueprintjs/table";
 
-
+import "styles/TableViz.css";
 
 // Dinamic selector
 class TableViz extends Component {
@@ -25,12 +24,12 @@ class TableViz extends Component {
 	}
 
 	getCellData = (rowIndex, columnIndex, item) => {
-        /*const sortedRowIndex = this.state.sortedIndexMap[rowIndex];
+		/*const sortedRowIndex = this.state.sortedIndexMap[rowIndex];
         if (sortedRowIndex != null) {
             rowIndex = sortedRowIndex;
         }*/
-        return item
-    }
+		return item;
+	};
 
 	updateExtension(event) {
 		this.setState({
@@ -43,15 +42,27 @@ class TableViz extends Component {
 		const numRows = options.config.data.length;
 
 		const renderCellName = (rowIndex, columnIndex) => {
-			return <Cell>{options.config.data[rowIndex]['name']}</Cell>;
+			return (
+				<Cell>
+					{options.config.data[rowIndex]["name"]}
+				</Cell>
+			);
 		};
 
 		const renderCellValue = (rowIndex, columnIndex) => {
-			return <Cell>{options.config.data[rowIndex]['value']}</Cell>;
+			return (
+				<Cell>
+					{options.config.data[rowIndex]["value"]}
+				</Cell>
+			);
 		};
 
 		const renderCellYear = (rowIndex, columnIndex) => {
-			return <Cell>{options.config.data[rowIndex]['year']}</Cell>;
+			return (
+				<Cell>
+					{options.config.data[rowIndex]["year"]}
+				</Cell>
+			);
 		};
 
 		return (

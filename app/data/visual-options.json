@@ -1,38 +1,32 @@
 [
-    {
-        "title": "Treemap",
-        "format": "svg",
-        "name": "treemap",
-        "panel": true
-    },
-    {
-        "title": "Donut",
-        "format": "svg",
-        "name": "donut",
-        "panel": true
-    },
-    {
-        "title": "Pie",
-        "format": "svg",
-        "name": "pie",
-        "panel": true
-    },
-    {
-        "title": "Bubble",
-        "format": "svg",
-        "name": "bubble",
-        "panel": false
-    },
-    {
-        "title": "Table",
-        "format": "svg",
-        "name": "table",
-        "panel": true
-    },
-    {
-        "title": "WordClod",
-        "format": "svg",
-        "name": "wordcloud",
-        "panel": true
-    }
+	{
+		"title": "Treemap",
+		"name": "treemap",
+		"panel": true
+	},
+	{
+		"title": "Donut",
+		"name": "donut",
+		"panel": true
+	},
+	{
+		"title": "Pie",
+		"name": "pie",
+		"panel": true
+	},
+	{
+		"title": "Bubble",
+		"name": "bubble",
+		"panel": false
+	},
+	{
+		"title": "Table",
+		"name": "table",
+		"panel": true
+	},
+	{
+		"title": "Word cloud",
+		"name": "wordcloud",
+		"panel": true
+	}
 ]

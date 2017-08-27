@@ -1,4 +1,4 @@
-export default function VizSelectorPanel(props) {
+export default function InputAggregator(props) {
 	return (
 		<div className="panel">
 			<label className="pt-label">
