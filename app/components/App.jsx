@@ -5,6 +5,7 @@ import PanelChart from "components/PanelChart";
 import PanelFilters from "components/PanelFilters";
 import Timeline from "components/Timeline";
 
+import "nprogress/nprogress.css";
 import "styles/App.css";
 
 function App(props) {
@@ -19,9 +20,9 @@ function App(props) {
 				<PanelChart />
 				<Timeline />
 			</div>
-			<div className="side-panel">
+			{/* <div className="side-panel">
 				<PanelAssistant />
-			</div>
+			</div> */}
 		</div>
 	);
 }

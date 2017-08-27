@@ -5,15 +5,14 @@ import WordCloud from "react-d3-cloud";
 import { applyFilters } from "components/FilterItem";
 import TableViz from "components/TableViz";
 
-import "styles/VizBuilder.css";
+import "styles/PanelChart.css";
 
-function VizBuilder(props) {
+function PanelChart(props) {
 	let config = {
 		type: props.type,
 		data: props.data,
 		title: props.title,
-		groupBy: props.groupBy,
-		size: props.measure
+		// groupBy: props.groupBy
 	};
 
 	switch (config.type) {
@@ -43,7 +42,7 @@ function VizBuilder(props) {
 
 			return (
 				<WordCloud
-					data={data}
+					data={config.data}
 					fontSizeMapper={fontSizeMapper}
 					//rotate={rotate}
 				/>
@@ -55,12 +54,19 @@ function VizBuilder(props) {
 }
 
 function mapStateToProps(state) {
+	let props = state.visuals.axis,
+		data = state.data.values.map(item => ({
+			id: item[props.x],
+			name: item[props.x],
+			value: item[props.y]
+		}));
+	console.log(props);
+
 	return {
 		type: state.visuals.type,
 		groupBy: state.visuals.groupBy,
-		data: applyFilters(state.data.values, state.filters),
-		measure: state.measure
+		data: applyFilters(data, state.filters)
 	};
 }
 
-export default connect(mapStateToProps)(VizBuilder);
+export default connect(mapStateToProps)(PanelChart);

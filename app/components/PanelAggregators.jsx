@@ -132,7 +132,7 @@ class PanelAggregators extends Component {
 	}
 
 	renderMeasureSelector(props) {
-		let { cube, measures, onMeasureAdd } = props;
+		let { cube, measures, onMeasureChange } = props;
 
 		if (!cube.measures) return null;
 
@@ -143,7 +143,7 @@ class PanelAggregators extends Component {
 					<Switch
 						checked={measures.indexOf(ms) > -1}
 						key={ms.fullName}
-						onChange={() => onMeasureAdd(ms)}
+						onChange={evt => onMeasureChange(ms, evt.target.checked)}
 						label={ms.caption}
 					/>
 				)}
@@ -181,10 +181,6 @@ function mapStateToProps(state) {
 		drilldowns: state.aggregators.drilldowns,
 		measures: state.aggregators.measures,
 		cuts: state.aggregators.cuts,
-
-		opt_cube: state.options.cubes,
-		opt_dimension: state.options.dimensions,
-		opt_measure: state.options.measures
 	};
 }
 
@@ -212,8 +208,11 @@ function mapDispatchToProps(dispatch) {
 			dispatch({ type: "CUT_DELETE", payload: dim });
 		},
 
-		onMeasureAdd(measure) {
-			dispatch({ type: "MEASURE_ADD", payload: measure });
+		onMeasureChange(measure, checked) {
+			if (checked)
+				dispatch({ type: "MEASURE_ADD", payload: measure });
+			else
+				dispatch({ type: "MEASURE_DELETE", payload: measure });				
 		}
 	};
 }

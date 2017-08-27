@@ -1,4 +1,5 @@
 import nprogress from "nprogress";
+import { zip } from "lodash";
 import { Client as MondrianClient } from "mondrian-rest-client";
 import { CUBE_API } from "assets/consts";
 
@@ -31,45 +32,70 @@ export function requestCubes() {
 	};
 }
 
-export function requestAxisMembers(dim) {}
-
 export function buildQuery(cube, drilldowns, measures, cuts) {
 	let query = cube.query;
 
-	if (drilldowns.length === 0) return query;
+	if (drilldowns.length > 0) {
+		query = measures.reduce(function(q, ms) {
+			return q.measure(ms.name);
+		}, query);
 
-	query = measures.reduce(function(q, ms) {
-		return q.measure(ms.name);
-	}, query);
+		query = drilldowns.reduce(function(q, dd) {
+			return q.drilldown(
+				dd.hierarchy.dimension.name,
+				dd.hierarchy.name,
+				dd.name
+			);
+		}, query);
 
-	query = drilldowns.reduce(function(q, dd) {
-		return q.drilldown(dd.hierarchy.dimension.name, dd.hierarchy.name, dd.name);
-	}, query);
-
-	// query = cuts.reduce(function(q, ct) {
-	// 	return q.cut(cutExpression(ct));
-	// }, query);
+		// query = cuts.reduce(function(q, ct) {
+		// 	return q.cut(cutExpression(ct));
+		// }, query);
+	}
 
 	return query.option("nonempty", true).option("debug", true);
 }
 
 export function requestQuery(query) {
 	return function(dispatch) {
+		nprogress.done();
+		nprogress.start();
 		return query
 			? client.query(query).then(request => request.data).then(data => {
-					console.log(data)
-
 					dispatch({
 						type: "DATA_UPDATE",
-						payload: parseMembers(data.axes, data.values)
+						payload: flattenDrilldowns(data.axes, data.values)
 					});
+					nprogress.done();
 				})
-			: false;
+			: nprogress.done();
 	};
 }
 
-function parseMembers(levels, values) {
-	return [];
+function flattenDrilldowns(levels, values) {
+	var level;
+
+	levels = [].concat(levels);
+	level = levels.pop().members;
+
+	if (levels.length == 0)
+		// MEASURES
+		return [
+			values.reduce(function(all, value, index) {
+				let key = level[index].name;
+				all[key] = value;
+				return all;
+			}, {})
+		];
+	else {
+		// DRILLDOWNS
+		return zip(level, values).reduce(function(all, member) {
+			let axis = member[0],
+				value = flattenDrilldowns(levels, member[1]);
+			value.forEach(item => (item[axis.level_name] = axis.name));
+			return all.concat(value);
+		}, []);
+	}
 }
 
 export default client;

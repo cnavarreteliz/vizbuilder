@@ -27,12 +27,12 @@ function FilterArea(props) {
 		<div className="filters-wrapper">
 			<div className="pt-form-group">
 				<label className="pt-label">Filters</label>
+				<div className="filter-items">
+					{filters}
+				</div>
 				<Button className="pt-fill" iconName="add" onClick={props.onFilterAdd}>
 					Add filter
 				</Button>
-			</div>
-			<div className="filter-items">
-				{filters}
 			</div>
 		</div>
 	);
@@ -43,7 +43,7 @@ function mapStateToProps(state) {
 	// TODO: reduce min and max values for ranges
 	return {
 		show: state.data.values.length > 0,
-		dataColumns: ["year", "value", "id", "name", "group"],
+		dataColumns: Object.keys(state.data.values[0] || {}),
 		filters: state.filters,
 		ranges: state.data.values.reduce(
 			(output, item) => {
