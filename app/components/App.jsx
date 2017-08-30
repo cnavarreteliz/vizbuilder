@@ -12,11 +12,11 @@ function App(props) {
 	return (
 		<div className="container">
 			<div className="side-panel">
+				<ChartSelector />
 				<PanelAggregators />
 				<PanelFilters />
 			</div>
 			<div className="main-panel">
-				<ChartSelector />
 				<PanelChart />
 				<Timeline />
 			</div>
