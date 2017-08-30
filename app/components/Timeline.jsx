@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 function Timeline(props) {
 	return (
 		<div className="timeline">
-			<input type="range" value={props.year} onChange={props.onYearChange}/>
+			<input type="range" min="2009" max="2016" value={props.year} onChange={props.onYearChange}/>
 		</div>
 	);
 }

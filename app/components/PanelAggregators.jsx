@@ -58,7 +58,7 @@ class PanelAggregators extends Component {
 
 		return (
 			<label className="pt-label">
-				<span>Cube</span>
+				<span>Database</span>
 				<div className="pt-select">
 					<select
 						value={props.cube.name}
@@ -98,7 +98,7 @@ class PanelAggregators extends Component {
 			</Tag>
 		);
 
-		return render("Drilldown", menu, applied);
+		return render("Serie", menu, applied);
 	}
 
 	renderCutSelector(props, render) {
