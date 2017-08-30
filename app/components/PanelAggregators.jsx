@@ -38,7 +38,6 @@ class PanelAggregators extends Component {
 
 	render() {
 		let props = this.props;
-
 		return (
 			<div className="aggregators-wrapper">
 				{this.renderCubeSelector(this.props)}
@@ -176,7 +175,6 @@ class PanelAggregators extends Component {
 function mapStateToProps(state) {
 	return {
 		cube: state.cubes.current || {},
-
 		cubes: state.cubes.all,
 		drilldowns: state.aggregators.drilldowns,
 		measures: state.aggregators.measures,

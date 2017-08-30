@@ -28,7 +28,8 @@ export default function(state = initialState, action) {
 				fetching: false,
 				success: true,
 				error: null,
-				all: action.payload
+				all: action.payload,
+				current: action.payload[Math.floor(Math.random() * action.payload.length)]
 			};
 		}
 
