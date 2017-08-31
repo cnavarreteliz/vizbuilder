@@ -70,8 +70,8 @@ function mapDataChart(state, props) {
 			return state.data.values.map(item => ({
 				id: item[props.x],
 				name: item[props.x],
-				y: item[props.y]
-				//x: item[props.y]
+				y: item[props.y],
+				x: item[props.year]
 			}));
 	}
 }

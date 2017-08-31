@@ -71,6 +71,20 @@ function ChartAxis(props) {
 							</select>
 						</div>
 					</label>
+					<label className="pt-label pt-inline">
+						Year
+						<div className="pt-select">
+							<select
+								value={props.axis_year}
+								onChange={evt => props.onSetAxis("year", evt.target.value)}
+							>
+								<option>Select...</option>
+								{props.label_axis_year.map(item => (
+									<option value={item}>{item}</option>
+								))}
+							</select>
+						</div>
+					</label>
 				</div>
 			);
 	}
@@ -103,9 +117,11 @@ function mapStateToProps(state) {
 		type: state.visuals.type,
 		label_axis_x: state.aggregators.drilldowns.map(e => e.name),
 		label_axis_y: state.aggregators.measures.map(e => e.name),
+		label_axis_year: state.aggregators.drilldowns.filter(e => e.name == "Year" ),
 		properties: Object.keys(state.data.values[0] || {}),
 		axis_x: state.visuals.axis.x,
-		axis_y: state.visuals.axis.y
+		axis_y: state.visuals.axis.y,
+		axis_year: state.visuals.axis.year
 	};
 }
 
