@@ -12,9 +12,7 @@ function App(props) {
 	return (
 		<div className="container">
 			<div className="side-panel">
-				<ChartSelector />
 				<PanelAggregators />
-				<PanelFilters />
 			</div>
 			<div className="main-panel">
 				<PanelChart />
@@ -23,6 +21,10 @@ function App(props) {
 			{/* <div className="side-panel">
 				<PanelAssistant />
 			</div> */}
+			<div className="side-panel">
+				<ChartSelector />
+				<PanelFilters />
+			</div>
 		</div>
 	);
 }

@@ -1,5 +1,5 @@
 import { connect } from "react-redux";
-import { Treemap, Donut, Pie, BarChart } from "d3plus-react";
+import { Treemap, Donut, Pie, BarChart, StackedArea } from "d3plus-react";
 import WordCloud from "react-d3-cloud";
 
 import { applyFilters } from "components/FilterItem";
@@ -11,7 +11,7 @@ function PanelChart(props) {
 	let config = {
 		type: props.type,
 		data: props.data,
-		title: props.title,
+		title: props.title
 		// groupBy: props.groupBy
 	};
 
@@ -31,6 +31,9 @@ function PanelChart(props) {
 		case "table":
 			return <TableViz config={config} />;
 
+		case "bar":
+			return <BarChart config={config} />;
+
 		case "wordcloud":
 			config.data = config.data.map(obj => ({
 				text: obj.id,
@@ -47,20 +50,36 @@ function PanelChart(props) {
 					//rotate={rotate}
 				/>
 			);
-
+		case "stacked":
+			return <StackedArea config={config} />;
+		
 		default:
 			return <div />;
 	}
 }
 
+function mapDataChart(state, props) {
+	switch (state.visuals.panel) {
+		case "PANEL_TYPE_NORMAL":
+			return state.data.values.map(item => ({
+				id: item[props.x],
+				name: item[props.x],
+				value: item[props.y]
+			}));
+		case "PANEL_TYPE_2D":
+			return state.data.values.map(item => ({
+				id: item[props.x],
+				name: item[props.x],
+				y: item[props.y]
+				//x: item[props.y]
+			}));
+	}
+}
+
 function mapStateToProps(state) {
 	let props = state.visuals.axis,
-		data = state.data.values.map(item => ({
-			id: item[props.x],
-			name: item[props.x],
-			value: item[props.y]
-		}));
-	console.log(props);
+		panel = state.visuals.panel,
+		data = mapDataChart(state, props);
 
 	return {
 		type: state.visuals.type,

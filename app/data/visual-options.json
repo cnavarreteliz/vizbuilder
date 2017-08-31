@@ -2,31 +2,41 @@
 	{
 		"title": "Treemap",
 		"name": "treemap",
-		"panel": true
+		"panel": "PANEL_TYPE_NORMAL"
 	},
 	{
 		"title": "Donut",
 		"name": "donut",
-		"panel": true
+		"panel": "PANEL_TYPE_NORMAL"
 	},
 	{
 		"title": "Pie",
 		"name": "pie",
-		"panel": true
+		"panel": "PANEL_TYPE_NORMAL"
 	},
 	{
 		"title": "Bubble",
 		"name": "bubble",
-		"panel": false
+		"panel": "PANEL_TYPE_2D"
 	},
 	{
 		"title": "Table",
 		"name": "table",
-		"panel": true
+		"panel": "PANEL_TYPE_NORMAL"
 	},
 	{
 		"title": "Word cloud",
 		"name": "wordcloud",
-		"panel": true
+		"panel": "PANEL_TYPE_WORDCLOUD"
+	},
+	{
+		"title": "Bar Chart",
+		"name": "bar",
+		"panel": "PANEL_TYPE_2D"
+	},
+	{
+		"title": "Stacked Chart",
+		"name": "stacked",
+		"panel": "PANEL_TYPE_2D"
 	}
 ]
