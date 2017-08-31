@@ -5,86 +5,38 @@ import icons from "data/visual-options.json";
 
 import "styles/ChartSelector.css";
 
+function CustomSelector(name, props, axis) {
+	return (
+		<label className="pt-label pt-inline">
+			{name}
+			<div className="pt-select">
+				<select
+					value={props.axis[axis]}
+					onChange={evt => props.onSetAxis(axis, evt.target.value)}
+				>
+					<option>Select...</option>
+					{props.label_axis[axis].map(item => <option value={item}>{item}</option>)}
+				</select>
+			</div>
+		</label>
+	);
+}
+
 function ChartAxis(props) {
 	switch (props.panel) {
 		case "PANEL_TYPE_NORMAL":
 			return (
 				<div>
-					<label className="pt-label pt-inline">
-						Dimension
-						<div className="pt-select">
-							<select
-								value={props.axis_x}
-								onChange={evt => props.onSetAxis("x", evt.target.value)}
-							>
-								<option>Select...</option>
-								{props.label_axis_x.map(item => (
-									<option value={item}>{item}</option>
-								))}
-							</select>
-						</div>
-					</label>
-					<label className="pt-label pt-inline">
-						Size
-						<div className="pt-select">
-							<select
-								value={props.axis_y}
-								onChange={evt => props.onSetAxis("y", evt.target.value)}
-							>
-								<option>Select...</option>
-								{props.label_axis_y.map(item => (
-									<option value={item}>{item}</option>
-								))}
-							</select>
-						</div>
-					</label>
+					{ CustomSelector('Dimension', props, 'x') }
+					{ CustomSelector('Size', props, 'y') }
 				</div>
 			);
 		case "PANEL_TYPE_2D":
 			return (
 				<div>
-					<label className="pt-label pt-inline">
-						Axis
-						<div className="pt-select">
-							<select
-								value={props.axis_x}
-								onChange={evt => props.onSetAxis("x", evt.target.value)}
-							>
-								<option>Select...</option>
-								{props.label_axis_x.map(item => (
-									<option value={item}>{item}</option>
-								))}
-							</select>
-						</div>
-					</label>
-					<label className="pt-label pt-inline">
-						Value
-						<div className="pt-select">
-							<select
-								value={props.axis_y}
-								onChange={evt => props.onSetAxis("y", evt.target.value)}
-							>
-								<option>Select...</option>
-								{props.label_axis_y.map(item => (
-									<option value={item}>{item}</option>
-								))}
-							</select>
-						</div>
-					</label>
-					<label className="pt-label pt-inline">
-						Year
-						<div className="pt-select">
-							<select
-								value={props.axis_year}
-								onChange={evt => props.onSetAxis("year", evt.target.value)}
-							>
-								<option>Select...</option>
-								{props.label_axis_year.map(item => (
-									<option value={item}>{item}</option>
-								))}
-							</select>
-						</div>
-					</label>
+					{ CustomSelector('Axis', props, 'x') }
+					{ CustomSelector('Value', props, 'y') }
+					{ CustomSelector('Year', props, 'year') }
 				</div>
 			);
 	}
@@ -115,13 +67,17 @@ function mapStateToProps(state) {
 	return {
 		panel: state.visuals.panel,
 		type: state.visuals.type,
-		label_axis_x: state.aggregators.drilldowns.map(e => e.name),
-		label_axis_y: state.aggregators.measures.map(e => e.name),
-		label_axis_year: state.aggregators.drilldowns.filter(e => e.name == "Year" ),
+		label_axis: {
+			x: state.aggregators.drilldowns.map(e => e.name),
+			y: state.aggregators.measures.map(e => e.name),
+			year: state.aggregators.drilldowns.filter(e => e.name == "Year")
+		},
 		properties: Object.keys(state.data.values[0] || {}),
-		axis_x: state.visuals.axis.x,
-		axis_y: state.visuals.axis.y,
-		axis_year: state.visuals.axis.year
+		axis: {
+			x: state.visuals.axis.x,
+			y: state.visuals.axis.y,
+			year: state.visuals.axis.year
+		}
 	};
 }
 
