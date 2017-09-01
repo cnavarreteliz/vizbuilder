@@ -1,5 +1,9 @@
 export default function(state = [], action) {
 	switch (action.type) {
+		case "CUBES_SET": {
+			return [];
+		}
+
 		case "FILTER_ADD": {
 			/* 
 			 * @param action.payload (Object) An object to add to the filter list.
@@ -8,7 +12,10 @@ export default function(state = [], action) {
 				...action.payload,
 				_id: Math.random().toString(36).substr(2, 5)
 			};
-			return [].concat(state, newFilter);
+			if (newFilter.property && !isNaN(newFilter.operator) && !isNaN(newFilter.value))
+				return [].concat(state, newFilter);
+			else
+				return state;
 		}
 
 		case "FILTER_UPDATE": {

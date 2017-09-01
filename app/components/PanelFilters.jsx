@@ -1,7 +1,9 @@
 import { connect } from "react-redux";
 import { Button } from "@blueprintjs/core/dist/components/button/buttons.js";
 
-import Filter, { defaultFilter } from "components/FilterItem";
+import OPERATOR from "assets/operators";
+import ChartSelector from "components/ChartSelector";
+import Filter from "components/FilterItem";
 
 function FilterArea(props) {
 	if (!props.show) return null;
@@ -14,8 +16,8 @@ function FilterArea(props) {
 				property={filter.property}
 				operator={filter.operator}
 				value={filter.value}
-				min={props.ranges.min}
-				max={props.ranges.max}
+				min={props.ranges[filter.property].min}
+				max={props.ranges[filter.property].max}
 				index={filter._id}
 				onChange={props.onFilterUpdate}
 				onDelete={props.onFilterRemove}
@@ -25,12 +27,15 @@ function FilterArea(props) {
 
 	return (
 		<div className="filters-wrapper">
+			<ChartSelector />
 			<div className="pt-form-group">
 				<label className="pt-label">Filters</label>
-				<div className="filter-items">
-					{filters}
-				</div>
-				<Button className="pt-fill" iconName="add" onClick={props.onFilterAdd}>
+				<div className="filter-items">{filters}</div>
+				<Button
+					className="pt-fill"
+					iconName="add"
+					onClick={() => props.onFilterAdd(props.defaultFilter)}
+				>
 					Add filter
 				</Button>
 			</div>
@@ -39,25 +44,41 @@ function FilterArea(props) {
 }
 
 function mapStateToProps(state) {
-	return {
-		show: state.data.values.length > 0,
-		dataColumns: Object.keys(state.data.values[0] || {}),
-		filters: state.filters,
-		ranges: state.data.values.reduce(
+	let measures = state.aggregators.measures.reduce((obj, measure) => {
+		measure = measure.name;
+		obj[measure] = state.data.values.reduce(
 			(output, item) => {
-				output.min = Math.min(output.min, item.value);
-				output.max = Math.max(output.max, item.value);
+				output.min = Math.min(output.min, item[measure] * 1);
+				output.max = Math.max(output.max, item[measure] * 1);
 				return output;
 			},
 			{ min: Number.MAX_VALUE, max: Number.MIN_VALUE }
-		)
+		);
+		return obj;
+	}, {});
+
+	console.log(measures)
+
+	return {
+		show: state.data.values.length > 0,
+		dataColumns: state.aggregators.measures.map(measure => measure.name),
+		filters: state.filters,
+		defaultFilter: {
+			property: Object.keys(measures)[0],
+			operator: OPERATOR.HIGHEREQUAL,
+			value: 0
+		},
+		ranges: measures
 	};
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
-		onFilterAdd() {
-			dispatch({ type: "FILTER_ADD", payload: defaultFilter() });
+		onFilterAdd(filter) {
+			dispatch({
+				type: "FILTER_ADD",
+				payload: filter
+			});
 		},
 
 		onFilterUpdate(id, props) {

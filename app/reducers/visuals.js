@@ -3,9 +3,9 @@ const initialState = {
 	panel: "PANEL_TYPE_NORMAL",
 	groupBy: ["group", "name"],
 	axis: {
-		x: null,
-		y: null,
-		year: null
+		x: '',
+		y: '',
+		year: ''
 	}
 };
 

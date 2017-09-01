@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { Component, createElement } from "react";
 import { connect } from "react-redux";
 import {
 	Button,
@@ -11,9 +11,8 @@ import {
 } from "@blueprintjs/core";
 
 import { requestCubes, requestQuery, buildQuery } from "actions/mondrian";
-
-// import InputChecklist from "components/InputChecklist";
-// import InputSelect from "components/InputSelect";
+import InputSelect from "components/InputSelect";
+import InputSelectPopover from "components/InputSelectPopover";
 
 import "styles/PanelAggregators.css";
 
@@ -23,7 +22,7 @@ class PanelAggregators extends Component {
 	}
 
 	componentDidUpdate(prev) {
-		const { dispatch, cube, drilldowns, measures, cuts } = this.props;
+		const { cube, drilldowns, measures, cuts, error } = this.props;
 
 		if (
 			cube.name != prev.cube.name ||
@@ -32,102 +31,90 @@ class PanelAggregators extends Component {
 			cuts != prev.cuts
 		) {
 			let query = buildQuery(cube, drilldowns, measures, cuts);
-			dispatch(requestQuery(query));
+			this.props.dispatch(requestQuery(query));
 		}
+
+		if (error != prev.error)
+			alert({ message: error.message });
 	}
 
 	render() {
-		let props = this.props;
+		const props = this.props;
+
 		return (
 			<div className="aggregators-wrapper">
-				{this.renderCubeSelector(this.props)}
-				{this.renderDrilldownSelector(this.props, this.renderSelect)}
-				{this.renderCutSelector(this.props, this.renderSelect)}
-				{this.renderMeasureSelector(this.props)}
+				<InputSelect
+					title="Database"
+					options={props.cubes.map(cube => ({ label: cube.name }))}
+					value={props.cube.name}
+					onChange={evt => props.onCubeSet(evt.target.value)}
+				/>
+				{this.renderDrilldownSelector(props)}
+				{/* {this.renderCutSelector(props)} */}
+				{this.renderMeasureSelector(props)}
 			</div>
 		);
 	}
 
-	renderCubeSelector(props) {
-		let options = props.cubes.map(cube =>
-			<option value={cube.name}>
-				{cube.name}
-			</option>
-		);
-
-		return (
-			<label className="pt-label">
-				<span>Database</span>
-				<div className="pt-select">
-					<select
-						value={props.cube.name}
-						disabled={props.cubes.length == 0}
-						onChange={evt => props.onCubeSet(evt.target.value)}
-					>
-						<option>Select...</option>
-						{options}
-					</select>
-				</div>
-			</label>
-		);
-	}
-
-	renderDrilldownSelector(props, render) {
+	renderDrilldownSelector(props) {
 		let { cube, drilldowns, onDrilldownAdd, onDrilldownDelete } = props;
 
 		if (!cube.dimensions) return null;
 
-		let menu = cube.dimensions.map(dim =>
-			<MenuItem key={dim.fullName} text={dim.name}>
-				{dim.hierarchies[0].levels
-					.slice(1)
-					.map(lvl =>
-						<MenuItem
-							key={dim.fullName}
-							text={lvl.name}
-							onClick={() => onDrilldownAdd(lvl)}
-						/>
-					)}
-			</MenuItem>
-		);
+		let menu = prepareHierarchyMenu(cube.dimensions);
 
-		let applied = drilldowns.map(dim =>
+		let applied = drilldowns.map(dim => (
 			<Tag key={dim.fullName} onRemove={() => onDrilldownDelete(dim)}>
-				{dim.hierarchy.dimension.name} / {dim.name}
+				{dim.hierarchy.dimension.name == dim.name ? (
+					dim.name
+				) : (
+					dim.hierarchy.dimension.name + " > " + dim.name
+				)}
 			</Tag>
-		);
+		));
 
-		return render("Serie", menu, applied);
+		return (
+			<InputSelectPopover
+				label="Serie"
+				menu={menu}
+				active={applied}
+				onClick={onDrilldownAdd}
+			/>
+		);
 	}
 
-	renderCutSelector(props, render) {
+	renderCutSelector(props) {
 		let { cube, cuts, onCutAdd, onCutDelete } = props;
 
 		if (!cube.dimensions) return null;
 
-		let menu = cube.dimensions.map(dim =>
-			<MenuItem key={dim.fullName} text={dim.name}>
-				{dim.hierarchies[0].levels
-					.slice(1)
-					.map(lvl =>
-						<MenuItem
-							key={dim.fullName}
-							text={lvl.name}
-							onClick={evt => onCutAdd(lvl)}
-						/>
-					)}
-			</MenuItem>
-		);
+		let menu = prepareHierarchyMenu(cube.dimensions);
 
-		let applied = Object.keys(cuts).map(key => cuts[key]).map(cut =>
-			<Popover content={"ASDF"} position={Position.LEFT_TOP}>
-				<Tag key={cut.dim.fullName} onRemove={() => onCutDelete(cut.dim.fullName)}>
-					{cut.dim.hierarchy.dimension.name} / {cut.dim.name}
-				</Tag>
-			</Popover>
-		);
+		let applied = Object.keys(cuts)
+			.map(key => cuts[key])
+			.map(cut => (
+				<Popover content={"ASDF"} position={Position.LEFT_TOP}>
+					<Tag
+						key={cut.dim.fullName}
+						onRemove={() => onCutDelete(cut.dim.fullName)}
+					>
+						{cut.dim.hierarchy.dimension.name == cut.dim.name ? (
+							cut.dim.name
+						) : (
+							cut.dim.hierarchy.dimension.name + " / " + cut.dim.name
+						)}
+					</Tag>
+				</Popover>
+			));
 
-		return render("Cut", menu, applied);
+		return (
+			<InputSelectPopover
+				label="Cut"
+				menu={menu}
+				active={applied}
+				onClick={onCutAdd}
+			/>
+		);
 	}
 
 	renderMeasureSelector(props) {
@@ -138,35 +125,14 @@ class PanelAggregators extends Component {
 		return (
 			<div className="pt-form-group">
 				<label className="pt-label">Measures</label>
-				{cube.measures.map(ms =>
+				{cube.measures.map(ms => (
 					<Switch
 						checked={measures.indexOf(ms) > -1}
 						key={ms.fullName}
 						onChange={evt => onMeasureChange(ms, evt.target.checked)}
 						label={ms.caption}
 					/>
-				)}
-			</div>
-		);
-	}
-
-	renderSelect(label, menu, applied) {
-		return (
-			<div className="pt-form-group">
-				<label className="pt-label">{`${label}s`}</label>
-				<Popover
-					content={
-						<Menu>
-							{menu}
-						</Menu>
-					}
-					position={Position.RIGHT_TOP}
-				>
-					<Button className="pt-fill" iconName="add" text={`Add ${label}...`} />
-				</Popover>
-				<div className="labels">
-					{applied}
-				</div>
+				))}
 			</div>
 		);
 	}
@@ -179,6 +145,7 @@ function mapStateToProps(state) {
 		drilldowns: state.aggregators.drilldowns,
 		measures: state.aggregators.measures,
 		cuts: state.aggregators.cuts,
+		error: state.cubes.error
 	};
 }
 
@@ -207,12 +174,31 @@ function mapDispatchToProps(dispatch) {
 		},
 
 		onMeasureChange(measure, checked) {
-			if (checked)
-				dispatch({ type: "MEASURE_ADD", payload: measure });
-			else
-				dispatch({ type: "MEASURE_DELETE", payload: measure });				
+			if (checked) dispatch({ type: "MEASURE_ADD", payload: measure });
+			else dispatch({ type: "MEASURE_DELETE", payload: measure });
 		}
 	};
+}
+
+function prepareHierarchyMenu(root) {
+	return root.map(item => {
+		let label = item.name,
+			children = [];
+
+		if (item.hierarchies) children = item.hierarchies[0].levels.slice(1);
+
+		if (children.length > 1) {
+			children = prepareHierarchyMenu(children);
+		} else if (children.length == 1) {
+			item = children[0];
+			children = [];
+			if (label != item.name) label += " > " + item.name;
+		}
+
+		item._children = children;
+		item._label = label;
+		return item;
+	});
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PanelAggregators);

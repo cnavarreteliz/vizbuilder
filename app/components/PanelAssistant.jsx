@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import "./Assistant.css";
+import "styles/Assistant.css";
 
 function Assistant(props) {
 	return (

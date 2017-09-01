@@ -1,21 +1,26 @@
-import { Menu, MenuItem, MenuDivider } from "@blueprintjs/core";
-
-export default function InputSelect(props) {
-	let {cube} = props;
+function Select(props) {
+	const options = [{ label: "Select..." }].concat(props.options);
 
 	return (
-		<div className="input-wrapper input-select">
-			<label className="pt-label">
-				<span className="label-text">{label}</span>
-				<div className="pt-select">
-					<select
-						value={value}
-						onChange={evt => onChange(evt.target.value)}
-					>
-						{/* {options} */}
-					</select>
-				</div>
-			</label>
-		</div>
+		<label className="pt-label">
+			<span>
+				{props.title}
+			</span>
+			<div className="pt-select">
+				<select
+					value={props.value}
+					disabled={props.options.length == 0 || props.disabled}
+					onChange={props.onChange}
+				>
+					{options.map(opt =>
+						<option value={opt.value || opt.label}>
+							{opt.label}
+						</option>
+					)}
+				</select>
+			</div>
+		</label>
 	);
 }
+
+export default Select;

@@ -1,5 +1,5 @@
 import nprogress from "nprogress";
-import { zip } from "lodash";
+import { zip, some, every } from "lodash";
 import { Client as MondrianClient } from "mondrian-rest-client";
 import { CUBE_API } from "assets/consts";
 
@@ -59,24 +59,40 @@ export function buildQuery(cube, drilldowns, measures, cuts) {
 export function requestQuery(query) {
 	return function(dispatch) {
 		nprogress.done();
+
+		if (!query) return;
+
 		nprogress.start();
-		return query
-			? client.query(query).then(request => request.data).then(data => {
-					dispatch({
-						type: "DATA_UPDATE",
+		dispatch({ type: "DATA_FETCH" });
+
+		let regex = RegExp("#?null$", "i");
+
+		client
+			.query(query)
+			.then(
+				request => {
+					const data = request.data;
+					return dispatch({
+						type: "DATA_FETCH_SUCCESS",
 						payload: flattenDrilldowns(data.axes, data.values)
 					});
-					nprogress.done();
-				})
-			: nprogress.done();
+				},
+				error => {
+					return dispatch({
+						type: "DATA_FETCH_ERROR",
+						payload: error
+					});
+				}
+			)
+			.then(() => {
+				nprogress.done();
+			});
 	};
 }
 
 function flattenDrilldowns(levels, values) {
-	var level;
-
 	levels = [].concat(levels);
-	level = levels.pop().members;
+	var level = levels.pop().members;
 
 	if (levels.length == 0)
 		// MEASURES
@@ -87,7 +103,7 @@ function flattenDrilldowns(levels, values) {
 				return all;
 			}, {})
 		];
-	else {
+	else
 		// DRILLDOWNS
 		return zip(level, values).reduce(function(all, member) {
 			let axis = member[0],
@@ -95,7 +111,6 @@ function flattenDrilldowns(levels, values) {
 			value.forEach(item => (item[axis.level_name] = axis.name));
 			return all.concat(value);
 		}, []);
-	}
 }
 
 export default client;

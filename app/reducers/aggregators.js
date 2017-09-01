@@ -1,17 +1,13 @@
 const initialState = {
 	measures: [],
 	drilldowns: [],
-	cuts: {}
+	cuts: []
 };
 
 export default function(state = initialState, action) {
 	switch (action.type) {
 		case "CUBES_SET": {
-			return {
-				measures: [],
-				drilldowns: [],
-				cuts: []
-			};
+			return initialState;
 		}
 
 		case "DRILLDOWN_ADD": {

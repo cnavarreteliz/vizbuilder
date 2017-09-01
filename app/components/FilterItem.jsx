@@ -154,15 +154,6 @@ FilterItem.propTypes = {
 	onDelete: PropTypes.func.isRequired,
 }
 
-export function defaultFilter() {
-	return {
-		property: "id",
-		operator: OPERATOR.LOWEREQUAL,
-		value: "20"
-	};
-}
-
-export const operators = OPERATOR;
 
 export function applyFilters(items, filters) {
 	return filters.reduce((output, filter) => {

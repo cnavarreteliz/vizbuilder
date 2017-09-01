@@ -58,16 +58,16 @@ function PanelChart(props) {
 	}
 }
 
-function mapDataChart(state, props) {
-	switch (state.visuals.panel) {
+function mapDataChart(data, panel, props) {
+	switch (panel) {
 		case "PANEL_TYPE_NORMAL":
-			return state.data.values.map(item => ({
+			return data.map(item => ({
 				id: item[props.x],
 				name: item[props.x],
 				value: item[props.y]
 			}));
 		case "PANEL_TYPE_2D":
-			return state.data.values.map(item => ({
+			return data.map(item => ({
 				id: item[props.x],
 				name: item[props.x],
 				y: item[props.y],
@@ -79,12 +79,12 @@ function mapDataChart(state, props) {
 function mapStateToProps(state) {
 	let props = state.visuals.axis,
 		panel = state.visuals.panel,
-		data = mapDataChart(state, props);
+		data = applyFilters(state.data.values, state.filters);
 
 	return {
 		type: state.visuals.type,
 		groupBy: state.visuals.groupBy,
-		data: applyFilters(data, state.filters)
+		data: mapDataChart(data, panel, props)
 	};
 }
 

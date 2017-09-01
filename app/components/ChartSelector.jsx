@@ -5,17 +5,18 @@ import icons from "data/visual-options.json";
 
 import "styles/ChartSelector.css";
 
-function CustomSelector(name, props, axis) {
+function CustomSelector(props) {
 	return (
 		<label className="pt-label pt-inline">
-			{name}
+			{props.name}
 			<div className="pt-select">
-				<select
-					value={props.axis[axis]}
-					onChange={evt => props.onSetAxis(axis, evt.target.value)}
-				>
+				<select value={props.value} onChange={props.onChange}>
 					<option>Select...</option>
-					{props.label_axis[axis].map(item => <option value={item}>{item}</option>)}
+					{props.options.map(item =>
+						<option value={item}>
+							{item}
+						</option>
+					)}
 				</select>
 			</div>
 		</label>
@@ -27,16 +28,41 @@ function ChartAxis(props) {
 		case "PANEL_TYPE_NORMAL":
 			return (
 				<div>
-					{ CustomSelector('Dimension', props, 'x') }
-					{ CustomSelector('Size', props, 'y') }
+					<CustomSelector
+						name="Dimension"
+						options={props.x.labels}
+						value={props.x.value}
+						onChange={evt => props.onSetAxis("x", evt.target.value)}
+					/>
+					<CustomSelector
+						name="Size"
+						options={props.y.labels}
+						value={props.y.value}
+						onChange={evt => props.onSetAxis("y", evt.target.value)}
+					/>
 				</div>
 			);
 		case "PANEL_TYPE_2D":
 			return (
 				<div>
-					{ CustomSelector('Axis', props, 'x') }
-					{ CustomSelector('Value', props, 'y') }
-					{ CustomSelector('Year', props, 'year') }
+					<CustomSelector
+						name="Axis"
+						options={props.x.labels}
+						value={props.x.value}
+						onChange={evt => props.onSetAxis("x", evt.target.value)}
+					/>
+					<CustomSelector
+						name="Value"
+						options={props.y.labels}
+						value={props.y.value}
+						onChange={evt => props.onSetAxis("y", evt.target.value)}
+					/>
+					<CustomSelector
+						name="Year"
+						options={props.year.labels}
+						value={props.year.value}
+						onChange={evt => props.onSetAxis("year", evt.target.value)}
+					/>
 				</div>
 			);
 	}
@@ -45,7 +71,9 @@ function ChartAxis(props) {
 function ChartSelector(props) {
 	return (
 		<div className="chartoptions-wrapper">
-			<div className="title">{props.type}</div>
+			<div className="title">
+				{props.type}
+			</div>
 			<div className="icons">
 				{icons.map(icon =>
 					React.createElement("img", {
@@ -67,16 +95,20 @@ function mapStateToProps(state) {
 	return {
 		panel: state.visuals.panel,
 		type: state.visuals.type,
-		label_axis: {
-			x: state.aggregators.drilldowns.map(e => e.name),
-			y: state.aggregators.measures.map(e => e.name),
-			year: state.aggregators.drilldowns.filter(e => e.name == "Year")
+
+		x: {
+			labels: state.aggregators.drilldowns.map(e => e.name),
+			value: state.visuals.axis.x
 		},
-		properties: Object.keys(state.data.values[0] || {}),
-		axis: {
-			x: state.visuals.axis.x,
-			y: state.visuals.axis.y,
-			year: state.visuals.axis.year
+
+		y: {
+			labels: state.aggregators.measures.map(e => e.name),
+			value: state.visuals.axis.y
+		},
+
+		year: {
+			labels: state.aggregators.drilldowns.filter(e => e.name == "Year"),
+			value: state.visuals.axis.year
 		}
 	};
 }

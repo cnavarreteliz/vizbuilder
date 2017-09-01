@@ -1,16 +1,25 @@
 import { connect } from "react-redux";
 
+import { Slider } from "@blueprintjs/core";
+
 function Timeline(props) {
+	if (isNaN(props.year)) return null;
+
 	return (
 		<div className="timeline">
-			<input type="range" min="2009" max="2016" value={props.year} onChange={props.onYearChange}/>
+			<Slider
+				min={2009}
+				max={2016}
+				value={props.year}
+				onChange={props.onYearChange}
+			/>
 		</div>
 	);
 }
 
 function mapStateToProps(state) {
 	return {
-		year: state.year
+		year: state.visuals.axis.year * 1
 	};
 }
 

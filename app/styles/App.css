@@ -10,6 +10,7 @@ html {
 body {
 	background-color: #E0E0E0;
 	font-family: 'Palanquin', sans-serif;
+	user-select: none;
 }
 
 #app {

@@ -1,17 +1,16 @@
 .aggregators-wrapper {
-    margin-bottom: 10px;
+	margin-bottom: 10px;
 
 	& .labels {
-        margin: 0 0 5px;
+		margin: 0 0 5px;
 
-        &:empty {
-            display: none;
-        }
+		&:empty {
+			display: none;
+		}
 
-        & .pt-tag {
-            margin: 5px 5px 0 0;
-            cursor: default;
-            user-select: none;
-        }
-    }
+		& .pt-tag {
+			margin: 5px 5px 0 0;
+			cursor: default;
+		}
+	}
 }
