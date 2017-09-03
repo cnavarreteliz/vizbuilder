@@ -12,11 +12,7 @@ function CustomSelector(props) {
 			<div className="pt-select">
 				<select value={props.value} onChange={props.onChange}>
 					<option>Select...</option>
-					{props.options.map(item =>
-						<option value={item}>
-							{item}
-						</option>
-					)}
+					{props.options.map(item => <option value={item}>{item}</option>)}
 				</select>
 			</div>
 		</label>
@@ -24,6 +20,7 @@ function CustomSelector(props) {
 }
 
 function ChartAxis(props) {
+	console.log(props.year.labels);
 	switch (props.panel) {
 		case "PANEL_TYPE_NORMAL":
 			return (
@@ -71,9 +68,7 @@ function ChartAxis(props) {
 function ChartSelector(props) {
 	return (
 		<div className="chartoptions-wrapper">
-			<div className="title">
-				{props.type}
-			</div>
+			<div className="title">{props.type}</div>
 			<div className="icons">
 				{icons.map(icon =>
 					React.createElement("img", {
@@ -91,6 +86,19 @@ function ChartSelector(props) {
 	);
 }
 
+function getMeasures(data) {
+	return data
+		.map(e => e.name)
+		.filter(e => e.includes("Sum") || e.includes("Count"));
+}
+
+// Detect Time Dimension in Series
+function TimeDimensions(data) {
+	return data
+		.filter(e => e.dimensionType == 1)
+		.map(e => e.name)
+}
+
 function mapStateToProps(state) {
 	return {
 		panel: state.visuals.panel,
@@ -102,12 +110,13 @@ function mapStateToProps(state) {
 		},
 
 		y: {
-			labels: state.aggregators.measures.map(e => e.name),
+			//labels: state.aggregators.measures.map(e => e.name),
+			labels: getMeasures(state.cubes.current.measures),
 			value: state.visuals.axis.y
 		},
 
 		year: {
-			labels: state.aggregators.drilldowns.filter(e => e.name == "Year"),
+			labels: TimeDimensions(state.cubes.current.dimensions),
 			value: state.visuals.axis.year
 		}
 	};
