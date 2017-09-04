@@ -7,7 +7,7 @@ import Filter from "components/FilterItem";
 
 function FilterArea(props) {
 	if (!props.show) return null;
-
+	/*
 	let filters = props.filters.map(function(filter) {
 		return (
 			<Filter
@@ -24,27 +24,27 @@ function FilterArea(props) {
 			/>
 		);
 	});
-
+	*/
 	return (
 		<div className="filters-wrapper">
 			<ChartSelector />
 			<div className="pt-form-group">
 				<label className="pt-label">Filters</label>
-				<div className="filter-items">{filters}</div>
-				<Button
+				<div className="filter-items">{ /*filters */}</div>
+				{/*<Button
 					className="pt-fill"
 					iconName="add"
 					onClick={() => props.onFilterAdd(props.defaultFilter)}
 				>
 					Add filter
-				</Button>
+				</Button>*/}
 			</div>
 		</div>
 	);
 }
 
 function mapStateToProps(state) {
-	let measures = state.aggregators.measures.reduce((obj, measure) => {
+	/*let measures = state.aggregators.measures.reduce((obj, measure) => {
 		measure = measure.name;
 		obj[measure] = state.data.values.reduce(
 			(output, item) => {
@@ -55,20 +55,18 @@ function mapStateToProps(state) {
 			{ min: Number.MAX_VALUE, max: Number.MIN_VALUE }
 		);
 		return obj;
-	}, {});
-
-	console.log(measures)
+	}, {});*/
 
 	return {
 		show: state.data.values.length > 0,
-		dataColumns: state.aggregators.measures.map(measure => measure.name),
+		//dataColumns: state.aggregators.measures.map(measure => measure.name),
 		filters: state.filters,
 		defaultFilter: {
-			property: Object.keys(measures)[0],
+			//property: Object.keys(measures)[0],
 			operator: OPERATOR.HIGHEREQUAL,
 			value: 0
 		},
-		ranges: measures
+		//ranges: measures
 	};
 }
 

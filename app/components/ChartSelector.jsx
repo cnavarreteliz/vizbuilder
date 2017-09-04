@@ -20,7 +20,6 @@ function CustomSelector(props) {
 }
 
 function ChartAxis(props) {
-	console.log(props.year.labels);
 	switch (props.panel) {
 		case "PANEL_TYPE_NORMAL":
 			return (
@@ -80,9 +79,36 @@ function ChartSelector(props) {
 						}
 					})
 				)}
-				{ChartAxis(props)}
+				{/* Custom search */}
+				<div>
+					Show me
+					<SmartSelector
+						options={props.ninput}
+						value={props.x.value}
+						onChange={evt => props.onSearchChange(evt.target.value)}
+					/>
+				</div>
+				{/*{ChartAxis(props)}*/}
 			</div>
 		</div>
+	);
+}
+
+function SmartSelector(props) {
+	return (
+		<label className="pt-label pt-inline">
+			{props.name}
+			<div className="pt-select">
+				<select onChange={props.onChange}>
+					<option>Select...</option>
+					{props.options.map(item => (
+						<option value={ item.dimension }>
+							{item.name}
+						</option>
+					))}
+				</select>
+			</div>
+		</label>
 	);
 }
 
@@ -94,24 +120,43 @@ function getMeasures(data) {
 
 // Detect Time Dimension in Series
 function TimeDimensions(data) {
-	return data
-		.filter(e => e.dimensionType == 1)
-		.map(e => e.name)
+	return data.filter(e => e.dimensionType == 1).map(e => e.name);
+}
+
+function naturalInput(dimensions, measures, cube) {
+	let data = [];
+	dimensions.filter(dm => dm.dimensionType == 0).forEach(dm => {
+		measures.forEach(ms => {
+			data.push({
+				name: ms + " by " + dm.name + " in " + cube,
+				_children: dm._children ? dm._children.map(e => e.name) : [],
+				measure: ms,
+				dimension: dm.name,
+				cube: cube
+			});
+		});
+	});
+	return data;
 }
 
 function mapStateToProps(state) {
 	return {
 		panel: state.visuals.panel,
 		type: state.visuals.type,
+		ninput: naturalInput(
+			state.cubes.current.dimensions,
+			getMeasures(state.cubes.current.measures),
+			state.cubes.current.name
+		),
 
 		x: {
-			labels: state.aggregators.drilldowns.map(e => e.name),
+			//labels: state.aggregators.drilldowns.map(e => e.name),
 			value: state.visuals.axis.x
 		},
 
 		y: {
 			//labels: state.aggregators.measures.map(e => e.name),
-			labels: getMeasures(state.cubes.current.measures),
+			//labels: getMeasures(state.cubes.current.measures),
 			value: state.visuals.axis.y
 		},
 
@@ -126,6 +171,14 @@ function mapDispatchToProps(dispatch) {
 	return {
 		onChangeViz(type, panel) {
 			dispatch({ type: "VIZ_TYPE_UPDATE", payload: type, panel: panel });
+		},
+
+		onSearchChange(data) {
+			console.log(data)
+			dispatch({ type: "DATA_SET", measure: "Salary Sum", dimension: data });
+			this.onSetAxis("x", data)
+			this.onSetAxis("y", "Salary Sum")
+			//dispatch({ type: "VIZ_FULL_UPDATE", measure: measure });
 		},
 
 		onSetAxis(axis, property) {

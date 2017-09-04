@@ -49,9 +49,9 @@ class PanelAggregators extends Component {
 					value={props.cube.name}
 					onChange={evt => props.onCubeSet(evt.target.value)}
 				/>
-				{this.renderDrilldownSelector(props)}
+				{/* {this.renderDrilldownSelector(props)} */}
 				{/* {this.renderCutSelector(props)} */}
-				{this.renderMeasureSelector(props)}
+				{/* {this.renderMeasureSelector(props)} */}
 			</div>
 		);
 	}

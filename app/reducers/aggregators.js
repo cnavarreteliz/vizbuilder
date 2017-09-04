@@ -6,6 +6,12 @@ const initialState = {
 
 export default function(state = initialState, action) {
 	switch (action.type) {
+		case "DATA_SET": {
+			const ms = action.measure,
+				dd = action.dimension
+			return { ...state, drilldowns: dd, measures: ms}
+		}
+
 		case "CUBES_SET": {
 			return initialState;
 		}
