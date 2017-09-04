@@ -114,8 +114,7 @@ function SmartSelector(props) {
 
 function getMeasures(data) {
 	return data
-		.map(e => e.name)
-		.filter(e => e.includes("Sum") || e.includes("Count"));
+		.filter(e => e.name.includes("Salary Sum"));
 }
 
 // Detect Time Dimension in Series
@@ -128,14 +127,15 @@ function naturalInput(dimensions, measures, cube) {
 	dimensions.filter(dm => dm.dimensionType == 0).forEach(dm => {
 		measures.forEach(ms => {
 			data.push({
-				name: ms + " by " + dm.name + " in " + cube,
+				name: ms.name + " by " + dm.name + " in " + cube,
 				_children: dm._children ? dm._children.map(e => e.name) : [],
 				measure: ms,
-				dimension: dm.name,
+				dimension: dm,
 				cube: cube
 			});
 		});
 	});
+
 	return data;
 }
 
@@ -174,9 +174,9 @@ function mapDispatchToProps(dispatch) {
 		},
 
 		onSearchChange(data) {
-			console.log(data)
-			dispatch({ type: "DATA_SET", measure: "Salary Sum", dimension: data });
-			this.onSetAxis("x", data)
+			
+			dispatch({ type: "DATA_SET", measure: "Salary Sum", dimension: {data} });
+			this.onSetAxis("x", "Gender")
 			this.onSetAxis("y", "Salary Sum")
 			//dispatch({ type: "VIZ_FULL_UPDATE", measure: measure });
 		},
