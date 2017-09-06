@@ -3,23 +3,9 @@ import Select from "react-select";
 import { connect } from "react-redux";
 
 import icons from "data/visual-options.json";
-import "react-select/dist/react-select.css";
+import CustomSelector from 'components/InputSelect';
 
 import "styles/ChartSelector.css";
-
-function CustomSelector(props) {
-	return (
-		<label className="pt-label pt-inline">
-			<div className="title">{props.name}</div>
-			<div className="pt-select">
-				<select value={props.value} onChange={props.onChange}>
-					<option>Select...</option>
-					{props.options.map(item => <option value={item}>{item}</option>)}
-				</select>
-			</div>
-		</label>
-	);
-}
 
 function ChartAxis(props) {
 	switch (props.panel) {
@@ -27,13 +13,13 @@ function ChartAxis(props) {
 			return (
 				<div>
 					<CustomSelector
-						name="Dimension"
+						title="Dimension"
 						options={props.x.labels}
 						value={props.x.value}
 						onChange={evt => props.onSetAxis("x", evt.target.value)}
 					/>
 					<CustomSelector
-						name="Size"
+						title="Size"
 						options={props.y.labels}
 						value={props.y.value}
 						onChange={evt => props.onSetAxis("y", evt.target.value)}
@@ -44,19 +30,19 @@ function ChartAxis(props) {
 			return (
 				<div>
 					<CustomSelector
-						name="Axis"
+						title="Axis"
 						options={props.x.labels}
 						value={props.x.value}
 						onChange={evt => props.onSetAxis("x", evt.target.value)}
 					/>
 					<CustomSelector
-						name="Value"
+						title="Value"
 						options={props.y.labels}
 						value={props.y.value}
 						onChange={evt => props.onSetAxis("y", evt.target.value)}
 					/>
 					<CustomSelector
-						name="Year"
+						title="Year"
 						options={props.year.labels}
 						value={props.year.value}
 						onChange={evt => props.onSetAxis("year", evt.target.value)}
