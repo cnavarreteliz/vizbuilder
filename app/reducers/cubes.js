@@ -29,7 +29,7 @@ export default function(state = initialState, action) {
 				success: true,
 				error: null,
 				all: action.payload,
-				current: action.payload[5]
+				current: action.payload[3]
 				//current: action.payload[Math.floor(Math.random() * action.payload.length)]
 			};
 		}

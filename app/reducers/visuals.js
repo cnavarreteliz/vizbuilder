@@ -20,7 +20,7 @@ export default function(state = initialState, action) {
 		}
 
 		case "VIZ_FULL_UPDATE": {
-			return {...state, axis: {...state.axis, y: action.measure } };
+			return {...state, axis: {...state.axis, x: action.dimension, y: action.measure } };
 		}
 
 		default:

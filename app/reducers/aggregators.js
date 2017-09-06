@@ -7,11 +7,10 @@ const initialState = {
 export default function(state = initialState, action) {
 	switch (action.type) {
 		case "DATA_SET": {
-			let ms = [].concat(state.measures, action.payload);
-			ms.sort((a, b) => a.name.localeCompare(b.name));
-			
-			let dd = [].concat(state.drilldowns, action.payload);
-			dd.sort((a, b) => a.fullName.localeCompare(b.fullName));
+			let ms = [action.payload.measure];
+			//ms.sort((a, b) => a.name.localeCompare(b.name));
+			let dd = [action.payload.dimension];
+			//dd.sort((a, b) => a.fullName.localeCompare(b.fullName));
 			return { ...state, drilldowns: dd, measures: ms}
 		}
 

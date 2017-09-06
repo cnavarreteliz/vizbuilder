@@ -1,0 +1,19 @@
+.appearance-wrapper {
+    & .icon {
+		margin-right: 5px;
+		padding: 5px;
+		height: 50px;
+		width: 50px;
+
+		border-radius: 3px;
+		cursor: pointer;
+
+		&:hover {
+			background-color: #e3f2fd;
+		}
+
+		&.active {
+			background-color: #e8eaf6;
+		}
+	}
+}

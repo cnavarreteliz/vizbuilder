@@ -1,5 +1,7 @@
 import { Component, createElement } from "react";
 import { connect } from "react-redux";
+import PanelFilters from "components/PanelFilters";
+
 import {
 	Button,
 	Menu,
@@ -24,6 +26,9 @@ class PanelAggregators extends Component {
 	componentDidUpdate(prev) {
 		const { cube, drilldowns, measures, cuts, error } = this.props;
 
+		console.log(drilldowns)
+		console.log(measures)
+
 		if (
 			cube.name != prev.cube.name ||
 			drilldowns != prev.drilldowns ||
@@ -43,15 +48,16 @@ class PanelAggregators extends Component {
 
 		return (
 			<div className="aggregators-wrapper">
-				<InputSelect
+				{/*<InputSelect
 					title="Database"
 					options={props.cubes.map(cube => ({ label: cube.name }))}
 					value={props.cube.name}
 					onChange={evt => props.onCubeSet(evt.target.value)}
-				/>
-				{/* {this.renderDrilldownSelector(props)} */}
+				/>*/}
+				{/*{this.renderDrilldownSelector(props)}*/}
 				{/* {this.renderCutSelector(props)} */}
 				{/* {this.renderMeasureSelector(props)} */}
+				<PanelFilters />
 			</div>
 		);
 	}
@@ -158,6 +164,7 @@ function mapDispatchToProps(dispatch) {
 		},
 
 		onDrilldownAdd(dim) {
+			console.log(dim)
 			dispatch({ type: "DRILLDOWN_ADD", payload: dim });
 		},
 

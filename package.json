@@ -19,5 +19,8 @@
     "url-loader": "^0.5.9",
     "@blueprintjs/core": "^1.25.1",
     "@blueprintjs/table": "^1.22.0"
+  },
+  "dependencies": {
+    "react-select": "^1.0.0-rc.5"
   }
 }
