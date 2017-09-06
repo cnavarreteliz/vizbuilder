@@ -6,6 +6,7 @@ import icons from "data/visual-options.json";
 import CustomSelector from 'components/InputSelect';
 
 import "styles/ChartSelector.css";
+import 'react-select/dist/react-select.css';
 
 function ChartAxis(props) {
 	switch (props.panel) {
