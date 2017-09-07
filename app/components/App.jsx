@@ -16,7 +16,6 @@ function App(props) {
 	return (
 		<div className="container">
 			<div className="side-panel">
-				
 				<Tabs2>
 					<Tab2 id="fil" title="Options" panel={<PanelAggregators />} />
 					<Tab2 id="chr" title="Appearance" panel={<PanelAppearance />} />

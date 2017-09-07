@@ -3,8 +3,68 @@ import Select from "react-select";
 import { connect } from "react-redux";
 
 import icons from "data/visual-options.json";
+import CustomSelector from "components/InputSelect";
+import { prepareHierarchy } from "helpers/prepareHierarchy";
 
 import "styles/PanelAppearance.css";
+import "react-select/dist/react-select.css";
+
+function ChartAxis(props) {
+	const { onSetTimeAxis } = props;
+	console.log(props.year.value.length > 0 ? (
+		prepareSelector(props.year.labels).filter(
+			e => e.label == props.year.value
+		)[0].value
+	) : null);
+	switch (props.panel) {
+		case "PANEL_TYPE_NORMAL":
+			return (
+				<div>
+					<CustomSelector
+						title="Dimension"
+						options={props.x.labels}
+						value={props.x.value}
+						onChange={evt => props.onSetAxis("x", evt.target.value)}
+					/>
+					<CustomSelector
+						title="Size"
+						options={props.y.labels}
+						value={props.y.value}
+						onChange={evt => props.onSetAxis("y", evt.target.value)}
+					/>
+				</div>
+			);
+		case "PANEL_TYPE_2D":
+			return (
+				<div>
+					<CustomSelector
+						title="Axis"
+						options={props.x.labels}
+						value={props.x.value}
+						onChange={evt => props.onSetAxis("x", evt.target.value)}
+					/>
+					<CustomSelector
+						title="Value"
+						options={props.y.labels}
+						value={props.y.value}
+						onChange={evt => props.onSetAxis("y", evt.target.value)}
+					/>
+					<Select
+						options={prepareSelector(props.year.labels)}
+						selectValue={
+							props.year.value.length > 0 ? (
+								prepareSelector(props.year.labels).filter(
+									e => e.label == props.year.value
+								)[0].value
+							) : null
+						}
+						placeholder="Time Dimension"
+						onChange={onSetTimeAxis}
+					/>
+				</div>
+			);
+	}
+}
 
 function PanelAppearance(props) {
 	return (
@@ -23,14 +83,47 @@ function PanelAppearance(props) {
 					})
 				)}
 			</div>
+			{ChartAxis(props)}
 		</div>
 	);
+}
+
+function prepareSelector(obj) {
+	return obj.map(e => {
+		return {
+			label: e.name,
+			value: e
+		};
+	});
+}
+
+// Detect Time Dimension in Series
+function timeDimensions(obj) {
+	return prepareHierarchy(obj.filter(e => e.dimensionType == 1));
 }
 
 function mapStateToProps(state) {
 	return {
 		panel: state.visuals.panel,
-		type: state.visuals.type
+		type: state.visuals.type,
+
+		x: {
+			labels: state.aggregators.drilldowns,
+			value: state.visuals.axis.x
+		},
+
+		y: {
+			labels: state.aggregators.measures,
+			value: state.visuals.axis.y
+		},
+
+		year: {
+			labels:
+				state.cubes.current != null
+					? timeDimensions(state.cubes.current.dimensions)
+					: "",
+			value: state.visuals.axis.year
+		}
 	};
 }
 
@@ -38,6 +131,15 @@ function mapDispatchToProps(dispatch) {
 	return {
 		onChangeViz(type, panel) {
 			dispatch({ type: "VIZ_TYPE_UPDATE", payload: type, panel: panel });
+		},
+
+		onSetTimeAxis(property) {
+			dispatch({ type: "DRILLDOWN_ADD", payload: property.value });
+			dispatch({
+				type: "VIZ_AXIS_UPDATE",
+				axis: "year",
+				payload: property.label
+			});
 		}
 	};
 }

@@ -3,55 +3,9 @@ import Select from "react-select";
 import { connect } from "react-redux";
 
 import icons from "data/visual-options.json";
-import CustomSelector from 'components/InputSelect';
 
-import "styles/ChartSelector.css";
 import 'react-select/dist/react-select.css';
-
-function ChartAxis(props) {
-	switch (props.panel) {
-		case "PANEL_TYPE_NORMAL":
-			return (
-				<div>
-					<CustomSelector
-						title="Dimension"
-						options={props.x.labels}
-						value={props.x.value}
-						onChange={evt => props.onSetAxis("x", evt.target.value)}
-					/>
-					<CustomSelector
-						title="Size"
-						options={props.y.labels}
-						value={props.y.value}
-						onChange={evt => props.onSetAxis("y", evt.target.value)}
-					/>
-				</div>
-			);
-		case "PANEL_TYPE_2D":
-			return (
-				<div>
-					<CustomSelector
-						title="Axis"
-						options={props.x.labels}
-						value={props.x.value}
-						onChange={evt => props.onSetAxis("x", evt.target.value)}
-					/>
-					<CustomSelector
-						title="Value"
-						options={props.y.labels}
-						value={props.y.value}
-						onChange={evt => props.onSetAxis("y", evt.target.value)}
-					/>
-					<CustomSelector
-						title="Year"
-						options={props.year.labels}
-						value={props.year.value}
-						onChange={evt => props.onSetAxis("year", evt.target.value)}
-					/>
-				</div>
-			);
-	}
-}
+import "styles/ChartSelector.css";
 
 function ChartSelector(props) {
 	let { onSearchChange } = props;
@@ -60,14 +14,12 @@ function ChartSelector(props) {
 			<div>
 				<div className="title">Show me ...</div>
 				<Select
-					name="form-field-name"
 					options={props.ninput}
 					value={props.x.va}
 					placeholder="Search any dimension/measure"
 					onChange={onSearchChange}
 				/>
 			</div>
-			{/*{ChartAxis(props)}*/}
 		</div>
 	);
 }
@@ -189,7 +141,6 @@ function mapDispatchToProps(dispatch) {
 		},
 
 		onSearchChange(data) {
-			console.log(data.value.measure);
 			dispatch({
 				type: "DATA_SET",
 				payload: {
@@ -197,8 +148,6 @@ function mapDispatchToProps(dispatch) {
 					dimension: data.value.dimension
 				}
 			});
-			//this.onSetAxis("x", "Sector");
-			//this.onSetAxis("y", "Salary Sum");
 			dispatch({
 				type: "VIZ_FULL_UPDATE",
 				dimension: data.value.dimension.name,

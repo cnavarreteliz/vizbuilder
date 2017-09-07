@@ -164,7 +164,6 @@ function mapDispatchToProps(dispatch) {
 		},
 
 		onDrilldownAdd(dim) {
-			console.log(dim)
 			dispatch({ type: "DRILLDOWN_ADD", payload: dim });
 		},
 
