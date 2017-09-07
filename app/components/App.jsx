@@ -1,6 +1,5 @@
 import { Tab2, Tabs2 } from "@blueprintjs/core";
 
-import PanelAggregators from "components/PanelAggregators";
 import PanelAssistant from "components/PanelAssistant";
 import PanelAppearance from "components/PanelAppearance";
 import PanelChart from "components/PanelChart";
@@ -16,8 +15,9 @@ function App(props) {
 	return (
 		<div className="container">
 			<div className="side-panel">
+				<img src="images/logo.svg" />
 				<Tabs2>
-					<Tab2 id="fil" title="Options" panel={<PanelAggregators />} />
+					<Tab2 id="fil" title="Search" panel={<PanelFilters />} />
 					<Tab2 id="chr" title="Appearance" panel={<PanelAppearance />} />
 					<Tab2 id="ast" title="Assistant" panel={<PanelAssistant />} />
 				</Tabs2>

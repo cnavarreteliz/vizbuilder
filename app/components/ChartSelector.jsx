@@ -153,10 +153,6 @@ function mapDispatchToProps(dispatch) {
 				dimension: data.value.dimension.name,
 				measure: data.value.measure.name
 			});
-		},
-
-		onSetAxis(axis, property) {
-			dispatch({ type: "VIZ_AXIS_UPDATE", axis, payload: property });
 		}
 	};
 }

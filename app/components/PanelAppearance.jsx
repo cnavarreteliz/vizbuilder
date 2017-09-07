@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 
 import icons from "data/visual-options.json";
 import CustomSelector from "components/InputSelect";
+import PanelAggregators from "components/PanelAggregators";
 import { prepareHierarchy } from "helpers/prepareHierarchy";
 
 import "styles/PanelAppearance.css";
@@ -22,13 +23,13 @@ function ChartAxis(props) {
 				<div>
 					<CustomSelector
 						title="Dimension"
-						options={props.x.labels}
+						options={prepareSelector(props.x.labels)}
 						value={props.x.value}
 						onChange={evt => props.onSetAxis("x", evt.target.value)}
 					/>
 					<CustomSelector
 						title="Size"
-						options={props.y.labels}
+						options={prepareSelector(props.y.labels)}
 						value={props.y.value}
 						onChange={evt => props.onSetAxis("y", evt.target.value)}
 					/>
@@ -39,13 +40,13 @@ function ChartAxis(props) {
 				<div>
 					<CustomSelector
 						title="Axis"
-						options={props.x.labels}
+						options={prepareSelector(props.x.labels)}
 						value={props.x.value}
 						onChange={evt => props.onSetAxis("x", evt.target.value)}
 					/>
 					<CustomSelector
 						title="Value"
-						options={props.y.labels}
+						options={prepareSelector(props.y.labels)}
 						value={props.y.value}
 						onChange={evt => props.onSetAxis("y", evt.target.value)}
 					/>
@@ -84,6 +85,7 @@ function PanelAppearance(props) {
 				)}
 			</div>
 			{ChartAxis(props)}
+			<PanelAggregators />
 		</div>
 	);
 }
@@ -140,6 +142,11 @@ function mapDispatchToProps(dispatch) {
 				axis: "year",
 				payload: property.label
 			});
+		},
+
+
+		onSetAxis(axis, property) {
+			dispatch({ type: "VIZ_AXIS_UPDATE", axis, payload: property });
 		}
 	};
 }

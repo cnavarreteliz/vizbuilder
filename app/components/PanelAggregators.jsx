@@ -48,16 +48,15 @@ class PanelAggregators extends Component {
 
 		return (
 			<div className="aggregators-wrapper">
-				{/*<InputSelect
+				{<InputSelect
 					title="Database"
 					options={props.cubes.map(cube => ({ label: cube.name }))}
 					value={props.cube.name}
 					onChange={evt => props.onCubeSet(evt.target.value)}
-				/>*/}
-				{/*{this.renderDrilldownSelector(props)}*/}
-				{/* {this.renderCutSelector(props)} */}
-				{/* {this.renderMeasureSelector(props)} */}
-				<PanelFilters />
+				/>}
+				{this.renderDrilldownSelector(props)}
+				{this.renderCutSelector(props)}
+				{this.renderMeasureSelector(props)}
 			</div>
 		);
 	}
