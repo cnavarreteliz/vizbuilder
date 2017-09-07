@@ -12,11 +12,7 @@ import "react-select/dist/react-select.css";
 
 function ChartAxis(props) {
 	const { onSetTimeAxis } = props;
-	console.log(props.year.value.length > 0 ? (
-		prepareSelector(props.year.labels).filter(
-			e => e.label == props.year.value
-		)[0].value
-	) : null);
+
 	switch (props.panel) {
 		case "PANEL_TYPE_NORMAL":
 			return (

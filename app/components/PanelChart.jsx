@@ -11,7 +11,8 @@ function PanelChart(props) {
 	let config = {
 		type: props.type,
 		data: props.data,
-		title: props.title
+		title: props.title,
+		colorScale: "value"
 		// groupBy: props.groupBy
 	};
 

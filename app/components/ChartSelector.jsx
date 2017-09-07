@@ -1,6 +1,7 @@
 import React from "react";
 import Select from "react-select";
 import { connect } from "react-redux";
+import { prepareHierarchy } from "helpers/prepareHierarchy";
 
 import icons from "data/visual-options.json";
 
@@ -12,11 +13,12 @@ function ChartSelector(props) {
 	return (
 		<div className="chartoptions-wrapper">
 			<div>
-				<div className="title">Show me ...</div>
+				<div className="title">Show me</div>
 				<Select
 					options={props.ninput}
-					value={props.x.va}
-					placeholder="Search any dimension/measure"
+					defaultValue={2}
+					value={2}
+					placeholder="ex. Industry Group, Sector, Education Sponsored"
 					onChange={onSearchChange}
 				/>
 			</div>
@@ -51,28 +53,8 @@ function timeDimensions(data) {
 	return data.filter(e => e.dimensionType == 1).map(e => e.name);
 }
 
-function prepareHierarchyMenu(root) {
-	return root.map(item => {
-		let label = item.name,
-			children = [];
-
-		if (item.hierarchies) children = item.hierarchies[0].levels.slice(1);
-
-		if (children.length > 1) {
-			children = prepareHierarchyMenu(children);
-		} else if (children.length == 1) {
-			item = children[0];
-			children = [];
-			if (label != item.name) label += " > " + item.name;
-		}
-
-		item._children = children;
-		item._label = label;
-		return item;
-	});
-}
-
 function naturalInput(dimensions, measures, cubes) {
+	var key = 0
 	let data = [];
 	//filter(dm => dm.dimensionType == 0).
 	cubes.map(cube => {
@@ -81,7 +63,8 @@ function naturalInput(dimensions, measures, cubes) {
 				if (dm._children.lenght == 0) {
 					data.push({
 						label: ms.name + " by " + dm.name + " in " + cube.name,
-						value: {
+						value: key,
+						options: {
 							measure: ms,
 							dimension: dm,
 							cube: cube.name
@@ -91,7 +74,8 @@ function naturalInput(dimensions, measures, cubes) {
 					dm._children.map(e => {
 						data.push({
 							label: ms.name + " by " + e.name + " in " + cube.name,
-							value: {
+							value: key,
+							options: {
 								measure: ms,
 								dimension: e,
 								cube: cube.name
@@ -99,6 +83,7 @@ function naturalInput(dimensions, measures, cubes) {
 						});
 					});
 				}
+				key += 1
 			});
 		});
 	});
@@ -111,7 +96,7 @@ function mapStateToProps(state) {
 		panel: state.visuals.panel,
 		type: state.visuals.type,
 		ninput: naturalInput(
-			prepareHierarchyMenu(state.cubes.current.dimensions),
+			prepareHierarchy(state.cubes.current.dimensions),
 			getMeasures(state.cubes.current.measures),
 			state.cubes.all
 		),
@@ -144,14 +129,14 @@ function mapDispatchToProps(dispatch) {
 			dispatch({
 				type: "DATA_SET",
 				payload: {
-					measure: data.value.measure,
-					dimension: data.value.dimension
+					measure: data.options.measure,
+					dimension: data.options.dimension
 				}
 			});
 			dispatch({
 				type: "VIZ_FULL_UPDATE",
-				dimension: data.value.dimension.name,
-				measure: data.value.measure.name
+				dimension: data.options.dimension.name,
+				measure: data.options.measure.name
 			});
 		}
 	};
