@@ -1,7 +1,10 @@
 const initialState = {
-	type: "treemap",
-	panel: "PANEL_TYPE_NORMAL",
-	groupBy: ["group", "name"],
+	chart: {
+		type: "treemap",
+		panel: "PANEL_TYPE_NORMAL",
+		groupBy: ["group", "name"],
+		colorScale: "value",
+	},
 	axis: {
 		x: '',
 		y: '',
@@ -11,8 +14,12 @@ const initialState = {
 
 export default function(state = initialState, action) {
 	switch (action.type) {
+		case "VIZ_COLOR_UPDATE": {
+			return { ...state, chart: { ...state.chart, colorScale: action.payload } };
+		}
+
 		case "VIZ_TYPE_UPDATE": {
-			return { ...state, type: action.payload, panel: action.panel };
+			return { ...state, chart: {...state.chart, type: action.payload, panel: action.panel} };
 		}
 
 		case "VIZ_AXIS_UPDATE": {

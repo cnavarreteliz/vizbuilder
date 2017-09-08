@@ -9,10 +9,12 @@ import "styles/PanelChart.css";
 
 function PanelChart(props) {
 	let config = {
-		type: props.type,
+		type: props.chart.type,
 		data: props.data,
 		title: props.title,
-		colorScale: "value"
+		colorScale: "colorScale",
+		colorScaleConfig: {color: ["#88B0D8", "#3F51B5"] }
+		
 		// groupBy: props.groupBy
 	};
 
@@ -59,33 +61,36 @@ function PanelChart(props) {
 	}
 }
 
-function mapDataChart(data, panel, props) {
-	switch (panel) {
+function mapDataChart(data, chart, props) {
+	switch (chart.panel) {
 		case "PANEL_TYPE_NORMAL":
-			return data.map(item => ({
+		console.log(data)
+			return data.map(item => (
+				{
 				id: item[props.x],
 				name: item[props.x],
-				value: item[props.y]
+				value: item[props.y],
+				colorScale: item[chart.colorScale]
 			}));
 		case "PANEL_TYPE_2D":
 			return data.map(item => ({
 				id: item[props.x],
 				name: item[props.x],
 				y: item[props.y],
-				x: item[props.year]
+				x: item[props.year],
+				colorScale: item[chart.colorScale]
 			}));
 	}
 }
 
 function mapStateToProps(state) {
 	let props = state.visuals.axis,
-		panel = state.visuals.panel,
+		chart = state.visuals.chart,
 		data = applyFilters(state.data.values, state.filters);
 
 	return {
-		type: state.visuals.type,
-		groupBy: state.visuals.groupBy,
-		data: mapDataChart(data, panel, props)
+		chart: chart,
+		data: mapDataChart(data, chart, props)
 	};
 }
 

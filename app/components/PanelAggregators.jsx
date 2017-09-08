@@ -1,5 +1,6 @@
 import { Component, createElement } from "react";
 import { connect } from "react-redux";
+import { prepareHierarchy } from "helpers/prepareHierarchy";
 import PanelFilters from "components/PanelFilters";
 
 import {
@@ -66,7 +67,7 @@ class PanelAggregators extends Component {
 
 		if (!cube.dimensions) return null;
 
-		let menu = prepareHierarchyMenu(cube.dimensions);
+		let menu = prepareHierarchy(cube.dimensions);
 
 		let applied = drilldowns.map(dim => (
 			<Tag key={dim.fullName} onRemove={() => onDrilldownDelete(dim)}>
@@ -93,7 +94,7 @@ class PanelAggregators extends Component {
 
 		if (!cube.dimensions) return null;
 
-		let menu = prepareHierarchyMenu(cube.dimensions);
+		let menu = prepareHierarchy(cube.dimensions);
 
 		let applied = Object.keys(cuts)
 			.map(key => cuts[key])
@@ -183,27 +184,6 @@ function mapDispatchToProps(dispatch) {
 			else dispatch({ type: "MEASURE_DELETE", payload: measure });
 		}
 	};
-}
-
-function prepareHierarchyMenu(root) {
-	return root.map(item => {
-		let label = item.name,
-			children = [];
-
-		if (item.hierarchies) children = item.hierarchies[0].levels.slice(1);
-
-		if (children.length > 1) {
-			children = prepareHierarchyMenu(children);
-		} else if (children.length == 1) {
-			item = children[0];
-			children = [];
-			if (label != item.name) label += " > " + item.name;
-		}
-
-		item._children = children;
-		item._label = label;
-		return item;
-	});
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PanelAggregators);

@@ -5,7 +5,7 @@ import { prepareHierarchy } from "helpers/prepareHierarchy";
 
 import icons from "data/visual-options.json";
 
-import 'react-select/dist/react-select.css';
+import "react-select/dist/react-select.css";
 import "styles/ChartSelector.css";
 
 function ChartSelector(props) {
@@ -43,9 +43,7 @@ function SmartSelector(props) {
 }
 
 function getMeasures(data) {
-	return data.filter(
-		e => e.name.includes("Salary Sum")
-	);
+	return data.filter(e => e.name.includes("Salary Sum"));
 }
 
 // Detect Time Dimension in Series
@@ -54,7 +52,7 @@ function timeDimensions(data) {
 }
 
 function naturalInput(dimensions, measures, cubes) {
-	var key = 0
+	var key = 0;
 	let data = [];
 	//filter(dm => dm.dimensionType == 0).
 	cubes.map(cube => {
@@ -83,7 +81,7 @@ function naturalInput(dimensions, measures, cubes) {
 						});
 					});
 				}
-				key += 1
+				key += 1;
 			});
 		});
 	});
@@ -93,8 +91,8 @@ function naturalInput(dimensions, measures, cubes) {
 
 function mapStateToProps(state) {
 	return {
-		panel: state.visuals.panel,
-		type: state.visuals.type,
+		panel: state.visuals.chart.panel,
+		type: state.visuals.chart.type,
 		ninput: naturalInput(
 			prepareHierarchy(state.cubes.current.dimensions),
 			getMeasures(state.cubes.current.measures),

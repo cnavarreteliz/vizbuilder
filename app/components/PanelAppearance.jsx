@@ -11,7 +11,7 @@ import "styles/PanelAppearance.css";
 import "react-select/dist/react-select.css";
 
 function ChartAxis(props) {
-	const { onSetTimeAxis } = props;
+	const { onSetTimeAxis, onChangeColorScale } = props;
 
 	switch (props.panel) {
 		case "PANEL_TYPE_NORMAL":
@@ -28,6 +28,12 @@ function ChartAxis(props) {
 						options={prepareSelector(props.y.labels)}
 						value={props.y.value}
 						onChange={evt => props.onSetAxis("y", evt.target.value)}
+					/>
+					<CustomSelector
+						title="Color"
+						options={prepareSelectorColor(props.y.labels)}
+						value={props.colorScale}
+						onChange={onChangeColorScale}
 					/>
 				</div>
 			);
@@ -95,6 +101,15 @@ function prepareSelector(obj) {
 	});
 }
 
+function prepareSelectorColor(obj) {
+	return obj.map(e => {
+		return {
+			label: e.name,
+			value: e.name
+		};
+	});
+}
+
 // Detect Time Dimension in Series
 function timeDimensions(obj) {
 	return prepareHierarchy(obj.filter(e => e.dimensionType == 1));
@@ -102,8 +117,9 @@ function timeDimensions(obj) {
 
 function mapStateToProps(state) {
 	return {
-		panel: state.visuals.panel,
-		type: state.visuals.type,
+		panel: state.visuals.chart.panel,
+		type: state.visuals.chart.type,
+		colorScale: state.visuals.chart.colorScale,
 
 		x: {
 			labels: state.aggregators.drilldowns,
@@ -127,6 +143,10 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
 	return {
+		onChangeColorScale(property) {
+			dispatch({ type: "VIZ_COLOR_UPDATE", payload: property.target.value });
+		},
+
 		onChangeViz(type, panel) {
 			dispatch({ type: "VIZ_TYPE_UPDATE", payload: type, panel: panel });
 		},
