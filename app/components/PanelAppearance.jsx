@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 
 import icons from "data/visual-options.json";
 import CustomSelector from "components/InputSelect";
-import PanelAggregators from "components/PanelAggregators";
 import { prepareHierarchy } from "helpers/prepareHierarchy";
 
 import "styles/PanelAppearance.css";
@@ -25,7 +24,7 @@ function ChartAxis(props) {
 					/>
 					<CustomSelector
 						title="Size"
-						options={prepareSelector(props.y.labels)}
+						options={prepareSelectorColor(props.y.labels)}
 						value={props.y.value}
 						onChange={evt => props.onSetAxis("y", evt.target.value)}
 					/>
@@ -87,7 +86,6 @@ function PanelAppearance(props) {
 				)}
 			</div>
 			{ChartAxis(props)}
-			<PanelAggregators />
 		</div>
 	);
 }

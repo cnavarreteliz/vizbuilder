@@ -27,9 +27,6 @@ class PanelAggregators extends Component {
 	componentDidUpdate(prev) {
 		const { cube, drilldowns, measures, cuts, error } = this.props;
 
-		console.log(drilldowns)
-		console.log(measures)
-
 		if (
 			cube.name != prev.cube.name ||
 			drilldowns != prev.drilldowns ||
@@ -50,7 +47,7 @@ class PanelAggregators extends Component {
 		return (
 			<div className="aggregators-wrapper">
 				{<InputSelect
-					title="Database"
+					title="Dataset"
 					options={props.cubes.map(cube => ({ label: cube.name }))}
 					value={props.cube.name}
 					onChange={evt => props.onCubeSet(evt.target.value)}

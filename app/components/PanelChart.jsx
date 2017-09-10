@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 import { Treemap, Donut, Pie, BarChart, StackedArea } from "d3plus-react";
+import { Tooltip } from "d3plus-tooltip";
 import WordCloud from "react-d3-cloud";
 
 import { applyFilters } from "components/FilterItem";
@@ -8,13 +9,52 @@ import TableViz from "components/TableViz";
 import "styles/PanelChart.css";
 
 function PanelChart(props) {
+	var data = [
+		{
+			title: "D3plus Tooltip",
+			body: "Check out this cool table:",
+			x: 100,
+			y: 120,
+			label: "Position"
+		}
+	];
+
+	let tooltip = <Tooltip 
+		data={data}
+		thead={["Axis", function(d) {return d.label}]}
+	/>
+	
 	let config = {
 		type: props.chart.type,
 		data: props.data,
 		title: props.title,
 		colorScale: "colorScale",
-		colorScaleConfig: {color: ["#88B0D8", "#3F51B5"] }
-		
+		colorScaleConfig: { color: ["#88B0D8", "#3F51B5"] },
+		tooltipConfig: {
+			background: "white",
+			//body: d => d.value,
+			footer: "",
+			width: "200px",
+			footerStyle: {
+			  "margin-top": 0
+			},
+			bodyStyle: {
+				"font-size": "14px"
+			},
+			titleStyle: {
+				"font-size": "14px",
+				"text-transform": "uppercase",
+				"font-weight": "bold",
+				"font-family": "'Palanquin', sans-serif",
+				"margin-bottom": "12px"
+			},
+			tbody:[
+				["Salary Sum", d => d.value],
+				//["Other", "Test value"]
+			],
+			padding: "10px",
+			title: d => d.name
+		},
 		// groupBy: props.groupBy
 	};
 
@@ -55,7 +95,7 @@ function PanelChart(props) {
 			);
 		case "stacked":
 			return <StackedArea config={config} />;
-		
+
 		default:
 			return <div />;
 	}
@@ -64,9 +104,8 @@ function PanelChart(props) {
 function mapDataChart(data, chart, props) {
 	switch (chart.panel) {
 		case "PANEL_TYPE_NORMAL":
-		console.log(data)
-			return data.map(item => (
-				{
+			console.log(data);
+			return data.map(item => ({
 				id: item[props.x],
 				name: item[props.x],
 				value: item[props.y],

@@ -2,6 +2,7 @@ import React from "react";
 import Select from "react-select";
 import { connect } from "react-redux";
 import { prepareHierarchy } from "helpers/prepareHierarchy";
+import { prepareNaturalInput } from "helpers/prepareNaturalInput";
 
 import icons from "data/visual-options.json";
 
@@ -19,7 +20,7 @@ function ChartSelector(props) {
 					defaultValue={2}
 					value={2}
 					placeholder="ex. Industry Group, Sector, Education Sponsored"
-					onChange={onSearchChange}
+					onChange={ onSearchChange }
 				/>
 			</div>
 		</div>
@@ -42,62 +43,18 @@ function SmartSelector(props) {
 	);
 }
 
-function getMeasures(data) {
-	return data.filter(e => e.name.includes("Salary Sum"));
-}
+
 
 // Detect Time Dimension in Series
 function timeDimensions(data) {
 	return data.filter(e => e.dimensionType == 1).map(e => e.name);
 }
 
-function naturalInput(dimensions, measures, cubes) {
-	var key = 0;
-	let data = [];
-	//filter(dm => dm.dimensionType == 0).
-	cubes.map(cube => {
-		dimensions.map(dm => {
-			measures.map(ms => {
-				if (dm._children.lenght == 0) {
-					data.push({
-						label: ms.name + " by " + dm.name + " in " + cube.name,
-						value: key,
-						options: {
-							measure: ms,
-							dimension: dm,
-							cube: cube.name
-						}
-					});
-				} else {
-					dm._children.map(e => {
-						data.push({
-							label: ms.name + " by " + e.name + " in " + cube.name,
-							value: key,
-							options: {
-								measure: ms,
-								dimension: e,
-								cube: cube.name
-							}
-						});
-					});
-				}
-				key += 1;
-			});
-		});
-	});
-
-	return data;
-}
-
 function mapStateToProps(state) {
 	return {
 		panel: state.visuals.chart.panel,
 		type: state.visuals.chart.type,
-		ninput: naturalInput(
-			prepareHierarchy(state.cubes.current.dimensions),
-			getMeasures(state.cubes.current.measures),
-			state.cubes.all
-		),
+		ninput: prepareNaturalInput(state.cubes.all),
 
 		x: {
 			labels: state.aggregators.drilldowns.map(e => e.name),
@@ -106,7 +63,6 @@ function mapStateToProps(state) {
 
 		y: {
 			labels: state.aggregators.measures.map(e => e.name),
-			//labels: getMeasures(state.cubes.current.measures),
 			value: state.visuals.axis.y
 		},
 
@@ -124,11 +80,12 @@ function mapDispatchToProps(dispatch) {
 		},
 
 		onSearchChange(data) {
+			dispatch({ type: "CUBES_SET", payload: data.options.cube });
 			dispatch({
 				type: "DATA_SET",
 				payload: {
 					measure: data.options.measure,
-					dimension: data.options.dimension
+					dimension: data.options.dimension,
 				}
 			});
 			dispatch({
