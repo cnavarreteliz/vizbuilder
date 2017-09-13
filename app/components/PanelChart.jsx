@@ -4,7 +4,7 @@ import { Tooltip } from "d3plus-tooltip";
 import WordCloud from "react-d3-cloud";
 
 import { applyFilters } from "components/FilterItem";
-import TableViz from "components/TableViz";
+import PanelTable from "components/PanelTable";
 
 import "styles/PanelChart.css";
 
@@ -30,6 +30,7 @@ function PanelChart(props) {
 		title: props.title,
 		colorScale: "colorScale",
 		colorScaleConfig: { color: ["#88B0D8", "#3F51B5"] },
+		shapeConfig: { fontFamily: "Fira Sans Condensed" },
 		tooltipConfig: {
 			background: "white",
 			//body: d => d.value,
@@ -72,7 +73,7 @@ function PanelChart(props) {
 			return <BarChart config={config} />;
 
 		case "table":
-			return <TableViz config={config} />;
+			return <PanelTable data={props.bulk} />;
 
 		case "bar":
 			return <BarChart config={config} />;
@@ -129,7 +130,8 @@ function mapStateToProps(state) {
 
 	return {
 		chart: chart,
-		data: mapDataChart(data, chart, props)
+		data: mapDataChart(data, chart, props),
+		bulk: state.data.values
 	};
 }
 

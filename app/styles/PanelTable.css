@@ -1,0 +1,40 @@
+@import '@blueprintjs/table/dist/table.css';
+
+.download {
+    padding: 10px;
+}
+.viz-table {
+    
+}
+
+.table {
+    background-color: #FFF;
+    border-collapse: collapse;
+
+    thead, tbody { display: block; }    
+
+    & .table-header {
+        background-color: #2196F3;
+        color: #FFFFFF;
+        text-transform: uppercase;
+        font-family: "Pathway Gothic One";
+        font-size: 18px;
+        text-align: left;
+    }
+
+    & .table-body {
+        height: 200px;       /* Just for the demo          */
+        overflow-y: auto;    /* Trigger vertical scroll    */
+        overflow-x: hidden;  /* Hide the horizontal scroll */
+        & .table-row:nth-child(odd) td{
+            
+        }
+        & .table-row:nth-child(even) td{
+            background-color: #F0F0F0;
+        }
+    }
+
+    & .table-cell {
+        padding: 8px 12px;
+    }
+}

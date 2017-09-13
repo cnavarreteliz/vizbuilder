@@ -10,7 +10,7 @@ export function prepareNaturalInput(cubes) {
             measures.map(ms => {
                 if(dm._children.length == 0) {
                     data.push({
-						label: ms.name + " by " + dm.name + " in " + cube.name,
+						label: dm.name + " in " + cube.name + " sized by " + ms.name,
 						value: key,
 						options: {
 							measure: ms,
@@ -22,7 +22,7 @@ export function prepareNaturalInput(cubes) {
                 } else {
                     prepareHierarchy(dm._children).map(e => {
                         data.push({
-                            label: ms.name + " by " + e.name + " in " + cube.name,
+                            label: e.name + " in " + cube.name + " sized by " + ms.name,
                             value: key,
                             options: {
                                 measure: ms,
@@ -36,7 +36,7 @@ export function prepareNaturalInput(cubes) {
             })
         })
     })
-    return data
+    return data.sort((a, b) => a.label.localeCompare(b.label))
 }
 
 function getMeasures(obj) {

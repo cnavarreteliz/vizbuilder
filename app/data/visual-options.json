@@ -15,19 +15,9 @@
 		"panel": "PANEL_TYPE_NORMAL"
 	},
 	{
-		"title": "Bubble",
-		"name": "bubble",
-		"panel": "PANEL_TYPE_2D"
-	},
-	{
 		"title": "Table",
 		"name": "table",
-		"panel": "PANEL_TYPE_NORMAL"
-	},
-	{
-		"title": "Word cloud",
-		"name": "wordcloud",
-		"panel": "PANEL_TYPE_WORDCLOUD"
+		"panel": "PANEL_TYPE_TABLE"
 	},
 	{
 		"title": "Bar Chart",

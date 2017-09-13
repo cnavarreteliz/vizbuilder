@@ -17,8 +17,6 @@ function ChartSelector(props) {
 				<div className="title">Show me</div>
 				<Select
 					options={props.ninput}
-					defaultValue={2}
-					value={2}
 					placeholder="ex. Industry Group, Sector, Education Sponsored"
 					onChange={ onSearchChange }
 				/>

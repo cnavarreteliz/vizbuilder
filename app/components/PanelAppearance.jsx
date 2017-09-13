@@ -18,7 +18,7 @@ function ChartAxis(props) {
 				<div>
 					<CustomSelector
 						title="Dimension"
-						options={prepareSelector(props.x.labels)}
+						options={prepareSelectorColor(props.x.labels)}
 						value={props.x.value}
 						onChange={evt => props.onSetAxis("x", evt.target.value)}
 					/>
@@ -32,7 +32,12 @@ function ChartAxis(props) {
 						title="Color"
 						options={prepareSelectorColor(props.y.labels)}
 						value={props.colorScale}
-						onChange={onChangeColorScale}
+						onChange={evt =>
+							props.onChangeColorScale(
+								props.current,
+								props.y.current,
+								evt.target.value
+							)}
 					/>
 				</div>
 			);
@@ -41,30 +46,26 @@ function ChartAxis(props) {
 				<div>
 					<CustomSelector
 						title="Axis"
-						options={prepareSelector(props.x.labels)}
+						options={prepareSelectorColor(props.x.labels)}
 						value={props.x.value}
 						onChange={evt => props.onSetAxis("x", evt.target.value)}
 					/>
 					<CustomSelector
 						title="Value"
-						options={prepareSelector(props.y.labels)}
+						options={prepareSelectorColor(props.y.labels)}
 						value={props.y.value}
 						onChange={evt => props.onSetAxis("y", evt.target.value)}
 					/>
+					Time Dimension
 					<Select
+						placeholder="ex. Year"
 						options={prepareSelector(props.year.labels)}
-						selectValue={
-							props.year.value.length > 0 ? (
-								prepareSelector(props.year.labels).filter(
-									e => e.label == props.year.value
-								)[0].value
-							) : null
-						}
-						placeholder="Time Dimension"
 						onChange={onSetTimeAxis}
 					/>
 				</div>
 			);
+		case "PANEL_TYPE_TABLE":
+			return <div />
 	}
 }
 
@@ -113,11 +114,13 @@ function timeDimensions(obj) {
 	return prepareHierarchy(obj.filter(e => e.dimensionType == 1));
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
 	return {
 		panel: state.visuals.chart.panel,
 		type: state.visuals.chart.type,
+		//colorScale: state.cubes.current ? state.cubes.current.measures : {},
 		colorScale: state.visuals.chart.colorScale,
+		current: state.cubes.current,
 
 		x: {
 			labels: state.aggregators.drilldowns,
@@ -125,8 +128,11 @@ function mapStateToProps(state) {
 		},
 
 		y: {
-			labels: state.aggregators.measures,
-			value: state.visuals.axis.y
+			labels: state.cubes.current
+				? state.cubes.current.measures
+				: state.aggregators.measures,
+			value: state.visuals.axis.y,
+			current: state.aggregators.measures
 		},
 
 		year: {
@@ -141,8 +147,13 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		onChangeColorScale(property) {
-			dispatch({ type: "VIZ_COLOR_UPDATE", payload: property.target.value });
+		onChangeColorScale(cube, measures, property) {
+			if (measures.filter(item => item == property).length == 0) {
+				let measure = cube.measures.filter(item => item.name == property);
+				dispatch({ type: "MEASURE_ADD", payload: measure });
+			}
+
+			dispatch({ type: "VIZ_COLOR_UPDATE", payload: property });
 		},
 
 		onChangeViz(type, panel) {
@@ -157,7 +168,6 @@ function mapDispatchToProps(dispatch) {
 				payload: property.label
 			});
 		},
-
 
 		onSetAxis(axis, property) {
 			dispatch({ type: "VIZ_AXIS_UPDATE", axis, payload: property });
