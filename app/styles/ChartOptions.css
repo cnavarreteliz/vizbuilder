@@ -1,8 +1,13 @@
 .chartappearance-wrapper {
     flex: 0 0 auto;
     justify-content: center;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
+    display: flex;    
     & div {
         display: inline-block;
+        & label {
+            margin: 0px;
+        }
     }
 }

@@ -40,5 +40,5 @@ export function prepareNaturalInput(cubes) {
 }
 
 function getMeasures(obj) {
-	return obj.filter(e => e.name.includes("Salary Sum"));
+	return obj.filter(e => e.name.includes("Sum") || e.name.includes("Count"));
 }

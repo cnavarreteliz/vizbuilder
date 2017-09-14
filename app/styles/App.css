@@ -35,6 +35,24 @@ body {
 		display: flex;
 		flex-direction: column;
 		height: 100vh;
+
+		& .header-panel {
+			display: flex;
+			flex: 0 0 auto;
+			min-height: 68px;
+			flex-direction: column;
+			& .title {
+				font-family: "Pathway Gothic One", sans-serif;
+				text-align: center;
+			}
+	
+			& .subtitle {
+				text-transform: uppercase;
+				font-size: 18px;
+				color: #aaa;
+				text-align: center;
+			}
+		}
 	}
 
 	& .viz {
