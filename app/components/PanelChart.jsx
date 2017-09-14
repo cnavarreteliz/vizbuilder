@@ -8,22 +8,15 @@ import PanelTable from "components/PanelTable";
 
 import "styles/PanelChart.css";
 
-function PanelChart(props) {
-	var data = [
-		{
-			title: "D3plus Tooltip",
-			body: "Check out this cool table:",
-			x: 100,
-			y: 120,
-			label: "Position"
-		}
-	];
+function prepareTooltip(obj) {
+	var content = ""
+	Object.keys(obj).map(key =>
+		content += "<div>" + key + ": " + obj[key] + "</div>"
+	)
+	return content
+}
 
-	let tooltip = <Tooltip 
-		data={data}
-		thead={["Axis", function(d) {return d.label}]}
-	/>
-	
+function PanelChart(props) {
 	let config = {
 		type: props.chart.type,
 		data: props.data,
@@ -33,30 +26,28 @@ function PanelChart(props) {
 		shapeConfig: { fontFamily: "Fira Sans Condensed" },
 		tooltipConfig: {
 			background: "white",
-			//body: d => d.value,
+			body: d => prepareTooltip(d.detail),
 			footer: "",
 			width: "200px",
 			footerStyle: {
-			  "margin-top": 0
+				"margin-top": 0
 			},
 			bodyStyle: {
-				"font-size": "14px"
+				"font-size": "16px"
 			},
 			titleStyle: {
-				"font-size": "14px",
+				"font-size": "18px",
 				"text-transform": "uppercase",
 				"font-weight": "bold",
-				"font-family": "'Palanquin', sans-serif",
+				"font-family": "'Pathway Gothic One', sans-serif",
 				"margin-bottom": "12px"
 			},
-			tbody:[
-				["Salary Sum", d => d.value],
-				//["Other", "Test value"]
-			],
+			//body: d => prepareTooltip( d.detail ),
 			padding: "10px",
 			title: d => d.name
-		},
+		}
 		// groupBy: props.groupBy
+		// d => JSON.stringify(d),
 	};
 
 	switch (config.type) {
@@ -105,12 +96,12 @@ function PanelChart(props) {
 function mapDataChart(data, chart, props) {
 	switch (chart.panel) {
 		case "PANEL_TYPE_NORMAL":
-			console.log(data);
 			return data.map(item => ({
 				id: item[props.x],
 				name: item[props.x],
 				value: item[props.y],
-				colorScale: item[chart.colorScale]
+				colorScale: item[chart.colorScale],
+				detail: item
 			}));
 		case "PANEL_TYPE_2D":
 			return data.map(item => ({
@@ -118,7 +109,8 @@ function mapDataChart(data, chart, props) {
 				name: item[props.x],
 				y: item[props.y],
 				x: item[props.year],
-				colorScale: item[chart.colorScale]
+				colorScale: item[chart.colorScale],
+				detail: item
 			}));
 	}
 }

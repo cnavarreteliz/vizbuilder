@@ -9,7 +9,7 @@ function ChartOptions(props) {
 
 	return (
 		<div className="chartappearance-wrapper">
-            <div> Color </div>
+            <div>Color </div>
 			<div><Selector
 				options={prepareSelectorColor(props.y.labels)}
 				value={props.colorScale}
