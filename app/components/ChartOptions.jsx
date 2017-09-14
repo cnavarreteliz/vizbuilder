@@ -9,17 +9,25 @@ function ChartOptions(props) {
 
 	return (
 		<div className="chartappearance-wrapper">
-            <div>Color </div>
-			<div><Selector
-				options={prepareSelectorColor(props.y.labels)}
-				value={props.colorScale}
-				onChange={evt =>
-					props.onChangeColorScale(
-						props.current,
-						props.y.current,
-						evt.target.value
+			<div>Color </div>
+			<div>
+				<Selector
+					options={prepareSelectorColor(props.y.labels).filter(
+						e =>
+							e.label.includes("Growth") ||
+							e.label.includes("Average") ||
+							e.label.includes("Median") ||
+							e.label.includes("Percent")
 					)}
-			/></div>
+					value={props.colorScale}
+					onChange={evt =>
+						props.onChangeColorScale(
+							props.current,
+							props.y.current,
+							evt.target.value
+						)}
+				/>
+			</div>
 		</div>
 	);
 }
@@ -37,10 +45,10 @@ function mapStateToProps(state, ownProps) {
 	return {
 		panel: state.visuals.chart.panel,
 		type: state.visuals.chart.type,
-		
+
 		colorScale: state.visuals.chart.colorScale,
-        current: state.cubes.current,
-        
+		current: state.cubes.current,
+
 		y: {
 			labels: state.cubes.current
 				? state.cubes.current.measures

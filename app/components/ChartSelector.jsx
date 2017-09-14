@@ -86,6 +86,7 @@ function mapDispatchToProps(dispatch) {
 					dimension: data.options.dimension,
 				}
 			});
+			dispatch({ type: "VIZ_COLOR_UPDATE", payload: "" });
 			dispatch({
 				type: "VIZ_FULL_UPDATE",
 				dimension: data.options.dimension.name,

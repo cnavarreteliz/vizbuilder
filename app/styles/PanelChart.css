@@ -2,3 +2,8 @@
     font-family: "Pathway Gothic One" !important;
     font-weight: 700!important;
 }
+
+.tooltip-row {
+    font-size: 14px;
+    border-bottom: 1px solid #cccccc;
+}
