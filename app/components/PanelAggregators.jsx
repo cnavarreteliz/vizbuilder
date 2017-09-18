@@ -143,7 +143,7 @@ class PanelAggregators extends Component {
 
 function mapStateToProps(state) {
 	return {
-		cube: state.cubes.current || {},
+		cube: state.cubes.current,
 		cubes: state.cubes.all,
 		drilldowns: state.aggregators.drilldowns,
 		measures: state.aggregators.measures,

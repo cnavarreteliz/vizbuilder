@@ -1,0 +1,22 @@
+.inline-select {
+	position: relative;
+	overflow: hidden;
+	display: inline-block;
+	min-width: 2px;
+	border-bottom: 1px dotted;
+
+	& .selected {
+		display: block;
+	}
+
+	& > select {
+		position: absolute;
+
+		font-family: inherit;
+		font-size: inherit;
+		line-height: inherit;
+
+		border: 0;
+		opacity: 0;
+	}
+}

@@ -11,7 +11,7 @@ export default function(state = initialState, action) {
 			//ms.sort((a, b) => a.name.localeCompare(b.name));
 			let dd = [action.payload.dimension];
 			//dd.sort((a, b) => a.fullName.localeCompare(b.fullName));
-			return { ...state, drilldowns: dd, measures: ms}
+			return { ...state, drilldowns: dd, measures: ms };
 		}
 
 		case "CUBES_SET": {
@@ -24,8 +24,12 @@ export default function(state = initialState, action) {
 			return { ...state, drilldowns: dd };
 		}
 
+		case "DRILLDOWN_SET": {
+			return { ...state, drilldowns: [action.payload] };
+		}
+
 		case "DRILLDOWN_DELETE": {
-			let dd = state.drilldowns.filter(item => item != action.payload);
+			let dd = state.drilldowns.filter(item => item !== action.payload);
 			return { ...state, drilldowns: dd };
 		}
 
@@ -35,15 +39,19 @@ export default function(state = initialState, action) {
 			return { ...state, measures: ms };
 		}
 
+		case "MEASURE_SET": {
+			return { ...state, measures: [action.payload] };
+		}
+
 		case "MEASURE_DELETE": {
-			let ms = state.measures.filter(item => item != action.payload);
+			let ms = state.measures.filter(item => item !== action.payload);
 			return { ...state, measures: ms };
 		}
 
 		case "CUT_ADD": {
 			let ct = { ...state.cuts };
 			let name = action.payload.fullName;
-			
+
 			ct[name] = {
 				items: [],
 				dim: action.payload
