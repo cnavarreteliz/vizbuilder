@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import { Button } from "@blueprintjs/core";
 
-import OPERATOR from "assets/operators";
+import OPERATOR from "helpers/operators";
 import KINDS from "data/properties.json";
 
 import "styles/FilterItem.css";

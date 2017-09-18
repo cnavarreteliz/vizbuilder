@@ -4,7 +4,13 @@ const initialState = {
 	error: null,
 
 	all: [],
-	current: null
+	current: {
+		dimensions: [],
+		measures: [],
+		drilldowns: [],
+		stdDimensions: [],
+		timeDimensions: []
+	}
 };
 
 export default function(state = initialState, action) {
@@ -28,16 +34,17 @@ export default function(state = initialState, action) {
 				fetching: false,
 				success: true,
 				error: null,
-				all: action.payload,
-				//current: null
-				current: action.payload[Math.floor(Math.random() * action.payload.length)]
+				all: action.payload
 			};
 		}
 
 		case "CUBES_SET": {
 			return {
 				...state,
-				current: state.all.find(cube => cube.name == action.payload)
+				current:
+					"string" === typeof action.payload
+						? state.all.find(cube => cube.name === action.payload)
+						: action.payload
 			};
 		}
 

@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import { Button } from "@blueprintjs/core/dist/components/button/buttons.js";
 
-import OPERATOR from "assets/operators";
+import OPERATOR from "helpers/operators";
 import ChartSelector from "components/ChartSelector";
 import Filter from "components/FilterItem";
 

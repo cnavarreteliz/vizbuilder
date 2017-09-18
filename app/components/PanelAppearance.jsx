@@ -2,7 +2,7 @@ import React from "react";
 import Select from "react-select";
 import { connect } from "react-redux";
 
-import icons from "data/visual-options.json";
+import CHARTS from "helpers/charts";
 import CustomSelector from "components/InputSelect";
 import { prepareHierarchy } from "helpers/prepareHierarchy";
 
@@ -65,7 +65,7 @@ function ChartAxis(props) {
 				</div>
 			);
 		case "PANEL_TYPE_TABLE":
-			return <div />
+			return null;
 	}
 }
 
@@ -75,13 +75,13 @@ function PanelAppearance(props) {
 			<div className="title">{props.type}</div>
 
 			<div className="icons">
-				{icons.map(icon =>
+				{CHARTS.map(chart =>
 					React.createElement("img", {
-						title: icon.title,
-						className: props.type == icon.name ? "icon active" : "icon",
-						src: "/images/viz/icon-" + icon.name + ".svg",
+						title: chart.name,
+						className: props.type == chart.name ? "icon active" : "icon",
+						src: require("assets/charts/icon-" + chart.name + ".svg"),
 						onClick() {
-							props.onChangeViz(icon.name, icon.panel);
+							props.onChangeViz(chart.name, icon.panel);
 						}
 					})
 				)}
@@ -92,26 +92,32 @@ function PanelAppearance(props) {
 }
 
 function prepareSelector(obj) {
-	return obj.map(e => {
-		return {
+	return []
+		.concat(obj)
+		.filter(Boolean)
+		.map(e => ({
 			label: e.name,
 			value: e
-		};
-	});
+		}));
 }
 
 function prepareSelectorColor(obj) {
-	return obj.map(e => {
-		return {
+	return []
+		.concat(obj)
+		.filter(Boolean)
+		.map(e => ({
 			label: e.name,
 			value: e.name
-		};
-	});
+		}));
 }
 
 // Detect Time Dimension in Series
-function timeDimensions(obj) {
-	return prepareHierarchy(obj.filter(e => e.dimensionType == 1));
+function timeDimensions(dims) {
+	dims = []
+		.concat(dims)
+		.filter(Boolean)
+		.filter(e => e.dimensionType == 1);
+	return prepareHierarchy(dims);
 }
 
 function mapStateToProps(state, ownProps) {
@@ -128,18 +134,13 @@ function mapStateToProps(state, ownProps) {
 		},
 
 		y: {
-			labels: state.cubes.current
-				? state.cubes.current.measures
-				: state.aggregators.measures,
+			labels: state.cubes.current.measures,
 			value: state.visuals.axis.y,
 			current: state.aggregators.measures
 		},
 
 		year: {
-			labels:
-				state.cubes.current != null
-					? timeDimensions(state.cubes.current.dimensions)
-					: "",
+			labels: timeDimensions(state.cubes.current.dimensions),
 			value: state.visuals.axis.year
 		}
 	};

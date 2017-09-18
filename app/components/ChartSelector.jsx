@@ -4,8 +4,6 @@ import { connect } from "react-redux";
 import { prepareHierarchy } from "helpers/prepareHierarchy";
 import { prepareNaturalInput } from "helpers/prepareNaturalInput";
 
-import icons from "data/visual-options.json";
-
 import "react-select/dist/react-select.css";
 import "styles/ChartSelector.css";
 
@@ -18,7 +16,7 @@ function ChartSelector(props) {
 				<Select
 					options={props.ninput}
 					placeholder="ex. Industry Group, Sector, Education Sponsored"
-					onChange={ onSearchChange }
+					onChange={onSearchChange}
 				/>
 			</div>
 		</div>
@@ -40,8 +38,6 @@ function SmartSelector(props) {
 		</label>
 	);
 }
-
-
 
 // Detect Time Dimension in Series
 function timeDimensions(data) {
@@ -83,7 +79,7 @@ function mapDispatchToProps(dispatch) {
 				type: "DATA_SET",
 				payload: {
 					measure: data.options.measure,
-					dimension: data.options.dimension,
+					dimension: data.options.dimension
 				}
 			});
 			dispatch({ type: "VIZ_COLOR_UPDATE", payload: "" });

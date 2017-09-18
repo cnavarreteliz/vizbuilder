@@ -1,7 +1,7 @@
 import nprogress from "nprogress";
 import { zip, some, every } from "lodash";
 import { Client as MondrianClient } from "mondrian-rest-client";
-import { CUBE_API } from "assets/consts";
+import { CUBE_API } from "helpers/consts";
 
 const client = new MondrianClient(CUBE_API);
 
@@ -14,9 +14,13 @@ export function requestCubes() {
 			.cubes()
 			.then(
 				cubes => {
-					return dispatch({
+					dispatch({
 						type: "CUBES_FETCH_SUCCESS",
 						payload: cubes
+					});
+					dispatch({
+						type: "CUBES_SET",
+						payload: cubes[Math.floor(Math.random() * cubes.length)]
 					});
 				},
 				error => {
