@@ -18,9 +18,8 @@
     "react-d3-cloud": "^0.5.0",
     "url-loader": "^0.5.9",
     "@blueprintjs/core": "^1.25.1",
-    "@blueprintjs/table": "^1.22.0"
-  },
-  "dependencies": {
+    "@blueprintjs/table": "^1.22.0",
+    "deeplearn": "^0.2.3",
     "react-select": "^1.0.0-rc.5"
   }
 }
