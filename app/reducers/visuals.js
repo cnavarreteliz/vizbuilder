@@ -3,7 +3,7 @@ const initialState = {
 		type: "treemap",
 		panel: "PANEL_TYPE_NORMAL",
 		groupBy: ["group", "name"],
-		colorScale: "value",
+		colorScale: "",
 	},
 	axis: {
 		x: '',
