@@ -22,6 +22,8 @@ body {
 	flex-direction: row;
 	height: 100vh;
 
+
+
 	& .side-panel {
 		flex: 0 0 auto;
 		width: 250px;
@@ -51,6 +53,14 @@ body {
 				font-size: 18px;
 				color: #aaa;
 				text-align: center;
+				& .selector {
+					display: inline-block;
+					border-bottom: 1px dashed #aaa;
+				}
+			}
+
+			& .pt-form-group {
+				margin: 0 0 5px;
 			}
 		}
 	}
