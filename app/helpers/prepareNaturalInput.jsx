@@ -7,6 +7,7 @@ export function prepareNaturalInput(cubes) {
 		let dimensions = prepareHierarchy(
 			cube.dimensions.filter(dm => dm.dimensionType != 1)
 		);
+		let timeDimensions = cube.dimensions.filter(e => e.dimensionType == 1)
 		let measures = getMeasures(cube.measures);
 		dimensions.map(dm => {
 			measures.map(ms => {
@@ -17,7 +18,8 @@ export function prepareNaturalInput(cubes) {
 						options: {
 							measure: ms,
 							dimension: dm,
-							cube: cube.name
+							cube: cube.name,
+							timeDimensions: timeDimensions
 						}
 					});
 					key += 1;
@@ -29,7 +31,8 @@ export function prepareNaturalInput(cubes) {
 							options: {
 								measure: ms,
 								dimension: e,
-								cube: cube.name
+								cube: cube.name,
+								timeDimensions: timeDimensions
 							}
 						});
 						key += 1;
