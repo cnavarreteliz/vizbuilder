@@ -12,7 +12,7 @@ function ChartOptions(props) {
 			<div>Color </div>
 			<div>
 				<Selector
-					options={prepareSelectorColor(props.y.labels).filter(
+					options={ prepareSelectorColor(props.y.labels).filter(
 						e =>
 							e.label.includes("Growth") ||
 							e.label.includes("Average") ||

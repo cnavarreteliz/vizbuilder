@@ -88,6 +88,21 @@ function mapDispatchToProps(dispatch) {
 				dimension: data.options.dimension.name,
 				measure: data.options.measure.name
 			});
+			
+			// Always add timeDimension drilldown if isset in cube
+			prepareHierarchy(data.options.timeDimensions).map(dim => {
+				if (dim._children.length == 0) { 
+					dispatch({ type: "DRILLDOWN_ADD", payload: dim });
+				}
+				else { 
+					prepareHierarchy(dim._children).map(e => {
+						dispatch({ type: "DRILLDOWN_ADD", payload: e });
+					})
+				}
+				
+			});
+
+
 		}
 	};
 }

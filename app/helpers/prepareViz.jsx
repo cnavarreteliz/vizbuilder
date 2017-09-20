@@ -1,8 +1,8 @@
 import { Array1D, NDArrayMathGPU } from "deeplearn";
 
 // Group alpha percent of lowest categories
-export function groupLowestCategories(data, alpha = 0.20) {
-    if (data.length > 1) {
+export function groupLowestCategories(data, alpha = 0.05) {
+    if (data !== null && data.length > 1) {
         const math = new NDArrayMathGPU();
         const sortdata = data.sort((a, b) => { return a.value - b.value });
         const tensor = Array1D.new(sortdata.map(e => e.value));

@@ -28,17 +28,6 @@ function ChartAxis(props) {
 						value={props.y.value}
 						onChange={evt => props.onSetAxis("y", evt.target.value)}
 					/>
-					<CustomSelector
-						title="Color"
-						options={prepareSelectorColor(props.y.labels)}
-						value={props.colorScale}
-						onChange={evt =>
-							props.onChangeColorScale(
-								props.current,
-								props.y.current,
-								evt.target.value
-							)}
-					/>
 				</div>
 			);
 		case "PANEL_TYPE_2D":
@@ -55,12 +44,6 @@ function ChartAxis(props) {
 						options={prepareSelectorColor(props.y.labels)}
 						value={props.y.value}
 						onChange={evt => props.onSetAxis("y", evt.target.value)}
-					/>
-					Time Dimension
-					<Select
-						placeholder="ex. Year"
-						options={prepareSelector(props.year.labels)}
-						onChange={onSetTimeAxis}
 					/>
 				</div>
 			);

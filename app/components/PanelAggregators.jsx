@@ -46,7 +46,7 @@ class PanelAggregators extends Component {
 
 		return (
 			<div className="aggregators-wrapper">
-				{<InputSelect
+				{/*{<InputSelect
 					title="Dataset"
 					options={props.cubes.map(cube => ({ label: cube.name }))}
 					value={props.cube.name}
@@ -54,7 +54,7 @@ class PanelAggregators extends Component {
 				/>}
 				{this.renderDrilldownSelector(props)}
 				{this.renderCutSelector(props)}
-				{this.renderMeasureSelector(props)}
+				{this.renderMeasureSelector(props)}*/}
 			</div>
 		);
 	}

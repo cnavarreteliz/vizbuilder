@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import CHARTTYPES from "helpers/charttypes";
+import CHARTTYPES from "helpers/charts";
 import InlineSelect from "components/InlineSelect";
 
 function NaturalSelectors(props) {

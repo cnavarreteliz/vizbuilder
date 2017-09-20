@@ -46,6 +46,10 @@ body {
 			& .title {
 				font-family: "Pathway Gothic One", sans-serif;
 				text-align: center;
+				& .selector {
+					display: inline-block;
+					border-bottom: 1px dashed #222222;
+				}
 			}
 	
 			& .subtitle {

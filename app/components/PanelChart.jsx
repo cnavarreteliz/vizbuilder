@@ -5,6 +5,7 @@ import WordCloud from "react-d3-cloud";
 
 import { applyFilters } from "components/FilterItem";
 import PanelTable from "components/PanelTable";
+import { groupLowestCategories } from "helpers/prepareViz";
 
 import "styles/PanelChart.css";
 
@@ -39,8 +40,9 @@ function PanelChart(props) {
 		type: props.chart.type,
 		data: props.data,
 		title: props.title,
-		colorScale: "colorScale",
+		colorScale: props.chart.colorScale != "" ? "colorScale" : false,
 		colorScaleConfig: { color: ["#88B0D8", "#3F51B5"] },
+		colorScalePosition: props.chart.colorScale != "" ? "bottom" : false,
 		shapeConfig: { fontFamily: "Fira Sans Condensed" },
 		tooltipConfig: {
 			background: "white",
@@ -140,6 +142,7 @@ function mapStateToProps(state) {
 
 	return {
 		chart: chart,
+		//data: groupLowestCategories(mapDataChart(data, chart, props)),
 		data: mapDataChart(data, chart, props),
 		bulk: state.data.values
 	};
