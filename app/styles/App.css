@@ -37,6 +37,9 @@ body {
 		width: 48px;
 		height: 48px;
 		margin-right: 15px;
+		&.selected {
+			border-bottom: 1px dashed #3f51b5;
+		}
 	}
 	& .search {
 		flex: 1;

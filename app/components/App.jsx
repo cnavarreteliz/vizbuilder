@@ -1,21 +1,16 @@
 import { Tab2, Tabs2 } from "@blueprintjs/core";
 import { connect } from "react-redux";
 import pluralize from "pluralize";
-import InputSelectPopover from "components/InputSelectPopover";
 
 import React from "react";
+import CHARTS from "helpers/charts";
 
 import ChartOptions from "components/ChartOptions";
-import PanelAppearance from "components/PanelAppearance";
 import PanelAggregators from "components/PanelAggregators";
 import PanelChart from "components/PanelChart";
-import PanelSearch from "components/PanelSearch";
 import PanelDownload from "components/PanelDownload";
 
 import Search from "components/Search";
-
-import InlineSelect from "components/InlineSelect";
-import NaturalSelectors from "components/PhraseSelectors";
 
 import { prepareHierarchy } from "helpers/prepareHierarchy";
 
@@ -32,17 +27,78 @@ import "nprogress/nprogress.css";
 import "styles/App.css";
 import logo from "assets/logo.svg";
 
+function prepareIcons(props) {
+	if (props.show_viz) {
+		return (
+			<div className="icons">
+				{CHARTS.map(chart =>
+					React.createElement("img", {
+						title: chart.name,
+						className: props.type == chart.name ? "icon active" : "icon",
+						src: require("assets/charts/icon-" + chart.name + ".svg"),
+						onClick() {
+							props.onChangeViz(chart.name, props.panel);
+						}
+					})
+				)}
+			</div>
+		);
+	}
+}
+
+function prepareMainPanel(props) {
+	if (props.x) {
+		return (
+			<div className="main-panel">
+				<div className="header-panel">
+					<h1 className="title">
+						{props.cube.name + " by "}
+						<span className="selector">
+							{renderDrilldownSelector(props, props.x)}
+						</span>
+						{" (All years)"}
+					</h1>
+					<h4 className="subtitle">
+						SIZED BY{" "}
+						<span className="selector">
+							{renderMeasureSelector(props, props.cube, props.y)}
+						</span>
+					</h4>
+					<PanelDownload />
+				</div>
+				<PanelChart />
+				<ChartOptions />
+			</div>
+		);
+	} else {
+		return (
+			<div className="main-panel">
+				<div className="header-panel">
+					<h1 className="title">KSA VizBuilder</h1>
+					<h4 className="subtitle">Build your custom charts</h4>
+				</div>
+				<Search />
+				<p> Every element with dashed can be customized </p>
+			</div>
+		);
+	}
+}
+
 function App(props) {
 	return (
 		<div className="container">
 			<div className="bar bar-1">
-				<div className="icon">
+				<div className="icon selected">
 					{React.createElement("img", {
-						title: "treemap",
+						title: props.type,
 						className: "icon",
-						src: require("assets/charts/icon-" + "treemap" + ".svg")
+						src: require("assets/charts/icon-" + props.type + ".svg"),
+						onClick() {
+							props.onToggleVizPanel(props.show_viz ? false : true);
+						}
 					})}
 				</div>
+				{prepareIcons(props)}
 				<div className="search">
 					<Search />
 				</div>
@@ -55,30 +111,7 @@ function App(props) {
 				</Tabs2>*/}
 				<PanelAggregators />
 
-				<div className="main-panel">
-					<div className="header-panel">
-						<h1 className="title">
-							{props.cube.name + " by "}
-							<span className="selector">
-								{props.x ? renderDrilldownSelector(props, props.x) : ""}
-							</span>
-							{" (All years)"}
-						</h1>
-						<h4 className="subtitle">
-							SIZED BY{" "}
-							<span className="selector">
-								{props.subtitle ? (
-									renderMeasureSelector(props, props.cube, props.y)
-								) : (
-									""
-								)}
-							</span>
-						</h4>
-						<PanelDownload />
-					</div>
-					<PanelChart />
-					<ChartOptions />
-				</div>
+				{prepareMainPanel(props)}
 			</div>
 		</div>
 	);
@@ -171,6 +204,7 @@ function mapStateToProps(state) {
 	const header = prepareTitle(state);
 
 	return {
+		show_viz: state.visuals.panel.show,
 		cube: state.cubes.current,
 		show: state.data.values.length > 1,
 		title: header.title,
@@ -178,6 +212,8 @@ function mapStateToProps(state) {
 		subtitle: header.subtitle,
 		y: state.visuals.axis.y,
 		x: state.visuals.axis.x,
+		panel: state.visuals.chart.panel,
+		type: state.visuals.chart.type,
 		measures: state.aggregators.measures ? state.aggregators.measures : []
 	};
 }
@@ -194,6 +230,14 @@ function mapDispatchToProps(dispatch) {
 		},
 		onDrilldownAdd(dim) {
 			dispatch({ type: "DRILLDOWN_ADD", payload: dim });
+		},
+
+		onToggleVizPanel(display) {
+			dispatch({ type: "VIZ_PANEL_TOGGLE", payload: display });
+		},
+
+		onChangeViz(type, panel) {
+			dispatch({ type: "VIZ_TYPE_UPDATE", payload: type, panel: panel });
 		}
 	};
 }

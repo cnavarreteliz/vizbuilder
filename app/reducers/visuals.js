@@ -1,4 +1,7 @@
 const initialState = {
+	panel: {
+		show: false
+	},
 	chart: {
 		type: "treemap",
 		panel: "PANEL_TYPE_NORMAL",
@@ -20,6 +23,10 @@ export default function(state = initialState, action) {
 
 		case "VIZ_TYPE_UPDATE": {
 			return { ...state, chart: {...state.chart, type: action.payload, panel: action.panel} };
+		}
+
+		case "VIZ_PANEL_TOGGLE": {
+			return { ...state, panel: {...state.panel, show: action.payload} };
 		}
 
 		case "VIZ_AXIS_UPDATE": {

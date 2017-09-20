@@ -13,7 +13,7 @@ function Search(props) {
 		<div className="searchselect-wrapper">
 			<Select
 				options={props.ninput}
-				placeholder="ex. Industry Group, Sector, Education Sponsored"
+				placeholder="Search data ex. Industry Group, Sector, Education Sponsored"
 				onChange={onSearchChange}
 			/>
 		</div>
@@ -87,15 +87,17 @@ function mapDispatchToProps(dispatch) {
 			});
 
 			// Always add timeDimension drilldown if isset in cube
-			prepareHierarchy(data.options.timeDimensions).map(dim => {
-				if (dim._children.length == 0) {
-					dispatch({ type: "DRILLDOWN_ADD", payload: dim });
-				} else {
-					prepareHierarchy(dim._children).map(e => {
-						dispatch({ type: "DRILLDOWN_ADD", payload: e });
-					});
-				}
-			});
+			if (data.options.timeDimensions.length == 1) {
+				prepareHierarchy(data.options.timeDimensions).map(dim => {
+					if (dim._children.length == 0) {
+						dispatch({ type: "DRILLDOWN_ADD", payload: dim });
+					} else {
+						prepareHierarchy(dim._children).map(e => {
+							dispatch({ type: "DRILLDOWN_ADD", payload: e });
+						});
+					}
+				});
+			}
 		}
 	};
 }

@@ -46,6 +46,7 @@ class PanelDownload extends Component {
 
 		return (
 			<div className="paneldownload-options">
+				{/*onClick={props.onChangeViz("table", "PANEL_TYPE_2D")} */}
 				<a className="download-btn">
 					<Icon iconName="pt-icon-th" /> View Data
 				</a>
@@ -72,4 +73,12 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps)(PanelDownload);
+function mapDispatchToProps(dispatch) {
+	return {
+		onChangeViz(type, panel) {
+			dispatch({ type: "VIZ_TYPE_UPDATE", payload: type, panel: panel });
+		}
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PanelDownload);
