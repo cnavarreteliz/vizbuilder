@@ -1,7 +1,7 @@
 import React from "react";
 import { Component, createElement } from "react";
 import Select from "react-select";
-import ChartSelector from "components/ChartSelector";
+import Search from "components/Search";
 import { connect } from "react-redux";
 import { requestCubes, requestQuery, buildQuery } from "actions/mondrian";
 
@@ -14,8 +14,7 @@ import "react-select/dist/react-select.css";
 function PanelSearch(props) {
 	return (
 		<div className="panelsearch-wrapper">
-			<ChartSelector />
-			{ renderDrilldownSelector(props) }
+			<Search />
 		</div>
 	);
 }

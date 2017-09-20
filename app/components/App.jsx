@@ -3,15 +3,17 @@ import { connect } from "react-redux";
 import pluralize from "pluralize";
 import InputSelectPopover from "components/InputSelectPopover";
 
-import { createElement } from "react";
+import React from "react";
 
 import ChartOptions from "components/ChartOptions";
 import PanelAppearance from "components/PanelAppearance";
-import PanelAssistant from "components/PanelAssistant";
+import PanelAggregators from "components/PanelAggregators";
 import PanelChart from "components/PanelChart";
 import PanelSearch from "components/PanelSearch";
 import PanelDownload from "components/PanelDownload";
-import ChartSelector from "components/ChartSelector";
+
+import Search from "components/Search";
+
 import InlineSelect from "components/InlineSelect";
 import NaturalSelectors from "components/PhraseSelectors";
 
@@ -33,38 +35,50 @@ import logo from "assets/logo.svg";
 function App(props) {
 	return (
 		<div className="container">
-			<div className="side-panel">
-				<img src={logo} />
-				<Tabs2>
+			<div className="bar bar-1">
+				<div className="icon">
+					{React.createElement("img", {
+						title: "treemap",
+						className: "icon",
+						src: require("assets/charts/icon-" + "treemap" + ".svg")
+					})}
+				</div>
+				<div className="search">
+					<Search />
+				</div>
+			</div>
+			<div className="panelContainer">
+				{/*<Tabs2>
 					<Tab2 id="fil" title="Search" panel={<PanelSearch />} />
 					<Tab2 id="chr" title="Appearance" panel={<PanelAppearance />} />
-					{/*<Tab2 id="ast" title="Advanced" panel={<PanelAssistant />} /> */}
-				</Tabs2>
-				<PanelAssistant />
-			</div>
-			<div className="main-panel">
-				<div className="header-panel">
-					<h1 className="title">
-						{props.cube.name + " by "}
-						<span className="selector">
-							{props.x ? renderDrilldownSelector(props, props.x) : ""}
-						</span>
-						{" (All years)"}
-					</h1>
-					<h4 className="subtitle">
-						SIZED BY{" "}
-						<span className="selector">
-							{props.subtitle ? (
-								renderMeasureSelector(props, props.cube, props.y)
-							) : (
-								""
-							)}
-						</span>
-					</h4>
-					<PanelDownload />
+					<Tab2 id="ast" title="Advanced" panel={<PanelAssistant />} />
+				</Tabs2>*/}
+				<PanelAggregators />
+
+				<div className="main-panel">
+					<div className="header-panel">
+						<h1 className="title">
+							{props.cube.name + " by "}
+							<span className="selector">
+								{props.x ? renderDrilldownSelector(props, props.x) : ""}
+							</span>
+							{" (All years)"}
+						</h1>
+						<h4 className="subtitle">
+							SIZED BY{" "}
+							<span className="selector">
+								{props.subtitle ? (
+									renderMeasureSelector(props, props.cube, props.y)
+								) : (
+									""
+								)}
+							</span>
+						</h4>
+						<PanelDownload />
+					</div>
+					<PanelChart />
+					<ChartOptions />
 				</div>
-				<PanelChart />
-				<ChartOptions />
 			</div>
 		</div>
 	);
@@ -112,13 +126,13 @@ function InputTitlePopover(props) {
 		let children = null,
 			attr = { key: item.fullName, text: item.name };
 		attr.onClick = () => props.onClick(item);
-		return createElement(MenuItem, attr, children);
+		return React.createElement(MenuItem, attr, children);
 	}
 
 	return (
 		<div className="pt-form-group">
 			<Popover
-				content={createElement(Menu, {}, props.menu.map(createMenuItem))}
+				content={React.createElement(Menu, {}, props.menu.map(createMenuItem))}
 				position={Position.BOTTOM}
 			>
 				<div> {props.label} </div>
@@ -138,13 +152,13 @@ function InputDimensionPopover(props) {
 			children = item._children.map(createMenuItem);
 		}
 
-		return createElement(MenuItem, attr, children);
+		return React.createElement(MenuItem, attr, children);
 	}
 
 	return (
 		<div className="pt-form-group">
 			<Popover
-				content={createElement(Menu, {}, props.menu.map(createMenuItem))}
+				content={React.createElement(Menu, {}, props.menu.map(createMenuItem))}
 				position={Position.BOTTOM}
 			>
 				{props.label}

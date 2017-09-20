@@ -2,7 +2,6 @@ import { connect } from "react-redux";
 import { Button } from "@blueprintjs/core/dist/components/button/buttons.js";
 
 import OPERATOR from "helpers/operators";
-import ChartSelector from "components/ChartSelector";
 import Filter from "components/FilterItem";
 
 function FilterArea(props) {
@@ -27,7 +26,6 @@ function FilterArea(props) {
 	
 	return (
 		<div className="filters-wrapper">
-			<ChartSelector />
 			{/*<div className="pt-form-group">
 				<label className="pt-label">Filters</label>
 				<div className="filter-items">{}</div>
