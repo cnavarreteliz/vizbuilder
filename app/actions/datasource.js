@@ -4,7 +4,7 @@ import client from "helpers/mondrian";
 import { Cube } from "helpers/classes";
 import { flattenDrilldowns } from "helpers/manageDimensions";
 
-export function requestCubes(dispatch) {
+export function requestCubes(dispatch, attempt) {
 	nprogress.start();
 	dispatch({ type: "CUBES_FETCH" });
 
@@ -27,10 +27,16 @@ export function requestCubes(dispatch) {
 				});
 			},
 			error => {
-				return dispatch({
-					type: "CUBES_FETCH_ERROR",
-					payload: error
-				});
+				let attempts = (attempt || 0) + 1;
+
+				if (attempts < 3) {
+					return requestCubes(dispatch, attempts);
+				} else {
+					return dispatch({
+						type: "CUBES_FETCH_ERROR",
+						payload: error
+					});
+				}
 			}
 		)
 		.then(() => {
@@ -38,7 +44,7 @@ export function requestCubes(dispatch) {
 		});
 }
 
-export function requestQuery(query) {
+export function requestQuery(query, attempt) {
 	return function(dispatch) {
 		nprogress.done();
 
@@ -47,16 +53,14 @@ export function requestQuery(query) {
 		nprogress.start();
 		dispatch({ type: "DATA_FETCH" });
 
-		let regex = RegExp("#?null", "i");
-
-		client
+		return client
 			.query(query)
 			.then(
 				request => {
 					let dataset = flattenDrilldowns(
-							request.data.axes,
-							request.data.values
-						);
+						request.data.axes,
+						request.data.values
+					);
 
 					return dispatch({
 						type: "DATA_FETCH_SUCCESS",
@@ -64,6 +68,11 @@ export function requestQuery(query) {
 					});
 				},
 				error => {
+					let attempts = (attempt || 0) + 1;
+
+					if (attempts < 4)
+						return requestQuery(query, attempts)(dispatch);
+
 					return dispatch({
 						type: "DATA_FETCH_ERROR",
 						payload: error

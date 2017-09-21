@@ -19,8 +19,6 @@ function InputChartType(props) {
 			? Position[props.position]
 			: props.position;
 
-	console.log(CHARTS);
-
 	return (
 		<Popover
 			position={position}
