@@ -4,7 +4,6 @@ export class Cube {
 	constructor(cb) {
 		this.key = makeRandomId();
 		this.name = cb.name;
-		this.query = cb.query;
 
 		this.dimensions = []
 			.concat(cb.dimensions)
@@ -17,6 +16,11 @@ export class Cube {
 			.map(item => new Measure(item));
 
 		this._drilldowns = null;
+		this._source = cb;
+	}
+
+	get query() {
+		return this._source.query;
 	}
 
 	get stdDimensions() {
