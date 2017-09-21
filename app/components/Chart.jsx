@@ -9,16 +9,6 @@ import { groupLowestCategories } from "helpers/prepareViz";
 
 import "styles/Chart.css";
 
-function prepareTooltip(obj) {
-	let content = "",
-		value;
-	Object.keys(obj).map(key => {
-		(value = isNumeric(obj[key]) ? abbreviateNumber(obj[key]) : obj[key]),
-			(content += "<div class='tooltip-row'>" + key + ": " + value + "</div>");
-	});
-	return content;
-}
-
 function isNumeric(n) {
 	return !isNaN(parseFloat(n)) && isFinite(n);
 }
@@ -42,42 +32,54 @@ function abbreviateNumber(num, fixed = 0) {
 	return e;
 }
 
+const CHARTCONFIG = {
+	shapeConfig: { 
+		fontFamily: "Fira Sans Condensed" 
+	},
+	tooltipConfig: {
+		padding: "10px",
+		width: "200px",
+		background: "white",
+		title: d => d.name,
+		titleStyle: {
+			"font-size": "18px",
+			"text-transform": "uppercase",
+			"font-weight": "bold",
+			"font-family": "'Pathway Gothic One', sans-serif",
+			"margin-bottom": "12px"
+		},
+		body(item) {
+			item = item.source;
+			return Object.keys(item).reduce(function(html, key) {
+				let value = isNumeric(item[key]) ? abbreviateNumber(item[key]) : item[key];
+				html += "<div class='tooltip-row'>" + key + ": " + value + "</div>";
+				return html;
+			}, '');
+		},
+		bodyStyle: {
+			"font-size": "16px"
+		},
+		footer: "",
+		footerStyle: {
+			"margin-top": 0
+		},
+	}
+}
+
 function Chart(props) {
 	let config = {
+		...CHARTCONFIG,
 		type: props.chart.type,
 		data: props.data,
 		// title: props.title,
-		colorScale: props.chart.colorScale != "" ? "colorScale" : false,
-		colorScaleConfig: { color: ["#88B0D8", "#3F51B5"] },
-		colorScalePosition: props.chart.colorScale != "" ? "bottom" : false,
-		shapeConfig: { fontFamily: "Fira Sans Condensed" },
-		tooltipConfig: {
-			background: "white",
-			body: d => prepareTooltip(d.detail),
-			footer: "",
-			width: "200px",
-			footerStyle: {
-				"margin-top": 0
-			},
-			bodyStyle: {
-				"font-size": "16px"
-			},
-			titleStyle: {
-				"font-size": "18px",
-				"text-transform": "uppercase",
-				"font-weight": "bold",
-				"font-family": "'Pathway Gothic One', sans-serif",
-				"margin-bottom": "12px"
-			},
-			//body: d => prepareTooltip( d.detail ),
-			padding: "10px",
-			title: d => d.name
-		}
 		// groupBy: props.groupBy
 	};
 
 	switch (config.type) {
 		case "treemap":
+			config.colorScale = "value";
+			config.colorScaleConfig = { color: ["#88B0D8", "#3F51B5"] };
+			config.colorScalePosition = "bottom";
 			return <Treemap config={config} />;
 
 		case "donut":
@@ -90,7 +92,7 @@ function Chart(props) {
 			return <BarChart config={config} />;
 
 		case "table":
-			return <PanelTable data={props.bulk} />;
+			return <PanelTable data={config.data} />;
 
 		case "bar":
 			return <BarChart config={config} />;
@@ -116,31 +118,34 @@ function mapDataForChart(data, chart, props) {
 	switch (chart.type) {
 		case "treemap":
 		case "donut":
-		case "pie": {
+		case "pie":
 			return data.map(item => ({
 				id: item[props.x],
 				name: item[props.x],
 				value: item[props.y],
-				colorScale: item[chart.colorScale]
+				source: item,
 			}));
-		}
 
 		case "bar":
-		case "stacked": {
+		case "stacked":
 			return data.map(item => ({
 				id: item[props.x],
 				name: item[props.x],
 				x: item[props.year],
 				y: item[props.y],
-				colorScale: item[chart.colorScale]
+				source: item,
 			}));
-		}
 
 		case "wordcloud":
 			return data.map(item => ({
 				text: item[props.x],
-				value: item[props.y]
+				value: item[props.y],
+				source: item,
 			}));
+
+		case "table":
+		default:
+			return data;
 	}
 }
 
@@ -166,8 +171,7 @@ function mapStateToProps(state) {
 
 	return {
 		chart: state.visuals.chart,
-		bulk: state.data.values,
-		data: mapDataForChart(state.data.values, state.visuals.chart, props),
+		data: mapDataForChart(state.data.values, state.visuals.chart, props)
 		// data: groupLowestCategories(mapDataChart(data, chart, props)),
 		// data: mapDataChart(data, chart, props),
 	};
