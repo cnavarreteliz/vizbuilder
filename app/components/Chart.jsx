@@ -10,33 +10,39 @@ import { groupLowestCategories } from "helpers/prepareViz";
 import "styles/Chart.css";
 
 function prepareTooltip(obj) {
-	let content = "", value
+	let content = "",
+		value;
 	Object.keys(obj).map(key => {
-			value = isNumeric(obj[key]) ? abbreviateNumber(obj[key]) : obj[key],
-			content += "<div class='tooltip-row'>" + key + ": " + value + "</div>"
-		}
-	)
-	return content
+		(value = isNumeric(obj[key]) ? abbreviateNumber(obj[key]) : obj[key]),
+			(content += "<div class='tooltip-row'>" + key + ": " + value + "</div>");
+	});
+	return content;
 }
 
 function isNumeric(n) {
 	return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
-function abbreviateNumber(num, fixed=0) {
-	if (num === null) { return null; } // terminate early
-	if (num === 0) { return '0'; } // terminate early
-	fixed = (!fixed || fixed < 0) ? 0 : fixed; // number of decimal places to show
-	var b = (num).toPrecision(2).split("e"), // get power
+function abbreviateNumber(num, fixed = 0) {
+	if (num === null) {
+		return null;
+	} // terminate early
+	if (num === 0) {
+		return "0";
+	} // terminate early
+	fixed = !fixed || fixed < 0 ? 0 : fixed; // number of decimal places to show
+	var b = num.toPrecision(2).split("e"), // get power
 		k = b.length === 1 ? 0 : Math.floor(Math.min(b[1].slice(1), 14) / 3), // floor at decimals, ceiling at trillions
-		c = k < 1 ? num.toFixed(0 + fixed) : (num / Math.pow(10, k * 3) ).toFixed(1 + fixed), // divide by power
+		c =
+			k < 1
+				? num.toFixed(0 + fixed)
+				: (num / Math.pow(10, k * 3)).toFixed(1 + fixed), // divide by power
 		d = c < 0 ? c : Math.abs(c), // enforce -0 is 0
-		e = d + ['', 'K', 'M', 'B', 'T'][k]; // append power
+		e = d + ["", "K", "M", "B", "T"][k]; // append power
 	return e;
 }
 
 function Chart(props) {
-
 	let config = {
 		type: props.chart.type,
 		data: props.data,
@@ -90,21 +96,14 @@ function Chart(props) {
 			return <BarChart config={config} />;
 
 		case "wordcloud":
-			config.data = config.data.map(obj => ({
-				text: obj.id,
-				value: obj.value
-			}));
-
-			const fontSizeMapper = word => Math.log2(word.value) * 5;
-			const rotate = word => (Math.random() * 6 - 3) * 30;
-
 			return (
 				<WordCloud
 					data={config.data}
-					fontSizeMapper={fontSizeMapper}
-					//rotate={rotate}
+					fontSizeMapper={word => Math.log2(word.value) * 5}
+					//rotate={word => (Math.random() * 6 - 3) * 30}
 				/>
 			);
+
 		case "stacked":
 			return <StackedArea config={config} />;
 
@@ -113,26 +112,34 @@ function Chart(props) {
 	}
 }
 
-function mapDataChart(data, chart, props) {
+function mapDataForChart(data, chart, props) {
 	switch (chart.type) {
 		case "treemap":
-		case "donut": 
-		case "pie":
+		case "donut":
+		case "pie": {
 			return data.map(item => ({
 				id: item[props.x],
 				name: item[props.x],
 				value: item[props.y],
 				colorScale: item[chart.colorScale]
 			}));
-		case "bar": 
-		case "stacked":
+		}
+
+		case "bar":
+		case "stacked": {
 			return data.map(item => ({
 				id: item[props.x],
 				name: item[props.x],
+				x: item[props.year],
 				y: item[props.y],
-				x: item[props.x],
-				colorScale: item[chart.colorScale],
-				detail: item
+				colorScale: item[chart.colorScale]
+			}));
+		}
+
+		case "wordcloud":
+			return data.map(item => ({
+				text: item[props.x],
+				value: item[props.y]
 			}));
 	}
 }
@@ -159,10 +166,10 @@ function mapStateToProps(state) {
 
 	return {
 		chart: state.visuals.chart,
-		data: mapDataChart(state.data.values, state.visuals.chart, props),
+		bulk: state.data.values,
+		data: mapDataForChart(state.data.values, state.visuals.chart, props),
 		// data: groupLowestCategories(mapDataChart(data, chart, props)),
 		// data: mapDataChart(data, chart, props),
-		// bulk: state.data.values
 	};
 }
 
