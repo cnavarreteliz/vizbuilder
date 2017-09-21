@@ -33,8 +33,8 @@ function abbreviateNumber(num, fixed = 0) {
 }
 
 const CHARTCONFIG = {
-	shapeConfig: { 
-		fontFamily: "Fira Sans Condensed" 
+	shapeConfig: {
+		fontFamily: "Fira Sans Condensed"
 	},
 	tooltipConfig: {
 		padding: "10px",
@@ -51,10 +51,12 @@ const CHARTCONFIG = {
 		body(item) {
 			item = item.source;
 			return Object.keys(item).reduce(function(html, key) {
-				let value = isNumeric(item[key]) ? abbreviateNumber(item[key]) : item[key];
+				let value = isNumeric(item[key])
+					? abbreviateNumber(item[key])
+					: item[key];
 				html += "<div class='tooltip-row'>" + key + ": " + value + "</div>";
 				return html;
-			}, '');
+			}, "");
 		},
 		bodyStyle: {
 			"font-size": "16px"
@@ -62,18 +64,20 @@ const CHARTCONFIG = {
 		footer: "",
 		footerStyle: {
 			"margin-top": 0
-		},
+		}
 	}
-}
+};
 
 function Chart(props) {
 	let config = {
 		...CHARTCONFIG,
 		type: props.chart.type,
-		data: props.data,
+		data: props.data
 		// title: props.title,
 		// groupBy: props.groupBy
 	};
+
+	console.log(config.data)
 
 	switch (config.type) {
 		case "treemap":
@@ -119,29 +123,44 @@ function mapDataForChart(data, chart, props) {
 		case "treemap":
 		case "donut":
 		case "pie":
-			return data.map(item => ({
-				id: item[props.x],
-				name: item[props.x],
-				value: item[props.y],
-				source: item,
-			}));
+			return data.reduce((all, item) => {
+				let value = item[props.y];
+				if (isNumeric(value))
+					all.push({
+						id: item[props.x],
+						name: item[props.x],
+						value,
+						source: item
+					});
+				return all;
+			}, []);
 
 		case "bar":
 		case "stacked":
-			return data.map(item => ({
-				id: item[props.x],
-				name: item[props.x],
-				x: item[props.year],
-				y: item[props.y],
-				source: item,
-			}));
+			return data.reduce((all, item) => {
+				let value = item[props.y];
+				if (isNumeric(value))
+					all.push({
+						id: item[props.x],
+						name: item[props.x],
+						x: item[props.year],
+						y: value,
+						source: item
+					});
+				return all;
+			}, []);
 
 		case "wordcloud":
-			return data.map(item => ({
-				text: item[props.x],
-				value: item[props.y],
-				source: item,
-			}));
+			return data.reduce((all, item) => {
+				let value = item[props.y];
+				if (isNumeric(value))
+					all.push({
+						text: item[props.x],
+						value,
+						source: item
+					});
+				return all;
+			}, []);
 
 		case "table":
 		default:
