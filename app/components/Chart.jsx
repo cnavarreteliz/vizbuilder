@@ -33,6 +33,7 @@ function abbreviateNumber(num, fixed = 0) {
 }
 
 const CHARTCONFIG = {
+	colorScaleConfig : { color: ["#88B0D8", "#3F51B5"] },
 	shapeConfig: {
 		fontFamily: "Fira Sans Condensed"
 	},
@@ -72,18 +73,15 @@ function Chart(props) {
 	let config = {
 		...CHARTCONFIG,
 		type: props.chart.type,
-		data: props.data
+		data: props.data,
+		colorScale : props.chart.colorScale !== "" ? "colorScale" : props.chart.colorScale,
+		colorScalePosition : props.chart.colorScale !== "" ? "bottom" : false,
 		// title: props.title,
 		// groupBy: props.groupBy
 	};
 
-	console.log(config.data)
-
 	switch (config.type) {
 		case "treemap":
-			config.colorScale = "value";
-			config.colorScaleConfig = { color: ["#88B0D8", "#3F51B5"] };
-			config.colorScalePosition = "bottom";
 			return <Treemap config={config} />;
 
 		case "donut":
@@ -129,6 +127,7 @@ function mapDataForChart(data, chart, props) {
 					all.push({
 						id: item[props.x],
 						name: item[props.x],
+						colorScale: item[props.colorScale],
 						value,
 						source: item
 					});
@@ -170,7 +169,7 @@ function mapDataForChart(data, chart, props) {
 
 function mapStateToProps(state) {
 	let aggr = state.aggregators,
-		props = { x: "", y: "", year: "" };
+		props = { x: "", y: "", year: "", colorScale: state.visuals.chart.colorScale };
 
 	if (aggr.drilldowns.length > 1) {
 		let xor = aggr.drilldowns[0].dimensionType === 0;

@@ -62,12 +62,18 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
 	return {
 		onChangeColorScale(cube, measures, property) {
+			let measure = cube.measures.filter(item => item.name == property);
+			console.log(measure)
+			dispatch({ type: "MEASURE_ADD", payload: measure });
+			dispatch({ type: "VIZ_COLOR_UPDATE", payload: property });
+			
+			/*dispatch({ type: "MEASURE_SET", payload: measures });
 			if (measures.filter(item => item == property).length == 0) {
 				let measure = cube.measures.filter(item => item.name == property);
 				dispatch({ type: "MEASURE_ADD", payload: measure });
 			}
 
-			dispatch({ type: "VIZ_COLOR_UPDATE", payload: property });
+			*/
 		},
 
 		onChangeViz(type, panel) {
