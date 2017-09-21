@@ -42,7 +42,7 @@ export function requestQuery(query) {
 	return function(dispatch) {
 		nprogress.done();
 
-		if (!query) return;
+		if (!query || !query.drilldowns) return;
 
 		nprogress.start();
 		dispatch({ type: "DATA_FETCH" });
@@ -53,12 +53,14 @@ export function requestQuery(query) {
 			.query(query)
 			.then(
 				request => {
-					let dataset = flattenDrilldowns(request.data.axes, request.data.values),
-						props = Object.keys(dataset[0] || {});
+					let dataset = flattenDrilldowns(
+							request.data.axes,
+							request.data.values
+						);
 
 					return dispatch({
 						type: "DATA_FETCH_SUCCESS",
-						payload: dataset.filter(item => props.some(p => regex.test(item[p])))
+						payload: dataset
 					});
 				},
 				error => {

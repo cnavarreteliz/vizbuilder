@@ -5,17 +5,20 @@ import { prepareHierarchy } from "helpers/prepareHierarchy";
 import { prepareNaturalInput } from "helpers/prepareNaturalInput";
 
 import "react-select/dist/react-select.css";
-import "styles/Search.css";
+import "styles/ChartSelector.css";
 
-function Search(props) {
+function ChartSelector(props) {
 	let { onSearchChange } = props;
 	return (
-		<div className="searchselect-wrapper">
-			<Select
-				options={props.ninput}
-				placeholder="Search data ex. Industry Group, Sector, Education Sponsored"
-				onChange={onSearchChange}
-			/>
+		<div className="chartoptions-wrapper">
+			<div>
+				<div className="title">Show me</div>
+				<Select
+					options={props.ninput}
+					placeholder="ex. Industry Group, Sector, Education Sponsored"
+					onChange={onSearchChange}
+				/>
+			</div>
 		</div>
 	);
 }
@@ -80,21 +83,8 @@ function mapDispatchToProps(dispatch) {
 				dimension: data.options.dimension.name,
 				measure: data.options.measure.name
 			});
-
-			// Always add timeDimension drilldown if isset in cube
-			if (data.options.timeDimensions.length == 1) {
-				prepareHierarchy(data.options.timeDimensions).map(dim => {
-					if (dim._children.length == 0) {
-						dispatch({ type: "DRILLDOWN_ADD", payload: dim });
-					} else {
-						prepareHierarchy(dim._children).map(e => {
-							dispatch({ type: "DRILLDOWN_ADD", payload: e });
-						});
-					}
-				});
-			}
 		}
 	};
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Search);
+export default connect(mapStateToProps, mapDispatchToProps)(ChartSelector);

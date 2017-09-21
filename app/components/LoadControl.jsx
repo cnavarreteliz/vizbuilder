@@ -1,17 +1,21 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { requestQuery } from "actions/datasource";
+import { requestCubes, requestQuery } from "actions/datasource";
 import { buildQuery } from "helpers/mondrian";
 
 class LoadControl extends React.Component {
+	componentDidMount() {
+		this.props.dispatch(requestCubes);
+	}
+
 	componentDidUpdate(prev) {
 		const { cb, dd, ms, ct } = this.props;
 
 		if (
-			cb.name !== prev.cb.name ||
-			dd.length !== prev.dd.length ||
-			ms.length !== prev.ms.length ||
+			cb.key !== prev.cb.key ||
+			(dd.length && prev.dd.length && dd[0].key !== prev.dd[0].key) || 
+			(ms.length && prev.ms.length && ms[0].key !== prev.ms[0].key) ||
 			ct.length !== prev.ct.length
 		) {
 			let query = buildQuery(cb, dd, ms, ct);

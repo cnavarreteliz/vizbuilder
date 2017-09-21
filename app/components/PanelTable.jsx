@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import FileSaver from "file-saver";
 import { Table, Column, Cell } from "@blueprintjs/table";
@@ -6,7 +6,7 @@ import { Table, Column, Cell } from "@blueprintjs/table";
 import "styles/PanelTable.css";
 
 // Dinamic selector
-class PanelTable extends Component {
+class PanelTable extends React.Component {
 	constructor(props) {
 		super(props);
 		//this.updateExtension = this.updateExtension.bind(this);

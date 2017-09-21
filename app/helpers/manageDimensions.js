@@ -29,8 +29,8 @@ export function flattenDimHierarchy(dimensions) {
 		let hierarchies = (dim.hierarchies || []).reduce(function(output, hie) {
 			let levels = (hie.levels || [])
 				.map(function(lvl, index) {
-					lvl = {...lvl}
-					
+					lvl = { ...lvl };
+
 					if (includes(hie.name, lvl.name)) {
 						lvl.name = hie.name;
 					} else if (lvl.name !== hie.name && !includes(lvl.name, hie.name)) {
@@ -48,7 +48,6 @@ export function flattenDimHierarchy(dimensions) {
 	}, []);
 }
 
-
 export function flattenDrilldowns(levels, values) {
 	levels = [].concat(levels);
 	var level = levels.pop().members;
@@ -58,15 +57,23 @@ export function flattenDrilldowns(levels, values) {
 		return zip(level, values).reduce(function(all, member) {
 			let axis = member[0],
 				value = flattenDrilldowns(levels, member[1]);
-			value.forEach(item => (item[axis.level_name] = axis.name));
+
+			value.forEach(function(item) {
+				item[axis.level_name] = axis.name;
+			});
+
+			axis = null;
+
 			return all.concat(value);
 		}, []);
 	else
 		// MEASURES
 		return [
 			values.reduce(function(all, value, index) {
-				let key = level[index].name;
-				all[key] = value;
+				if (!isNaN(value)) {
+					let key = level[index].name;
+					all[key] = value;
+				}
 				return all;
 			}, {})
 		];

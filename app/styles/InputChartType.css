@@ -1,0 +1,14 @@
+.charttype {
+	&-current {
+		display: block;
+		margin-right: 10px;
+		width: 48px;
+		height: 48px;
+	}
+
+	&-menu {
+		& .icon {
+			display: inline-block;
+		}
+	}
+}

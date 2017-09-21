@@ -1,0 +1,21 @@
+.toolbar {
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	text-align: left;
+	list-style: none;
+
+	& .button {
+		// display: inline-block;
+		margin-right: 15px;
+		line-height: 18px;
+		font-size: 12px;
+		font-family: "Palanquin", sans-serif;
+		color: #949494;
+		cursor: pointer;
+
+		&:hover {
+			color: #3f51b5;
+		}
+	}
+}
