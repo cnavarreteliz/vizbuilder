@@ -6,27 +6,18 @@ import { Menu } from "@blueprintjs/core/dist/components/menu/menu";
 import { MenuItem } from "@blueprintjs/core/dist/components/menu/menuItem";
 
 function InputPopover(props) {
-	console.log(props.options);
-	
-	let options = props.options.map(function createMenuItem(item) {
+	function createMenuItem(item) {
 		let children = null,
-			attr = { key: item.key, text: item.name };
-		// let children = null,
-		// 	attr = { key: item._label, text: item._label };
+			attr = { key: item.key, text: item.label };
 
-		// if (item._children.length == 0) {
-		// 	attr.onClick = () => props.onClick(item);
-		// } else {
-		// 	children = item._children.map(createMenuItem);
-		// }
-
-
-		attr.onClick = () => props.onClick(item);
+		if (Array.isArray(item.value)) {
+			children = item.value.map(createMenuItem);
+		} else {
+			attr.onClick = () => props.onClick(item.value);
+		}
 
 		return React.createElement(MenuItem, attr, children);
-	});
-
-	let menu = React.createElement(Menu, null, options);
+	}
 
 	let position =
 		"string" === typeof props.position
@@ -34,9 +25,13 @@ function InputPopover(props) {
 			: props.position;
 
 	return (
-		<Popover content={menu} position={position}>
-			{props.value}
-		</Popover>
+		<Popover
+			target={props.value}
+			content={
+				<Menu>{props.options.sort(sortParentsFirst).map(createMenuItem)}</Menu>
+			}
+			position={position}
+		/>
 	);
 }
 
@@ -52,5 +47,9 @@ InputPopover.defaultProps = {
 	value: "",
 	position: Position.BOTTOM
 };
+
+function sortParentsFirst(a,b) {
+	return (a.value.length || 0) < (b.value.length || 0)
+}
 
 export default InputPopover;

@@ -143,4 +143,12 @@ export class Measure {
 		this.key = makeRandomId();
 		this.name = ms.name;
 	}
+
+	get label() {
+		return this.name;
+	}
+
+	get value() {
+		return this;
+	}
 }
