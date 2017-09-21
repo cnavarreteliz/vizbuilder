@@ -35,10 +35,7 @@ function abbreviateNumber(num, fixed=0) {
 	return e;
 }
 
-function PanelChart(props) {
-
 function Chart(props) {
-	console.log(props.data)
 
 	let config = {
 		type: props.chart.type,
@@ -162,7 +159,7 @@ function mapStateToProps(state) {
 
 	return {
 		chart: state.visuals.chart,
-		data: mapDataForChart(state.data.values, state.visuals.chart, props),
+		data: mapDataChart(state.data.values, state.visuals.chart, props),
 		// data: groupLowestCategories(mapDataChart(data, chart, props)),
 		// data: mapDataChart(data, chart, props),
 		// bulk: state.data.values
