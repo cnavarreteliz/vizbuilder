@@ -7,7 +7,7 @@ import { applyFilters } from "components/FilterItem";
 import PanelTable from "components/PanelTable";
 import { groupLowestCategories } from "helpers/prepareViz";
 
-import "styles/PanelChart.css";
+import "styles/Chart.css";
 
 function prepareTooltip(obj) {
 	let content = "", value
@@ -35,11 +35,13 @@ function abbreviateNumber(num, fixed=0) {
 	return e;
 }
 
-function PanelChart(props) {
+function Chart(props) {
+	console.log(props.data)
+
 	let config = {
 		type: props.chart.type,
 		data: props.data,
-		title: props.title,
+		// title: props.title,
 		colorScale: props.chart.colorScale != "" ? "colorScale" : false,
 		colorScaleConfig: { color: ["#88B0D8", "#3F51B5"] },
 		colorScalePosition: props.chart.colorScale != "" ? "bottom" : false,
@@ -113,39 +115,65 @@ function PanelChart(props) {
 	}
 }
 
-function mapDataChart(data, chart, props) {
-	switch (chart.panel) {
-		case "PANEL_TYPE_NORMAL":
+function mapDataForChart(data, chart, props) {
+	switch (chart.type) {
+		case "treemap":
+		case "donut":
+		case "pie": {
 			return data.map(item => ({
 				id: item[props.x],
 				name: item[props.x],
 				value: item[props.y],
-				colorScale: item[chart.colorScale],
-				detail: item
+				colorScale: item[chart.colorScale]
 			}));
-		case "PANEL_TYPE_2D":
+		}
+
+		case "bar":
+		case "stacked": {
 			return data.map(item => ({
 				id: item[props.x],
 				name: item[props.x],
-				y: item[props.y],
 				x: item[props.year],
-				colorScale: item[chart.colorScale],
-				detail: item
+				y: item[props.y],
+				colorScale: item[chart.colorScale]
+			}));
+		}
+
+		case "wordcloud":
+			return data.map(item => ({
+				text: item[props.x],
+				value: item[props.y]
 			}));
 	}
 }
 
 function mapStateToProps(state) {
-	let props = state.visuals.axis,
-		chart = state.visuals.chart,
-		data = applyFilters(state.data.values, state.filters);
+	let aggr = state.aggregators,
+		props = { x: "", y: "", year: "" };
+
+	if (aggr.drilldowns.length > 1) {
+		let xor = aggr.drilldowns[0].dimensionType === 0;
+		props.x = aggr.drilldowns[xor ? 0 : 1].level;
+		props.year = aggr.drilldowns[xor ? 1 : 0].level;
+	} else if (aggr.drilldowns.length > 0) {
+		props.x = aggr.drilldowns[0].level;
+	}
+
+	if (aggr.measures.length > 0) {
+		props.y = aggr.measures[0].name;
+	}
+
+	if (state.cubes.current.timeDimensions.length > 0) {
+		props.year = state.cubes.current.timeDimensions[0].name;
+	}
 
 	return {
-		chart: chart,
-		//data: groupLowestCategories(mapDataChart(data, chart, props)),
-		data: mapDataChart(data, chart, props),
-		bulk: state.data.values
+		chart: state.visuals.chart,
+		data: mapDataForChart(state.data.values, state.visuals.chart, props),
+		// data: groupLowestCategories(mapDataChart(data, chart, props)),
+		// data: mapDataChart(data, chart, props),
+		// bulk: state.data.values
 	};
 }
 
-export default connect(mapStateToProps)(PanelChart);
+export default connect(mapStateToProps)(Chart);

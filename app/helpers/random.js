@@ -1,4 +1,4 @@
-export default function makeRandomId() {
+export function makeRandomId() {
 	return (
 		"id" +
 		Math.random()

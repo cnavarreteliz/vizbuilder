@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
 <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-  <rect x="32.386" y="28.436" width="224.327" height="241.707" style="fill: rgb(33, 150, 243);" rx="3.16" ry="3.16"/>
-  <rect x="263.823" y="277.252" width="207.741" height="92.417" rx="3.16" ry="3.16" style="fill: rgb(136, 176, 216);"/>
-  <rect x="264.613" y="376.776" width="208.53" height="96.367" style="fill: rgb(33, 150, 243);" rx="2.37" ry="2.37"/>
-  <rect x="31.596" y="277.042" width="112.164" height="195.102" style="fill: rgb(63, 81, 181);" rx="3.16" ry="3.16"/>
-  <rect x="149.869" y="277.436" width="106.635" height="93.208" style="fill: rgb(63, 81, 181);" rx="2.37" ry="2.37"/>
-  <rect x="150.659" y="377.567" width="105.845" height="95.577" rx="3.16" ry="3.16" style="fill: rgb(136, 176, 216);"/>
-  <rect x="264.613" y="28.83" width="205.372" height="240.917" style="fill: rgb(63, 81, 181);" rx="2.37" ry="2.37"/>
+  <rect x="28" y="28" width="208" height="238" rx="5" ry="5" fill="#3F51B5"/>
+  <rect x="264" y="28" width="208" height="208" rx="5" ry="5" fill="#2196F3"/>
+  <rect x="264" y="264" width="90" height="208" rx="5" ry="5" fill="#3F51B5"/>
+  <rect x="28" y="294" width="208" height="80" rx="5" ry="5" fill="#88B0D8"/>
+  <rect x="28" y="402" width="208" height="70" rx="5" ry="5" fill="#2196F3"/>
+  <rect x="382" y="264" width="90" height="90" rx="5" ry="5" fill="#3F51B5"/>
+  <rect x="382" y="382" width="90" height="90" rx="5" ry="5" fill="#88B0D8"/>
 </svg>

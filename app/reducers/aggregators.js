@@ -6,14 +6,6 @@ const initialState = {
 
 export default function(state = initialState, action) {
 	switch (action.type) {
-		case "DATA_SET": {
-			let ms = [action.payload.measure];
-			//ms.sort((a, b) => a.name.localeCompare(b.name));
-			let dd = [action.payload.dimension];
-			//dd.sort((a, b) => a.fullName.localeCompare(b.fullName));
-			return { ...state, drilldowns: dd, measures: ms };
-		}
-
 		case "CUBES_SET": {
 			return initialState;
 		}
@@ -25,7 +17,13 @@ export default function(state = initialState, action) {
 		}
 
 		case "DRILLDOWN_SET": {
-			return { ...state, drilldowns: [action.payload] };
+			// payload can be the dimension object or its name
+			let dd =
+				"string" === typeof action.payload
+					? state.drilldowns.find(item => item.name == action.payload)
+					: action.payload;
+
+			return dd ? { ...state, drilldowns: [dd] } : state;
 		}
 
 		case "DRILLDOWN_DELETE": {
@@ -40,7 +38,12 @@ export default function(state = initialState, action) {
 		}
 
 		case "MEASURE_SET": {
-			return { ...state, measures: [action.payload] };
+			// payload can be the measure object or its name
+			let ms =
+				"string" === typeof action.payload
+					? state.measures.find(item => item.name === action.payload)
+					: action.payload;
+			return ms ? { ...state, measures: [action.payload] } : state;
 		}
 
 		case "MEASURE_DELETE": {

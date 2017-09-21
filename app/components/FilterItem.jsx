@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from 'prop-types';
 import { Button } from "@blueprintjs/core";
 
@@ -7,7 +7,7 @@ import KINDS from "data/properties.json";
 
 import "styles/FilterItem.css";
 
-class FilterItem extends Component {
+class FilterItem extends React.Component {
 	constructor(props) {
 		super(props);
 

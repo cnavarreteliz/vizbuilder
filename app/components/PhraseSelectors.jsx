@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import CHARTTYPES from "helpers/charts";
+import CHARTS from "helpers/charts";
 import InlineSelect from "components/InlineSelect";
 
 function NaturalSelectors(props) {
@@ -28,7 +28,7 @@ function NaturalSelectors(props) {
 			<span className="static"> in </span>
 			<InlineSelect
 				value={props.viztype}
-				options={CHARTTYPES}
+				options={CHARTS}
 				onChange={props.onVizChange}
 			/>
 		</span>

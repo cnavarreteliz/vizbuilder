@@ -36,6 +36,16 @@ export class Cube {
 
 		return this._drilldowns;
 	}
+	
+	/**
+	* @function getLevelHierarchy
+	* @return {Hierarchy} {description}
+	*/
+	getLevelHierarchy() {
+		return this.dimensions.reduce(function(all, dim) {
+			return all.concat(dim.getLevelHierarchy());
+		}, []);
+	}
 }
 
 export class Dimension {
@@ -55,6 +65,29 @@ export class Dimension {
 			return all.concat(hr.drilldowns);
 		}, []);
 	}
+
+	getLevelHierarchy() {
+		return this.hierarchies.reduce(function(all, hr) {
+			let levels = hr.levels.slice(1);
+
+			if (levels.length > 1) {
+				all.push({
+					key: hr.key,
+					label: hr.name,
+					value: levels.map(lv => ({ key: lv.key, label: lv.level, value: lv }))
+				});
+			} else if (levels.length === 1) {
+				levels = levels[0];
+				all.push({
+					key: levels.key,
+					label: levels.name,
+					value: levels
+				});
+			}
+
+			return all;
+		}, []);
+	}
 }
 
 export class Hierarchy {
@@ -68,6 +101,10 @@ export class Hierarchy {
 			.map(item => new Level(item));
 	}
 
+	/**
+	 * @function drilldowns
+	 * @return {Level[]}
+	 */
 	get drilldowns() {
 		let hierarchy = this.name;
 
