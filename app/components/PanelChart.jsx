@@ -36,6 +36,8 @@ function abbreviateNumber(num, fixed=0) {
 }
 
 function PanelChart(props) {
+
+
 	let config = {
 		type: props.chart.type,
 		data: props.data,
@@ -67,7 +69,6 @@ function PanelChart(props) {
 			title: d => d.name
 		}
 		// groupBy: props.groupBy
-		// d => JSON.stringify(d),
 	};
 
 	switch (config.type) {
@@ -114,8 +115,10 @@ function PanelChart(props) {
 }
 
 function mapDataChart(data, chart, props) {
-	switch (chart.panel) {
-		case "PANEL_TYPE_NORMAL":
+	switch (chart.type) {
+		case "treemap":
+		case "donut": 
+		case "pie":
 			return data.map(item => ({
 				id: item[props.x],
 				name: item[props.x],
@@ -123,12 +126,13 @@ function mapDataChart(data, chart, props) {
 				colorScale: item[chart.colorScale],
 				detail: item
 			}));
-		case "PANEL_TYPE_2D":
+		case "bar": 
+		case "stacked":
 			return data.map(item => ({
 				id: item[props.x],
 				name: item[props.x],
 				y: item[props.y],
-				x: item[props.year],
+				x: item[props.x],
 				colorScale: item[chart.colorScale],
 				detail: item
 			}));
@@ -142,8 +146,8 @@ function mapStateToProps(state) {
 
 	return {
 		chart: chart,
-		//data: groupLowestCategories(mapDataChart(data, chart, props)),
-		data: mapDataChart(data, chart, props),
+		data: groupLowestCategories(mapDataChart(data, chart, props)),
+		//data: mapDataChart(data, chart, props),
 		bulk: state.data.values
 	};
 }

@@ -8,6 +8,7 @@ import CHARTS from "helpers/charts";
 import ChartOptions from "components/ChartOptions";
 import PanelAggregators from "components/PanelAggregators";
 import PanelChart from "components/PanelChart";
+import PanelFilters from "components/PanelFilters";
 import PanelDownload from "components/PanelDownload";
 
 import Search from "components/Search";
@@ -72,13 +73,12 @@ function prepareMainPanel(props) {
 		);
 	} else {
 		return (
-			<div className="main-panel">
+			<div className="main-panel text-center">
 				<div className="header-panel">
 					<h1 className="title">KSA VizBuilder</h1>
 					<h4 className="subtitle">Build your custom charts</h4>
 				</div>
-				<Search />
-				<p> Every element with dashed can be customized </p>
+				<div> Every element with underline dashed can be customized </div>
 			</div>
 		);
 	}
