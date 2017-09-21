@@ -12,31 +12,41 @@ import "styles/InputChartType.css";
 function InputChartType(props) {
 	let current = getChartByName(props.value);
 
-	let menu = (
-		<div className="charttype-menu">
-			{CHARTS.map(chart =>
-				React.createElement("img", {
-					key: chart.key,
-					title: chart.name,
-					className: props.type == chart.name ? "icon active" : "icon",
-					src: chart.icon,
-					onClick() {
-						props.onChange && props.onChange(chart.name);
-					}
-				})
-			)}
-		</div>
-	);
+	if (!current) return null;
 
 	let position =
 		"string" === typeof props.position
 			? Position[props.position]
 			: props.position;
 
+	console.log(CHARTS);
+
 	return (
-		<Popover content={menu} position={position}>
-			<img className="charttype-current icon" title={current.name} src={current.icon} />
-		</Popover>
+		<Popover
+			position={position}
+			target={
+				<img
+					className="charttype-current icon"
+					title={current.name}
+					src={current.icon}
+				/>
+			}
+			content={
+				<div className="charttype-menu">
+					{CHARTS.map(chart =>
+						React.createElement("img", {
+							key: chart.key,
+							title: chart.name,
+							className: props.value == chart.name ? "icon active" : "icon",
+							src: chart.icon,
+							onClick() {
+								props.onChange && props.onChange(chart.name);
+							}
+						})
+					)}
+				</div>
+			}
+		/>
 	);
 }
 
