@@ -230,6 +230,11 @@ function mapDispatchToProps(dispatch) {
 		},
 		onDrilldownAdd(dim) {
 			dispatch({ type: "DRILLDOWN_ADD", payload: dim });
+			dispatch({
+				type: "VIZ_AXIS_UPDATE",
+				axis: "x",
+				payload: dim.name
+			});
 		},
 
 		onToggleVizPanel(display) {
