@@ -26,7 +26,7 @@ function FilterArea(props) {
 	
 	return (
 		<div className="filters-wrapper">
-			{/*<div className="pt-form-group">
+			<div className="pt-form-group">
 				<label className="pt-label">Filters</label>
 				<div className="filter-items">{}</div>
 				{<Button
@@ -36,7 +36,7 @@ function FilterArea(props) {
 				>
 					Add filter
 				</Button>}
-			</div>*/}
+			</div>
 		</div>
 	);
 }

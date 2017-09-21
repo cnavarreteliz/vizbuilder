@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Button } from "@blueprintjs/core";
 
 import OPERATOR from "helpers/operators";
-import KINDS from "data/properties.json";
 
 import "styles/FilterItem.css";
 
@@ -21,7 +20,7 @@ class FilterItem extends React.Component {
 	}
 
 	calculateType(property, value) {
-		let kind = KINDS.find(obj => obj.property == property);
+		/*let kind = KINDS.find(obj => obj.property == property);
 
 		if (!kind) {
 			let isnumber = !isNaN(parseFloat(value)) && isFinite(value);
@@ -30,7 +29,7 @@ class FilterItem extends React.Component {
 
 		kind = kind.category;
 
-		return kind == "size" ? "range" : kind == "time" ? "range" : "text";
+		return kind == "size" ? "range" : kind == "time" ? "range" : "text";*/
 	}
 
 	handleChange(newState) {

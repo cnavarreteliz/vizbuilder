@@ -17,6 +17,10 @@ body {
 	height: 100%;
 }
 
+.text-center {
+	text-align: center;
+}
+
 .container {
 	display: flex;
 	flex-direction: column;

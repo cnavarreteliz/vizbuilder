@@ -35,6 +35,8 @@ function abbreviateNumber(num, fixed=0) {
 	return e;
 }
 
+function PanelChart(props) {
+
 function Chart(props) {
 	console.log(props.data)
 
@@ -69,7 +71,6 @@ function Chart(props) {
 			title: d => d.name
 		}
 		// groupBy: props.groupBy
-		// d => JSON.stringify(d),
 	};
 
 	switch (config.type) {
@@ -115,34 +116,26 @@ function Chart(props) {
 	}
 }
 
-function mapDataForChart(data, chart, props) {
+function mapDataChart(data, chart, props) {
 	switch (chart.type) {
 		case "treemap":
-		case "donut":
-		case "pie": {
+		case "donut": 
+		case "pie":
 			return data.map(item => ({
 				id: item[props.x],
 				name: item[props.x],
 				value: item[props.y],
 				colorScale: item[chart.colorScale]
 			}));
-		}
-
-		case "bar":
-		case "stacked": {
+		case "bar": 
+		case "stacked":
 			return data.map(item => ({
 				id: item[props.x],
 				name: item[props.x],
-				x: item[props.year],
 				y: item[props.y],
-				colorScale: item[chart.colorScale]
-			}));
-		}
-
-		case "wordcloud":
-			return data.map(item => ({
-				text: item[props.x],
-				value: item[props.y]
+				x: item[props.x],
+				colorScale: item[chart.colorScale],
+				detail: item
 			}));
 	}
 }
