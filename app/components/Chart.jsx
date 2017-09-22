@@ -7,6 +7,8 @@ import { applyFilters } from "components/FilterItem";
 import PanelTable from "components/PanelTable";
 import { groupLowestCategories } from "helpers/prepareViz";
 
+import { prepareGrowth } from "helpers/prepareViz"
+
 import "styles/Chart.css";
 
 function isNumeric(n) {
@@ -74,7 +76,8 @@ function Chart(props) {
 		...CHARTCONFIG,
 		type: props.chart.type,
 		data: props.data,
-		colorScale : props.chart.colorScale !== "" ? "colorScale" : props.chart.colorScale,
+		colorScale: props.chart.colorScale,
+		//colorScale : props.chart.colorScale !== "" ? "colorScale" : props.chart.colorScale,
 		colorScalePosition : props.chart.colorScale !== "" ? "bottom" : false,
 		// title: props.title,
 		// groupBy: props.groupBy
@@ -127,6 +130,7 @@ function mapDataForChart(data, chart, props) {
 					all.push({
 						id: item[props.x],
 						name: item[props.x],
+						year: item[props.year],
 						colorScale: item[props.colorScale],
 						value,
 						source: item
@@ -167,6 +171,18 @@ function mapDataForChart(data, chart, props) {
 	}
 }
 
+function mapGrowthToData(data) {
+	const obj = prepareGrowth(data)
+	return data.reduce((all, item) => {
+		all.push({
+			...item,
+			growth: obj[item.name],
+			source: {growth: obj[item.name]}
+		});
+		return all;
+	}, []);
+}
+
 function mapStateToProps(state) {
 	let aggr = state.aggregators,
 		props = { x: "", y: "", year: "", colorScale: state.visuals.chart.colorScale };
@@ -187,9 +203,11 @@ function mapStateToProps(state) {
 		props.year = state.cubes.current.timeDimensions[0].name;
 	}
 
+	console.log(mapGrowthToData(mapDataForChart(state.data.values, state.visuals.chart, props)))
+
 	return {
 		chart: state.visuals.chart,
-		data: mapDataForChart(state.data.values, state.visuals.chart, props)
+		data: mapGrowthToData(mapDataForChart(state.data.values, state.visuals.chart, props))
 		// data: groupLowestCategories(mapDataChart(data, chart, props)),
 		// data: mapDataChart(data, chart, props),
 	};

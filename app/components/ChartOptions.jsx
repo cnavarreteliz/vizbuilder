@@ -2,17 +2,19 @@ import React from "react";
 import { connect } from "react-redux";
 import Selector from "components/InputSelect";
 
+import { Switch } from "@blueprintjs/core";
+
 import "styles/ChartOptions.css";
 
 function ChartOptions(props) {
-	const { onSetTimeAxis, onChangeColorScale } = props;
+	const { onSetTimeAxis, onChangeColorScale, onGrowthToggle } = props;
 
 	return (
 		<div className="chartappearance-wrapper">
 			<div>Color </div>
 			<div>
 				<Selector
-					options={ prepareSelectorColor(props.y.labels).filter(
+					options={prepareSelectorColor(props.y.labels).filter(
 						e =>
 							e.label.includes("Growth") ||
 							e.label.includes("Average") ||
@@ -26,6 +28,12 @@ function ChartOptions(props) {
 							props.y.current,
 							evt.target.value
 						)}
+				/>
+			</div>
+			<div>
+				<Switch
+					onChange={evt => onGrowthToggle(evt.target.checked)}
+					label={"Yearly growth"}
 				/>
 			</div>
 		</div>
@@ -63,10 +71,10 @@ function mapDispatchToProps(dispatch) {
 	return {
 		onChangeColorScale(cube, measures, property) {
 			let measure = cube.measures.filter(item => item.name == property);
-			console.log(measure)
+			console.log(measure);
 			dispatch({ type: "MEASURE_ADD", payload: measure });
 			dispatch({ type: "VIZ_COLOR_UPDATE", payload: property });
-			
+
 			/*dispatch({ type: "MEASURE_SET", payload: measures });
 			if (measures.filter(item => item == property).length == 0) {
 				let measure = cube.measures.filter(item => item.name == property);
@@ -91,7 +99,13 @@ function mapDispatchToProps(dispatch) {
 
 		onSetAxis(axis, property) {
 			dispatch({ type: "VIZ_AXIS_UPDATE", axis, payload: property });
+		},
+
+		onGrowthToggle(checked) {
+			const scale = checked ? "growth" : "colorScale"
+			dispatch({ type: "VIZ_COLOR_UPDATE", payload: scale });
 		}
+		
 	};
 }
 

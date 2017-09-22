@@ -11,7 +11,7 @@
   "author": "Carlos Navarrete & Francisco Abarzúa",
   "license": "MIT",
   "devDependencies": {
-    "datawheel-canon": "^0.9.4",
+    "datawheel-canon": "^0.10.4",
     "file-loader": "^0.11.2",
     "mondrian-rest-client": "git+https://github.com/Datawheel/mondrian-rest-client.git",
     "nprogress": "^0.2.0",

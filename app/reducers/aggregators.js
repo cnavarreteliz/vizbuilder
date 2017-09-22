@@ -12,7 +12,7 @@ export default function(state = initialState, action) {
 
 		case "DRILLDOWN_ADD": {
 			let dd = [].concat(state.drilldowns, action.payload);
-			dd.sort((a, b) => a.fullName.localeCompare(b.fullName));
+			//dd.sort((a, b) => a.fullName.localeCompare(b.fullName));
 			return { ...state, drilldowns: dd };
 		}
 

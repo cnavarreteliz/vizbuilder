@@ -5,9 +5,9 @@ export function prepareNaturalInput(cubes) {
 	var key = 0;
 	cubes.map(cube => {
 		let dimensions = prepareHierarchy(
-			cube.dimensions.filter(dm => dm.dimensionType != 1)
+			cube.dimensions.filter(dm => dm.type != 1)
 		);
-		let timeDimensions = cube.dimensions.filter(e => e.dimensionType == 1)
+		let timeDimensions = cube.dimensions.filter(dm => dm.type == 1)
 		let measures = getMeasures(cube.measures);
 		dimensions.map(dm => {
 			measures.map(ms => {

@@ -55,11 +55,6 @@ function mapStateToProps(state) {
 		y: {
 			labels: state.aggregators.measures.map(e => e.name),
 			value: state.visuals.axis.y
-		},
-
-		year: {
-			labels: timeDimensions(state.cubes.current.dimensions),
-			value: state.visuals.axis.year
 		}
 	};
 }
@@ -85,14 +80,17 @@ function mapDispatchToProps(dispatch) {
 			if (data.options.timeDimensions.length == 1) {
 				prepareHierarchy(data.options.timeDimensions).map(dim => {
 					if (dim._children.length == 0) {
+						console.log(dim)
 						dispatch({ type: "DRILLDOWN_ADD", payload: dim });
-					} else {
+					} /*else {
 						prepareHierarchy(dim._children).map(e => {
 							dispatch({ type: "DRILLDOWN_ADD", payload: e });
 						});
-					}
+					}*/
 				});
 			}
+
+			
 		}
 	};
 }
