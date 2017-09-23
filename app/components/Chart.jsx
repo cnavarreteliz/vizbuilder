@@ -1,6 +1,9 @@
 import { connect } from "react-redux";
 import { Treemap, Donut, Pie, BarChart, StackedArea } from "d3plus-react";
 import { Tooltip } from "d3plus-tooltip";
+import { mean } from "d3-array";
+import { COLORS_RAINFALL } from "helpers/colors"
+
 import WordCloud from "react-d3-cloud";
 
 import { applyFilters } from "components/FilterItem";
@@ -34,8 +37,9 @@ function abbreviateNumber(num, fixed = 0) {
 	return e;
 }
 
+// ["red", "#88B0D8", "#3F51B5"]
 const CHARTCONFIG = {
-	colorScaleConfig : { color: ["#88B0D8", "#3F51B5"] },
+	//colorScaleConfig : { color: ["#D32F2F", "#FFF59D", "#388E3C"] },
 	shapeConfig: {
 		fontFamily: "Fira Sans Condensed"
 	},
@@ -79,8 +83,15 @@ function Chart(props) {
 		colorScale: props.chart.colorScale,
 		//colorScale : props.chart.colorScale !== "" ? "colorScale" : props.chart.colorScale,
 		colorScalePosition : props.chart.colorScale !== "" ? "bottom" : false,
+		colorScaleConfig: {
+			color: COLORS_RAINFALL
+		},
+		aggs: {
+			growth: mean
+		},
+		timeline: true
 		// title: props.title,
-		// groupBy: props.groupBy
+		//groupBy: ["id","year"]
 	};
 
 	switch (config.type) {
@@ -202,8 +213,6 @@ function mapStateToProps(state) {
 	if (state.cubes.current.timeDimensions.length > 0) {
 		props.year = state.cubes.current.timeDimensions[0].name;
 	}
-
-	console.log(mapGrowthToData(mapDataForChart(state.data.values, state.visuals.chart, props)))
 
 	return {
 		chart: state.visuals.chart,
