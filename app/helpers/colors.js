@@ -5,3 +5,8 @@ export const COLORS_RAINFALL = [
 	"#4393CB",
 	"#1478BE"
 ];
+
+export const COLORS_GENDER = {
+	female: "#A599D0",
+	male: "#C9DB78"
+};

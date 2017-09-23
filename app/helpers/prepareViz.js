@@ -18,8 +18,7 @@ export function prepareGrowth(data) {
     Object.keys(result).map(e => {
         obj[e] = calculateGrowth(result[e])   
     })
-
-	return obj;
+    return obj
 }
 
 function calculateGrowth(obj) {

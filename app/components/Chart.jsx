@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import { Treemap, Donut, Pie, BarChart, StackedArea } from "d3plus-react";
 import { Tooltip } from "d3plus-tooltip";
 import { mean } from "d3-array";
-import { COLORS_RAINFALL } from "helpers/colors"
+import { COLORS_RAINFALL } from "helpers/colors";
 
 import WordCloud from "react-d3-cloud";
 
@@ -10,7 +10,7 @@ import { applyFilters } from "components/FilterItem";
 import PanelTable from "components/PanelTable";
 import { groupLowestCategories } from "helpers/prepareViz";
 
-import { prepareGrowth } from "helpers/prepareViz"
+import { prepareGrowth } from "helpers/prepareViz";
 
 import "styles/Chart.css";
 
@@ -40,9 +40,6 @@ function abbreviateNumber(num, fixed = 0) {
 // ["red", "#88B0D8", "#3F51B5"]
 const CHARTCONFIG = {
 	//colorScaleConfig : { color: ["#D32F2F", "#FFF59D", "#388E3C"] },
-	shapeConfig: {
-		fontFamily: "Fira Sans Condensed"
-	},
 	tooltipConfig: {
 		padding: "10px",
 		width: "200px",
@@ -74,24 +71,50 @@ const CHARTCONFIG = {
 		}
 	}
 };
-
+//props.chart.colorScale
 function Chart(props) {
+	let attributes = prepareGrowth(props.data),
+		data = props.data.map(attr => ({
+			...attr,
+			growth: attributes[attr.id]
+		}))
+
+	console.log(data)
+
 	let config = {
 		...CHARTCONFIG,
 		type: props.chart.type,
-		data: props.data,
-		colorScale: props.chart.colorScale,
-		//colorScale : props.chart.colorScale !== "" ? "colorScale" : props.chart.colorScale,
-		colorScalePosition : props.chart.colorScale !== "" ? "bottom" : false,
+		aggs: {
+			growth: mean,
+			colorScale: mean
+		},
+		data: data,
+		colorScalePosition: props.chart.colorScale !== "" ? "bottom" : false,
 		colorScaleConfig: {
 			color: COLORS_RAINFALL
 		},
-		aggs: {
-			growth: mean
+		colorScale: props.chart.colorScale,
+		shapeConfig: {
+			fontFamily: () => "Work Sans"
 		},
-		timeline: true
-		// title: props.title,
-		//groupBy: ["id","year"]
+		legendConfig: {
+			marginLeft: 50,
+			padding: 8,
+			shapeConfig: {
+				labelConfig: {
+					fontColor: "rgba(0, 0, 0, 0.8)",
+					fontFamily: () => "Work Sans",
+					fontResize: false,
+					fontSize: 12,
+					fontWeight: 400
+				},
+				height: () => 25,
+				width: () => 25
+			},
+			tooltipConfig: {
+				body: false
+			}
+		}
 	};
 
 	switch (config.type) {
@@ -183,12 +206,12 @@ function mapDataForChart(data, chart, props) {
 }
 
 function mapGrowthToData(data) {
-	const obj = prepareGrowth(data)
+	const obj = prepareGrowth(data);
 	return data.reduce((all, item) => {
 		all.push({
 			...item,
 			growth: obj[item.name],
-			source: {growth: obj[item.name]}
+			source: { growth: obj[item.name] }
 		});
 		return all;
 	}, []);
@@ -196,7 +219,12 @@ function mapGrowthToData(data) {
 
 function mapStateToProps(state) {
 	let aggr = state.aggregators,
-		props = { x: "", y: "", year: "", colorScale: state.visuals.chart.colorScale };
+		props = {
+			x: "",
+			y: "",
+			year: "",
+			colorScale: state.visuals.chart.colorScale
+		};
 
 	if (aggr.drilldowns.length > 1) {
 		let xor = aggr.drilldowns[0].dimensionType === 0;
@@ -216,7 +244,7 @@ function mapStateToProps(state) {
 
 	return {
 		chart: state.visuals.chart,
-		data: mapGrowthToData(mapDataForChart(state.data.values, state.visuals.chart, props))
+		data: mapDataForChart(state.data.values, state.visuals.chart, props)
 		// data: groupLowestCategories(mapDataChart(data, chart, props)),
 		// data: mapDataChart(data, chart, props),
 	};
