@@ -1,12 +1,12 @@
 import { Array1D, Scalar, NDArrayMathGPU } from "deeplearn";
 
-export function prepareGrowth(data) {
+export function calculateGrowth(data, key = 'value') {
 
 	const result = data.reduce((r, a) => {
 		r[a.id] = r[a.id] || [];
 		// Create custom item
 		let item = {
-			value: a.value,
+			value: a[key],
 			year: a.year
 		};
 		r[a.id].push(item);
@@ -16,12 +16,12 @@ export function prepareGrowth(data) {
     // Get growth by dimension
     const obj = {}
     Object.keys(result).map(e => {
-        obj[e] = calculateGrowth(result[e])   
+        obj[e] = calculateCategoryGrowth(result[e])   
     })
     return obj
 }
 
-function calculateGrowth(obj) {
+function calculateCategoryGrowth(obj) {
     // Verify if data is sorted by year
     obj = obj.sort((a, b) => { return a.year - b.year });
 

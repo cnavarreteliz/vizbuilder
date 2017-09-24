@@ -10,7 +10,7 @@ import { applyFilters } from "components/FilterItem";
 import PanelTable from "components/PanelTable";
 import { groupLowestCategories } from "helpers/prepareViz";
 
-import { prepareGrowth } from "helpers/prepareViz";
+import { calculateGrowth } from "helpers/prepareViz";
 
 import "styles/Chart.css";
 
@@ -73,13 +73,20 @@ const CHARTCONFIG = {
 };
 //props.chart.colorScale
 function Chart(props) {
-	let attributes = prepareGrowth(props.data),
+	console.log(props.chart.colorScale)
+	let data;
+	if (props.axis.year) {
+		let attributes = calculateGrowth(
+			props.data,
+			props.chart.colorScale !== "growth" ? "colorScale" : "value"
+		);
 		data = props.data.map(attr => ({
 			...attr,
 			growth: attributes[attr.id]
-		}))
-
-	console.log(data)
+		}));
+	} else {
+		data = props.data;
+	}
 
 	let config = {
 		...CHARTCONFIG,
@@ -205,18 +212,6 @@ function mapDataForChart(data, chart, props) {
 	}
 }
 
-function mapGrowthToData(data) {
-	const obj = prepareGrowth(data);
-	return data.reduce((all, item) => {
-		all.push({
-			...item,
-			growth: obj[item.name],
-			source: { growth: obj[item.name] }
-		});
-		return all;
-	}, []);
-}
-
 function mapStateToProps(state) {
 	let aggr = state.aggregators,
 		props = {
@@ -244,6 +239,7 @@ function mapStateToProps(state) {
 
 	return {
 		chart: state.visuals.chart,
+		axis: state.visuals.axis,
 		data: mapDataForChart(state.data.values, state.visuals.chart, props)
 		// data: groupLowestCategories(mapDataChart(data, chart, props)),
 		// data: mapDataChart(data, chart, props),
