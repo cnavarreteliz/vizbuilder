@@ -70,6 +70,7 @@ function mapDispatchToProps(dispatch) {
 			dispatch({ type: "DRILLDOWN_SET", payload: data.options.dimension });
 			dispatch({ type: "MEASURE_SET", payload: data.options.measure });
 			dispatch({ type: "VIZ_COLOR_UPDATE", payload: "" });
+			console.log(data.options.dimension.name)
 			dispatch({
 				type: "VIZ_FULL_UPDATE",
 				dimension: data.options.dimension.name,
@@ -80,8 +81,12 @@ function mapDispatchToProps(dispatch) {
 			if (data.options.timeDimensions.length == 1) {
 				prepareHierarchy(data.options.timeDimensions).map(dim => {
 					if (dim._children.length == 0) {
-						console.log(dim)
 						dispatch({ type: "DRILLDOWN_ADD", payload: dim });
+						dispatch({
+							type: "VIZ_AXIS_UPDATE",
+							axis: "year",
+							payload: dim.name
+						});
 					} /*else {
 						prepareHierarchy(dim._children).map(e => {
 							dispatch({ type: "DRILLDOWN_ADD", payload: e });

@@ -230,7 +230,7 @@ function mapStateToProps(state) {
 	}
 
 	if (aggr.measures.length > 0) {
-		props.y = aggr.measures[0].name;
+		props.y = aggr.measures.filter(ms => ms.name === state.visuals.axis.y)[0].name;
 	}
 
 	if (state.cubes.current.timeDimensions.length > 0) {
