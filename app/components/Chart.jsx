@@ -100,7 +100,7 @@ function Chart(props) {
 		colorScaleConfig: {
 			color: COLORS_RAINFALL
 		},
-		colorScale: props.chart.colorScale,
+		colorScale: props.chart.colorScale !== "growth" ? "colorScale" : "growth",
 		shapeConfig: {
 			fontFamily: () => "Work Sans"
 		},
