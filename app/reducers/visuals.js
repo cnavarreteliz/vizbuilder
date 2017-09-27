@@ -54,6 +54,14 @@ export default function(state = initialState, action) {
 			return {...state, axis: {...state.axis, x: action.dimension, y: action.measure } };
 		}
 
+		case "DRILLDOWN_SET": {
+			return {...state, axis: {...state.axis, x: action.payload.name }}
+		}
+
+		case "MEASURE_SET": {
+			return {...state, axis: {...state.axis, y: action.payload.name }}
+		}
+
 		default:
 			return state;
 	}

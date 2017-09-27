@@ -1,14 +1,17 @@
 import React from "react";
 import { connect } from "react-redux";
+import GeminiScrollbar from 'react-gemini-scrollbar'
 
 import CustomSelect from "components/SelectCustom";
 import ChartTypeSelect from 'components/SelectChartType'
 
+import 'gemini-scrollbar/gemini-scrollbar.css'
 import "styles/AreaSidebar.css";
 
 function Sidebar(props) {
 	return (
 		<div className="side-panel">
+			<GeminiScrollbar>
 			<p className="group">
 				<span className="label">I want to see</span>
 				<CustomSelect value={props.curr_dd} options={props.all_dd} onChange={props.onSetDrilldown} />
@@ -30,6 +33,7 @@ function Sidebar(props) {
 			<p className="group">
 				<span className="label">labeled by</span>
 			</p>
+			</GeminiScrollbar>
 		</div>
 	);
 }

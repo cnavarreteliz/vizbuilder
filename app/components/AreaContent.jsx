@@ -16,7 +16,7 @@ import Selector from "components/InputSelect";
 import "styles/AreaContent.css";
 
 function AreaContent(props) {
-	if (!props.x) return <ContentDefault />;
+	if (!props.x || !props.y) return <ContentDefault />;
 	return (
 		<div className="main-panel">
 			<header className="header">

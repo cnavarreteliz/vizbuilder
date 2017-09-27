@@ -25,6 +25,10 @@
 		"@blueprintjs/core": "^1.25.1",
 		"@blueprintjs/table": "^1.22.0",
 		"deeplearn": "^0.2.3",
-		"react-select": "^1.0.0-rc.5"
+		"react-select": "^1.0.0-rc.10",
+		"react-gemini-scrollbar": "^2.3.2",
+		"regex-escape": "^3.4.7",
+		"typeface-montserrat": "^0.0.37",
+		"typeface-pathway-gothic-one": "^0.0.35"
 	}
 }
