@@ -1,0 +1,69 @@
+.select {
+    &-box {
+        position: relative;
+        width: 240px;
+        white-space: nowrap;
+        cursor: default;
+    }
+
+    &-current {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 5px 0;
+        background: #ffffff;
+        
+        & > span,
+        & > input {
+            margin: 0 5px;
+        }
+
+        &-label {
+            flex: 1 0;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+
+        &-icon {
+            line-height: 1;
+            font-size: 1.2em;
+        }
+
+        & .icon-caret {
+            color: #ddd;
+        }
+    }
+
+    &-filter {
+        & input {
+            padding: 0;
+            width: 100%;
+            font-size: inherit;
+            font-family: inherit;
+            background: transparent;
+            border: 0 none;
+            outline: 0 none;
+        }
+    }
+
+    &-options {
+        position: absolute;
+        left: 0;
+        margin: 2px 0 0;
+        padding: 4px 0;
+        min-width: 100%;
+        max-height: 5em;
+        background-color: #dddddd;
+    }
+
+    &-option {
+        display: block;
+        padding: 5px;
+        line-height: 1.25em;
+
+        &:hover {
+            background-color: #aaa;
+        }
+    }
+}
