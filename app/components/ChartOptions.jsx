@@ -8,9 +8,14 @@ import { RangeSlider, Switch, Slider } from "@blueprintjs/core";
 import "styles/ChartOptions.css";
 
 function ChartOptions(props) {
-	const { onSetTimeAxis, onChangeColorScale, onGrowthToggle, onChangeTimeAxis } = props;
+	const {
+		onSetTimeAxis,
+		onChangeColorScale,
+		onGrowthToggle,
+		onChangeTimeAxis
+	} = props;
 	return (
-		<div>
+		<div className="chartoptions-wrapper">
 			<div>
 				{/*<RangeSlider
 					min={FIRST_YEAR - 1}
@@ -21,7 +26,7 @@ function ChartOptions(props) {
 					value={props.range}
 				/>*/}
 			</div>
-			<div className="chartappearance-wrapper">
+			<div className="item">
 				<div>Color </div>
 				<div>
 					<Selector
@@ -41,12 +46,12 @@ function ChartOptions(props) {
 							)}
 					/>
 				</div>
-				<div>
-					<Switch
-						onChange={evt => onGrowthToggle(evt.target.checked)}
-						label={"Yearly growth"}
-					/>
-				</div>
+			</div>
+			<div className="item">
+				<Switch
+					onChange={evt => onGrowthToggle(evt.target.checked)}
+					label={"Yearly growth"}
+				/>
 			</div>
 		</div>
 	);
