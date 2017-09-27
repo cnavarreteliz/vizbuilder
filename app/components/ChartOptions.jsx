@@ -7,6 +7,17 @@ import { RangeSlider, Switch, Slider } from "@blueprintjs/core";
 
 import "styles/ChartOptions.css";
 
+function YearlyGrowth(show) {
+	if(show) {
+		return (
+			<Switch
+				onChange={evt => onGrowthToggle(evt.target.checked)}
+				label={"Yearly growth"}
+			/>
+		);
+	}
+}
+
 function ChartOptions(props) {
 	const {
 		onSetTimeAxis,
@@ -47,12 +58,7 @@ function ChartOptions(props) {
 					/>
 				</div>
 			</div>
-			<div className="item">
-				<Switch
-					onChange={evt => onGrowthToggle(evt.target.checked)}
-					label={"Yearly growth"}
-				/>
-			</div>
+			<div className="item">{YearlyGrowth(props.show_yg)}</div>
 		</div>
 	);
 }
@@ -67,12 +73,14 @@ function prepareSelectorColor(obj) {
 }
 
 function mapStateToProps(state) {
+	console.log(state.data.values)
 	return {
 		panel: state.visuals.chart.panel,
 		type: state.visuals.chart.type,
 
 		colorScale: state.visuals.chart.colorScale,
 		current: state.cubes.current,
+		show_yg: state.visuals.timeDimension,
 
 		range: state.visuals.range,
 
