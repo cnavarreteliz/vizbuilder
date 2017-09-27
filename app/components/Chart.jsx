@@ -1,3 +1,4 @@
+import React from "react";
 import { connect } from "react-redux";
 import { Treemap, Donut, Pie, BarChart, StackedArea } from "d3plus-react";
 import { Tooltip } from "d3plus-tooltip";
@@ -6,6 +7,7 @@ import { mean } from "d3-array";
 import { COLORS_RAINFALL } from "helpers/colors";
 import { CHARTCONFIG } from "helpers/d3plus";
 import { createBuckets } from "helpers/buckets";
+import { isNumeric } from "helpers/functions";
 import { groupLowestCategories, calculateGrowth } from "helpers/prepareViz";
 
 import WordCloud from "react-d3-cloud";
@@ -13,12 +15,7 @@ import WordCloud from "react-d3-cloud";
 import { applyFilters } from "components/FilterItem";
 import PanelTable from "components/PanelTable";
 
-
 import "styles/Chart.css";
-
-function isNumeric(n) {
-	return !isNaN(parseFloat(n)) && isFinite(n);
-}
 
 function Chart(props) {
 	// Create buckets if drilldown selected is Age

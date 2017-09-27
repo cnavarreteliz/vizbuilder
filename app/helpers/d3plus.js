@@ -1,4 +1,5 @@
 import { FORMATTERS } from "helpers/formatters";
+import { isNumeric } from "helpers/functions";
 
 const axisConfig = {
 	barConfig: {
@@ -105,17 +106,13 @@ export const CHARTCONFIG = {
 	y2Config: { barConfig: axisConfig.barConfig }
 };
 
-function isNumeric(n) {
-	return !isNaN(parseFloat(n)) && isFinite(n);
-}
-
 function abbreviateFormat(name, value) {
 	if (name.includes("Salary")) {
 		return FORMATTERS.dollarCommas(value);
-	} else if(name === "Growth") {
+	} else if (name === "Growth") {
 		let span_class = value >= 0 ? "increase" : "decrease";
 		value = FORMATTERS.share(value);
-		return "<span class=" + span_class + ">" + value +"</span>"
+		return "<span class=" + span_class + ">" + value + "</span>";
 	} else {
 		return FORMATTERS.commas(value);
 	}

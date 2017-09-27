@@ -1,3 +1,7 @@
 export function stopPropagation(evt) {
-    evt.stopPropagation();
+	evt.stopPropagation();
+}
+
+export function isNumeric(n) {
+	return !isNaN(parseFloat(n)) && isFinite(n);
 }
