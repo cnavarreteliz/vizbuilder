@@ -1,49 +1,49 @@
 export const BAR = {
 	key: "BAR",
 	name: "bar",
-	nllabel: "a bar chart",
+	nllabel: "bar chart",
 	icon: require("assets/charts/icon-bar.svg")
 };
 export const BUBBLE = {
 	key: "BUBBLE",
 	name: "bubble",
-	nllabel: "a bubble chart",
+	nllabel: "bubble chart",
 	icon: require("assets/charts/icon-bubble.svg")
 };
 export const DONUT = {
 	key: "DONUT",
 	name: "donut",
-	nllabel: "a donut chart",
+	nllabel: "donut chart",
 	icon: require("assets/charts/icon-donut.svg")
 };
 export const PIE = {
 	key: "PIE",
 	name: "pie",
-	nllabel: "a pie chart",
+	nllabel: "pie chart",
 	icon: require("assets/charts/icon-pie.svg")
 };
 export const STACKED = {
 	key: "STACKED",
 	name: "stacked",
-	nllabel: "a stacked chart",
+	nllabel: "stacked chart",
 	icon: require("assets/charts/icon-stacked.svg")
 };
 export const TABLE = {
 	key: "TABLE",
 	name: "table",
-	nllabel: "a table",
+	nllabel: "table",
 	icon: require("assets/charts/icon-table.svg")
 };
 export const TREEMAP = {
 	key: "TREEMAP",
 	name: "treemap",
-	nllabel: "a treemap",
+	nllabel: "treemap",
 	icon: require("assets/charts/icon-treemap.svg")
 };
 export const WORDCLOUD = {
 	key: "WORDCLOUD",
 	name: "wordcloud",
-	nllabel: "a word cloud",
+	nllabel: "word cloud",
 	icon: require("assets/charts/icon-wordcloud.svg")
 };
 

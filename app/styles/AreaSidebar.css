@@ -1,0 +1,17 @@
+.side-panel {
+    margin: 1rem;
+    padding: 1rem;
+
+    font-size: 1.2rem;
+    color: #444;
+    background-color: #efefef;
+
+    & .label {
+        display: block;
+        margin: 0 0 0.2em;
+    }
+
+    & .select-box {
+        display: block;
+    }
+}

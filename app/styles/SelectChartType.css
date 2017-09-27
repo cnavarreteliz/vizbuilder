@@ -1,0 +1,18 @@
+.select-charttype {
+    line-height: 3em;
+
+    & .select-options {
+        max-height: 12em;
+    }
+
+    & .select-option {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    & .select-option img {
+        height: 2.5em;
+        margin-right: 0.5em;
+    }
+}
