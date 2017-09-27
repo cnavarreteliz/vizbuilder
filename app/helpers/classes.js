@@ -19,6 +19,14 @@ export class Cube {
 		this._source = cb;
 	}
 
+	get label() {
+		return this.name;
+	}
+
+	get value() {
+		return this;
+	}
+
 	get query() {
 		return this._source.query;
 	}
@@ -40,7 +48,7 @@ export class Cube {
 
 		return this._drilldowns;
 	}
-	
+
 	/**
 	* @function getLevelHierarchy
 	* @return {Hierarchy} {description}
@@ -62,6 +70,14 @@ export class Dimension {
 			.concat(dm.hierarchies)
 			.filter(Boolean)
 			.map(item => new Hierarchy(item));
+	}
+
+	get label() {
+		return this.name;
+	}
+
+	get value() {
+		return this;
 	}
 
 	get drilldowns() {
@@ -105,6 +121,14 @@ export class Hierarchy {
 			.map(item => new Level(item));
 	}
 
+	get label() {
+		return this.name;
+	}
+
+	get value() {
+		return this;
+	}
+
 	/**
 	 * @function drilldowns
 	 * @return {Level[]}
@@ -139,6 +163,14 @@ export class Level {
 		} else {
 			this.name = this.level;
 		}
+	}
+
+	get label() {
+		return this.name;
+	}
+
+	get value() {
+		return this;
 	}
 }
 

@@ -4,7 +4,7 @@ import escape from "regex-escape";
 
 import { stopPropagation } from "helpers/functions";
 
-import "styles/CustomSelect.css";
+import "styles/SelectCustom.css";
 
 class CustomSelect extends React.Component {
 	state = {
@@ -22,7 +22,8 @@ class CustomSelect extends React.Component {
 	static defaultProps = {
 		options: [],
 		value: "",
-		disabled: false
+		disabled: false,
+		placeholder: { label: 'Select...', value: null, disabled: true }
 	};
 
 	componentWillUnmount() {
@@ -33,12 +34,14 @@ class CustomSelect extends React.Component {
 		let value = this.props.value,
 			current = this.props.options.find(item => value == item.value);
 
-		if (!current) current = { label: "Undefined", value: null };
+		if (!current)
+			current = this.props.placeholder;
 
 		return (
-			<div
+			<span
 				ref={this.handleRef}
 				className={classnames("select-box", this.props.className, {
+					open: this.state.open,
 					disabled: this.props.disabled
 				})}
 			>
@@ -57,34 +60,38 @@ class CustomSelect extends React.Component {
 						<span className="select-current-icon icon-search">🔍</span>
 					</label>
 				) : (
-					<div className="select-current" onClick={this.handleToggle}>
-						<span className="select-current-label">
-							{current.label || current.value}
+					<span className="select-current" onClick={this.handleToggle}>
+						<span className="select-option select-current-option">
+							{this.renderOption(current)}
 						</span>
 						<span className="select-current-icon icon-caret">▼</span>
-					</div>
+					</span>
 				)}
 				{this.state.open && (
-					<ul className="select-options">
-						{this.props.options
-							.filter(this.filterOption)
-							.map(this.renderOption)}
-					</ul>
+					<span className="select-options">
+						{this.props.options.filter(this.filterOption).map((item, index) => (
+							<span
+								key={item.key || index}
+								className={classnames("select-option", {
+									disabled: item.disabled
+								})}
+								onClick={this.handleSelect}
+							>
+								{this.renderOption(item, index)}
+							</span>
+						))}
+					</span>
 				)}
-			</div>
+			</span>
 		);
 	}
 
-	filterOption = item => {
-		return this.state.filter.test(item.label || item.value || '');
-	};
+	renderOption(item, index) {
+		return item.label || item.value;
+	}
 
-	renderOption = (item, index) => {
-		return (
-			<li className="select-option" onClick={this.handleSelect}>
-				{item.label || item.value}
-			</li>
-		);
+	filterOption = item => {
+		return this.state.filter.test(item.label || item.value || "");
 	};
 
 	handleRef = box => {
@@ -96,7 +103,7 @@ class CustomSelect extends React.Component {
 			this.setState({ open: false });
 			document.removeEventListener("click", this.handleCloseOutside, true);
 		} else {
-			this.setState({ open: true, filter: RegExp('.') });
+			this.setState({ open: true, filter: RegExp(".") });
 			document.addEventListener("click", this.handleCloseOutside, true);
 		}
 	};
@@ -109,8 +116,16 @@ class CustomSelect extends React.Component {
 	};
 
 	handleSelect = evt => {
-		let item = this.props.options;
-		this.props.onChange(item);
+		let target = evt.target.textContent,
+			item = this.props.options.find(
+				item => (item.label || item.value) == target
+			);
+
+		if (item && !item.disabled) {
+			this.props.onChange(item);
+			this.setState({ open: false });
+			document.removeEventListener("click", this.handleCloseOutside, true);
+		}
 	};
 
 	handleFilter = evt => {

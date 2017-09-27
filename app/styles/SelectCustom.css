@@ -1,24 +1,28 @@
 .select {
     &-box {
         position: relative;
+        display: inline-block;
         width: 240px;
+
+        line-height: 2em;
+        font-size: 1em;
         white-space: nowrap;
+
         cursor: default;
+
+        &.open {
+            outline: 1px solid #aaa;
+            outline-offset: -1px;
+        }
     }
 
     &-current {
         display: flex;
         flex-direction: row;
         align-items: center;
-        padding: 5px 0;
         background: #ffffff;
         
-        & > span,
-        & > input {
-            margin: 0 5px;
-        }
-
-        &-label {
+        &-option {
             flex: 1 0;
             white-space: nowrap;
             text-overflow: ellipsis;
@@ -26,6 +30,7 @@
         }
 
         &-icon {
+            margin: 0 0.25em;
             line-height: 1;
             font-size: 1.2em;
         }
@@ -37,10 +42,13 @@
 
     &-filter {
         & input {
-            padding: 0;
+            padding: 0 0.25em;
             width: 100%;
+
+            line-height: inherit;
             font-size: inherit;
             font-family: inherit;
+
             background: transparent;
             border: 0 none;
             outline: 0 none;
@@ -48,22 +56,32 @@
     }
 
     &-options {
+        display: block;
+        overflow: auto;
+
         position: absolute;
         left: 0;
-        margin: 2px 0 0;
-        padding: 4px 0;
+        z-index: 9999;
+
+        margin: 0.25em 0 0;
         min-width: 100%;
-        max-height: 5em;
+        max-height: 12em;
+        
+        border: 1px solid #aaa;
         background-color: #dddddd;
     }
 
     &-option {
         display: block;
-        padding: 5px;
-        line-height: 1.25em;
+        padding: 0 0.25em;
+        line-height: inherit;
 
-        &:hover {
+        &s &:hover {
             background-color: #aaa;
+        }
+
+        &.disabled {
+            color: #ddd;
         }
     }
 }
