@@ -1,40 +1,52 @@
 import React from "react";
 import { connect } from "react-redux";
 import Selector from "components/InputSelect";
+import { FIRST_YEAR, LATEST_YEAR } from "helpers/consts";
 
-import { Switch } from "@blueprintjs/core";
+import { RangeSlider, Switch, Slider } from "@blueprintjs/core";
 
 import "styles/ChartOptions.css";
 
 function ChartOptions(props) {
-	const { onSetTimeAxis, onChangeColorScale, onGrowthToggle } = props;
-
+	const { onSetTimeAxis, onChangeColorScale, onGrowthToggle, onChangeTimeAxis } = props;
 	return (
-		<div className="chartappearance-wrapper">
-			<div>Color </div>
+		<div>
 			<div>
-				<Selector
-					options={prepareSelectorColor(props.y.labels).filter(
-						e =>
-							e.label.includes("Growth") ||
-							e.label.includes("Average") ||
-							e.label.includes("Median") ||
-							e.label.includes("Percent")
-					)}
-					value={props.colorScale}
-					onChange={evt =>
-						props.onChangeColorScale(
-							props.current,
-							props.y.current,
-							evt.target.value
-						)}
-				/>
+				{/*<RangeSlider
+					min={FIRST_YEAR - 1}
+					max={LATEST_YEAR + 1}
+					onChange={onChangeTimeAxis}
+					stepSize={1}
+                    labelStepSize={1}
+					value={props.range}
+				/>*/}
 			</div>
-			<div>
-				<Switch
-					onChange={evt => onGrowthToggle(evt.target.checked)}
-					label={"Yearly growth"}
-				/>
+			<div className="chartappearance-wrapper">
+				<div>Color </div>
+				<div>
+					<Selector
+						options={prepareSelectorColor(props.y.labels).filter(
+							e =>
+								e.label.includes("Growth") ||
+								e.label.includes("Average") ||
+								e.label.includes("Median") ||
+								e.label.includes("Percent")
+						)}
+						value={props.colorScale}
+						onChange={evt =>
+							props.onChangeColorScale(
+								props.current,
+								props.y.current,
+								evt.target.value
+							)}
+					/>
+				</div>
+				<div>
+					<Switch
+						onChange={evt => onGrowthToggle(evt.target.checked)}
+						label={"Yearly growth"}
+					/>
+				</div>
 			</div>
 		</div>
 	);
@@ -49,13 +61,15 @@ function prepareSelectorColor(obj) {
 	});
 }
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
 	return {
 		panel: state.visuals.chart.panel,
 		type: state.visuals.chart.type,
 
 		colorScale: state.visuals.chart.colorScale,
 		current: state.cubes.current,
+
+		range: state.visuals.range,
 
 		y: {
 			labels: state.cubes.current
@@ -96,15 +110,18 @@ function mapDispatchToProps(dispatch) {
 			});
 		},
 
+		onChangeTimeAxis(property) {
+			dispatch({ type: "VIZ_RANGE_UPDATE", payload: property });
+		},
+
 		onSetAxis(axis, property) {
 			dispatch({ type: "VIZ_AXIS_UPDATE", axis, payload: property });
 		},
 
 		onGrowthToggle(checked) {
-			const scale = checked ? "growth" : "colorScale"
+			const scale = checked ? "growth" : "colorScale";
 			dispatch({ type: "VIZ_COLOR_UPDATE", payload: scale });
 		}
-		
 	};
 }
 

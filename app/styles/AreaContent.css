@@ -27,6 +27,15 @@
 			border-bottom: 1px dashed;
 			cursor: pointer;
 		}
+
+		& .custombuckets-wrapper {
+			display: flex;
+			align-items: center;
+			flex-direction: row; 
+			& .pt-label {
+				margin: 0;
+			}
+		}
 	}
 
 	& .viz {

@@ -2,15 +2,17 @@ import { connect } from "react-redux";
 import { Treemap, Donut, Pie, BarChart, StackedArea } from "d3plus-react";
 import { Tooltip } from "d3plus-tooltip";
 import { mean } from "d3-array";
+
 import { COLORS_RAINFALL } from "helpers/colors";
+import { CHARTCONFIG } from "helpers/d3plus";
+import { createBuckets } from "helpers/buckets";
+import { groupLowestCategories, calculateGrowth } from "helpers/prepareViz";
 
 import WordCloud from "react-d3-cloud";
 
 import { applyFilters } from "components/FilterItem";
 import PanelTable from "components/PanelTable";
-import { groupLowestCategories } from "helpers/prepareViz";
 
-import { calculateGrowth } from "helpers/prepareViz";
 
 import "styles/Chart.css";
 
@@ -18,74 +20,22 @@ function isNumeric(n) {
 	return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
-function abbreviateNumber(num, fixed = 0) {
-	if (num === null) {
-		return null;
-	} // terminate early
-	if (num === 0) {
-		return "0";
-	} // terminate early
-	fixed = !fixed || fixed < 0 ? 0 : fixed; // number of decimal places to show
-	var b = num.toPrecision(2).split("e"), // get power
-		k = b.length === 1 ? 0 : Math.floor(Math.min(b[1].slice(1), 14) / 3), // floor at decimals, ceiling at trillions
-		c =
-			k < 1
-				? num.toFixed(0 + fixed)
-				: (num / Math.pow(10, k * 3)).toFixed(1 + fixed), // divide by power
-		d = c < 0 ? c : Math.abs(c), // enforce -0 is 0
-		e = d + ["", "K", "M", "B", "T"][k]; // append power
-	return e;
-}
-
-// ["red", "#88B0D8", "#3F51B5"]
-const CHARTCONFIG = {
-	//colorScaleConfig : { color: ["#D32F2F", "#FFF59D", "#388E3C"] },
-	tooltipConfig: {
-		padding: "10px",
-		width: "200px",
-		background: "white",
-		title: d => d.name,
-		titleStyle: {
-			"font-size": "18px",
-			"text-transform": "uppercase",
-			"font-weight": "bold",
-			"font-family": "'Pathway Gothic One', sans-serif",
-			"margin-bottom": "12px"
-		},
-		body(item) {
-			item = item.source;
-			return Object.keys(item).reduce(function(html, key) {
-				let value = isNumeric(item[key])
-					? abbreviateNumber(item[key])
-					: item[key];
-				html += "<div class='tooltip-row'>" + key + ": " + value + "</div>";
-				return html;
-			}, "");
-		},
-		bodyStyle: {
-			"font-size": "16px"
-		},
-		footer: "",
-		footerStyle: {
-			"margin-top": 0
-		}
-	}
-};
-//props.chart.colorScale
 function Chart(props) {
-	console.log(props.chart.colorScale)
-	let data;
+	// Create buckets if drilldown selected is Age
+	let data = props.axis.x === "Age" ? createBuckets(props.data) : props.data
+	if (props.axis.x === "Age") { props.chart.type = "bar" }
+	console.log(data)
+
 	if (props.axis.year) {
 		let attributes = calculateGrowth(
-			props.data,
+			data,
 			props.chart.colorScale !== "growth" ? "colorScale" : "value"
 		);
-		data = props.data.map(attr => ({
+		
+		data = data.map(attr => ({
 			...attr,
 			growth: attributes[attr.id]
 		}));
-	} else {
-		data = props.data;
 	}
 
 	let config = {
@@ -96,32 +46,11 @@ function Chart(props) {
 			colorScale: mean
 		},
 		data: data,
+		colorScale: props.chart.colorScale !== "growth" ? "colorScale" : "growth",
 		colorScalePosition: props.chart.colorScale !== "" ? "bottom" : false,
 		colorScaleConfig: {
 			color: COLORS_RAINFALL
 		},
-		colorScale: props.chart.colorScale !== "growth" ? "colorScale" : "growth",
-		shapeConfig: {
-			fontFamily: () => "Work Sans"
-		},
-		legendConfig: {
-			marginLeft: 50,
-			padding: 8,
-			shapeConfig: {
-				labelConfig: {
-					fontColor: "rgba(0, 0, 0, 0.8)",
-					fontFamily: () => "Work Sans",
-					fontResize: false,
-					fontSize: 12,
-					fontWeight: 400
-				},
-				height: () => 25,
-				width: () => 25
-			},
-			tooltipConfig: {
-				body: false
-			}
-		}
 	};
 
 	switch (config.type) {
@@ -187,8 +116,11 @@ function mapDataForChart(data, chart, props) {
 					all.push({
 						id: item[props.x],
 						name: item[props.x],
+						year: item[props.year],
+						colorScale: item[props.colorScale],
 						x: item[props.year],
 						y: value,
+						value,
 						source: item
 					});
 				return all;

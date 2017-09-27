@@ -1,3 +1,5 @@
+import { FIRST_YEAR, LATEST_YEAR } from "helpers/consts";
+
 const initialState = {
 	panel: {
 		show: false
@@ -12,7 +14,9 @@ const initialState = {
 		x: '',
 		y: '',
 		year: ''
-	}
+	},
+	range: [ FIRST_YEAR, LATEST_YEAR ],
+	buckets: 0,
 };
 
 export default function(state = initialState, action) {
@@ -23,6 +27,14 @@ export default function(state = initialState, action) {
 
 		case "VIZ_TYPE_UPDATE": {
 			return { ...state, chart: {...state.chart, type: action.payload, panel: action.panel} };
+		}
+
+		case "VIZ_RANGE_UPDATE": {
+			return { ...state, range: action.payload };
+		}
+
+		case "VIZ_BUCKET_UPDATE": {
+			return { ...state, buckets: action.payload };
 		}
 
 		case "VIZ_PANEL_TOGGLE": {
