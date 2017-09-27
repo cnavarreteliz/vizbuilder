@@ -17,6 +17,7 @@ const initialState = {
 	},
 	range: [ FIRST_YEAR, LATEST_YEAR ],
 	buckets: 0,
+	timeDimension: false
 };
 
 export default function(state = initialState, action) {
@@ -27,6 +28,10 @@ export default function(state = initialState, action) {
 
 		case "VIZ_TYPE_UPDATE": {
 			return { ...state, chart: {...state.chart, type: action.payload, panel: action.panel} };
+		}
+
+		case "VIZ_TIMEDIMENSION_UPDATE": {
+			return { ...state, timeDimension: action.payload };
 		}
 
 		case "VIZ_RANGE_UPDATE": {

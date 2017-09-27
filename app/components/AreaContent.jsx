@@ -5,18 +5,17 @@ import pluralize from "pluralize";
 // import { prepareHierarchy } from "helpers/prepareHierarchy";
 
 import Chart from "components/Chart";
+import AgeBucket from "components/Bucket";
 import ChartOptions from "components/ChartOptions";
 import ContentDefault from "components/ContentDefault";
 import InputPopover from "components/InputPopover";
 import Toolbar from "components/Toolbar";
 
-import Selector from "components/InputSelect"
+import Selector from "components/InputSelect";
 
 import "styles/AreaContent.css";
 
 function AreaContent(props) {
-	const {onBucketUpdate} = props
-	const options = Array(10).fill().map((e,i) => ({id: i + 1, value: i+ 1}))
 	if (!props.x) return <ContentDefault />;
 	return (
 		<div className="main-panel">
@@ -39,12 +38,12 @@ function AreaContent(props) {
 						onClick={props.onMeasureChange}
 					/>
 				</p>
-				<div className="custombuckets-wrapper">
-					Group into <Selector options={options} onChange={onBucketUpdate} /> buckets 
-				</div>
 			</header>
 			<Chart />
-			<ChartOptions />
+			<div className="chartappearance-wrapper">
+				<AgeBucket />
+				<ChartOptions />
+			</div>
 		</div>
 	);
 }

@@ -44,16 +44,13 @@ function calculateCategoryGrowth(obj) {
 
 // Group alpha percent of lowest categories
 export function groupLowestCategories(data, alpha = 0.05) {
-	if (data !== null && data.length > 1) {
-		const math = new NDArrayMathGPU();
+	if (data !== null) {
 		const sortdata = data.sort((a, b) => {
 			return a.value - b.value;
 		});
-		const tensor = Array1D.new(sortdata.map(e => e.value));
-		let total = 0;
-		math.scope(() => {
-			total = math.sum(tensor).getValues()[0];
-		});
+		let total = sortdata.reduce((a, b) => {
+			return a + b.value;
+		}, 0);
 
 		var output = [];
 		sortdata.reduce((a, b) => {

@@ -5,9 +5,20 @@
     align-items: center;
     display: flex;    
     & div {
-        display: inline-block;
         & label {
             margin: 0px;
         }
+    }
+
+    & .chartoptions-wrapper {
+        flex-direction: row;
+        align-items: center;
+        display: flex;    
+    }
+
+    & .item {
+        margin: 0 10px;
+        display: flex;
+        align-items: center;
     }
 }
