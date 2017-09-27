@@ -23,12 +23,11 @@ function isNumeric(n) {
 function Chart(props) {
 	// Create buckets if drilldown selected is Age
 	let data = props.axis.x === "Age" ? createBuckets(props.data, props.num_buckets) : props.data
-	if (props.axis.x === "Age") { props.chart.type = "bar" }
-
+	
+	props.chart.type = props.axis.x === "Age" ? "bar": props.chart.type
+	
 	if (props.axis.year) {
-		if (props.chart.colorScale !== "colorScale") {
-
-		}
+		
 		let attributes = calculateGrowth(
 			data,
 			props.chart.colorScale === "colorScale" ? "colorScale" : "value"
@@ -41,14 +40,14 @@ function Chart(props) {
 				...attr.source,
 				Growth: attributes[attr.id]
 			} 
-		}));
+		}))
+
 	}
 
 	//data = groupLowestCategories(data)
 
 	let config = {
 		...CHARTCONFIG,
-		xSort: (d) => d.id,
 		type: props.chart.type,
 		aggs: {
 			growth: mean,
@@ -127,7 +126,7 @@ function mapDataForChart(data, chart, props) {
 						name: item[props.x],
 						year: item[props.year],
 						colorScale: item[props.colorScale],
-						x: item[props.year],
+						x: item[props.id],
 						y: value,
 						value,
 						source: item

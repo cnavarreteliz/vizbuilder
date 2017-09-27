@@ -7,11 +7,12 @@ import { RangeSlider, Switch, Slider } from "@blueprintjs/core";
 
 import "styles/ChartOptions.css";
 
-function YearlyGrowth(show) {
+function YearlyGrowth(props) {
 	const { onGrowthToggle } = props;
-	if (show) {
+	if (props.show_yg) {
 		return (
 			<Switch
+				value={false}
 				onChange={evt => onGrowthToggle(evt.target.checked)}
 				label={"Yearly growth"}
 			/>
@@ -54,7 +55,7 @@ function ChartOptions(props) {
 					/>
 				</div>
 			</div>
-			<div className="item">{YearlyGrowth(props.show_yg)}</div>
+			<div className="item">{YearlyGrowth(props)}</div>
 		</div>
 	);
 }

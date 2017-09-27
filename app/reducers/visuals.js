@@ -16,7 +16,7 @@ const initialState = {
 		year: ''
 	},
 	range: [ FIRST_YEAR, LATEST_YEAR ],
-	buckets: 0,
+	buckets: 10,
 	timeDimension: false
 };
 

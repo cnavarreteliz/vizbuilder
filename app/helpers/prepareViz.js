@@ -16,8 +16,8 @@ export function calculateGrowth(data, key = 'value') {
     // Get growth by dimension
     const obj = {}
     Object.keys(result).map(e => {
-        obj[e] = calculateCategoryGrowth(result[e])   
-    })
+		obj[e] = calculateCategoryGrowth(result[e])   
+	})
     return obj
 }
 
@@ -35,8 +35,12 @@ function calculateCategoryGrowth(obj) {
     let value
 
 	math.scope(() => {
-		value = math.sum(math.arrayMinusScalar(math.divide(period, lastperiod), ONE))
+		if (period.shape[0] !== 0) {
+			value = math.sum(math.arrayMinusScalar(math.divide(period, lastperiod), ONE))
 			.getValues() / period.shape
+		} else {
+			value = 0
+		}
     });
     
     return value
