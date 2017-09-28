@@ -12,7 +12,7 @@ export default function(state = initialState, action) {
 
 		case "DRILLDOWN_ADD": {
 			let dd =
-				state.drilldowns.find(item => item.name == action.payload)
+				state.drilldowns.find(item => item === action.payload)
 					? state.drilldowns
 					: [].concat(state.drilldowns, action.payload);
 			//dd.sort((a, b) => a.fullName.localeCompare(b.fullName));

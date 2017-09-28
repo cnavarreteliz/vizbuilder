@@ -71,6 +71,24 @@ function mapDispatchToProps(dispatch) {
 				type: "DRILLDOWN_SET",
 				payload: item
 			});
+
+			// Generate suggested Viztype
+			switch(item.name) {
+				case "Age":
+				case "Age Bucket":
+					dispatch({
+						type: "VIZ_TYPE_UPDATE",
+						payload: "bar"
+					});
+					return
+				default:
+					dispatch({
+						type: "VIZ_TYPE_UPDATE",
+						payload: "treemap"
+					});
+					return
+			}
+
 		},
 
 		onSetMeasure(item) {

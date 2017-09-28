@@ -19,29 +19,39 @@ import "styles/Chart.css";
 
 function Chart(props) {
 	// Create buckets if drilldown selected is Age
-	let data = props.axis.x === "Age" ? createBuckets(props.data, props.num_buckets) : props.data
-	
-	props.chart.type = props.axis.x === "Age" ? "bar": props.chart.type
-	
+	let data =
+		props.axis.x === "Age"
+			? createBuckets(props.data, props.num_buckets)
+			: props.data;
+
 	if (props.axis.year) {
-		
 		let attributes = calculateGrowth(
 			data,
-			props.chart.colorScale === "colorScale" ? "colorScale" : "value"
+			props.chart.colorScale !== "" ? "colorScale" : "value"
 		);
-		
+
 		data = data.map(attr => ({
 			...attr,
 			growth: attributes[attr.id],
 			source: {
 				...attr.source,
 				Growth: attributes[attr.id]
-			} 
-		}))
-
+			}
+		}));
 	}
 
 	//data = groupLowestCategories(data)
+
+	let colorScale;
+	if (props.chart.colorScale === "" && props.chart.growth) {
+		colorScale = "growth";
+	} else if (props.chart.colorScale === "" && !props.chart.growth) {
+		colorScale = false;
+	} else if (props.chart.colorScale !== "" && props.chart.growth) {
+		colorScale = "growth";
+	} else {
+		colorScale = "colorScale";
+	}
 
 	let config = {
 		...CHARTCONFIG,
@@ -51,11 +61,12 @@ function Chart(props) {
 			colorScale: mean
 		},
 		data: data,
-		colorScale: props.chart.colorScale !== "growth" ? "colorScale" : "growth",
-		colorScalePosition: props.chart.colorScale !== "" ? "bottom" : false,
+		colorScale: colorScale,
+		colorScalePosition:
+			props.chart.colorScale !== "" || props.chart.growth ? "bottom" : false,
 		colorScaleConfig: {
 			color: COLORS_RAINFALL
-		},
+		}
 	};
 
 	switch (config.type) {
@@ -167,7 +178,9 @@ function mapStateToProps(state) {
 	}
 
 	if (aggr.measures.length > 0) {
-		props.y = aggr.measures.filter(ms => ms.name === state.visuals.axis.y)[0].name;
+		props.y = aggr.measures.filter(
+			ms => ms.name === state.visuals.axis.y
+		)[0].name;
 	}
 
 	if (state.cubes.current.timeDimensions.length > 0) {
