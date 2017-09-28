@@ -12,6 +12,25 @@ export function buildQuery(cube, drilldowns, measures, cuts) {
 			return q.measure(ms.name);
 		}, query);
 
+		let dd_original = drilldowns.length;
+		cube.timeDimensions.some(dim => {
+			let flag = false,
+				levels = dim.drilldowns;
+
+			for (let d = 0; d < dd_original; d++) {
+				let dd = drilldowns[d];
+
+				for (let l = 0; l < levels.length; l++) {
+					let lv = levels[l];
+
+					if (dd.hierarchy !== lv.hierarchy) {
+						drilldowns.push(lv);
+						return true;
+					}
+				}
+			}
+		});
+
 		query = drilldowns.reduce(function(q, lv) {
 			return q.drilldown(lv.dimension, lv.hierarchy, lv.level);
 		}, query);
