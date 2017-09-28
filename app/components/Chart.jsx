@@ -71,6 +71,13 @@ function Chart(props) {
 
 	switch (config.type) {
 		case "treemap":
+			if(props.groupBy.length > 0) {
+				console.log(props.groupBy)
+				config = {
+					...config,
+					groupBy: ["groupBy", "id"]
+				}
+			}
 			return <Treemap config={config} />;
 
 		case "donut":
@@ -112,11 +119,13 @@ function mapDataForChart(data, chart, props) {
 		case "pie":
 			return data.reduce((all, item) => {
 				let value = item[props.y];
+				console.log(props)
 				if (isNumeric(value))
 					all.push({
 						id: item[props.x],
 						name: item[props.x],
 						year: item[props.year],
+						groupBy: item[props.groupBy],
 						colorScale: item[props.colorScale],
 						value,
 						source: item
@@ -163,11 +172,13 @@ function mapDataForChart(data, chart, props) {
 function mapStateToProps(state) {
 	let aggr = state.aggregators,
 		colorBy = aggr.colorBy[0] || {},
+		groupBy = aggr.groupBy[0] || {},
 		props = {
 			x: "",
 			y: "",
 			year: "",
 			colorScale: colorBy.name || '',
+			groupBy: groupBy.name || ''
 		};
 
 	if (aggr.drilldowns.length > 1) {
@@ -192,6 +203,7 @@ function mapStateToProps(state) {
 
 	return {
 		chart: chart,
+		groupBy: groupBy,
 		axis: state.visuals.axis,
 		data: mapDataForChart(state.data.values, chart, props),
 		num_buckets: state.visuals.buckets
