@@ -71,8 +71,7 @@ function Chart(props) {
 
 	switch (config.type) {
 		case "treemap":
-			if(props.groupBy.length > 0) {
-				console.log(props.groupBy)
+			if(props.groupBy.name) {
 				config = {
 					...config,
 					groupBy: ["groupBy", "id"]
@@ -119,7 +118,6 @@ function mapDataForChart(data, chart, props) {
 		case "pie":
 			return data.reduce((all, item) => {
 				let value = item[props.y];
-				console.log(props)
 				if (isNumeric(value))
 					all.push({
 						id: item[props.x],

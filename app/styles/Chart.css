@@ -19,6 +19,7 @@
     & .content {
         color: #727272;
         max-width: 150px;
+        max-height: 200px;
         overflow: hidden;
 
         & .increase {
