@@ -80,11 +80,13 @@ function mapDispatchToProps(dispatch) {
 						type: "VIZ_TYPE_UPDATE",
 						payload: "bar"
 					});
+					return
 				default:
 					dispatch({
 						type: "VIZ_TYPE_UPDATE",
 						payload: "treemap"
 					});
+					return
 			}
 
 		},
