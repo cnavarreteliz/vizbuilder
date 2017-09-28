@@ -6,9 +6,6 @@ const initialState = {
 	},
 	chart: {
 		type: "treemap",
-		panel: "PANEL_TYPE_NORMAL",
-		groupBy: ["group", "name"],
-		colorScale: "",
 		growth: false
 	},
 	axis: {
@@ -23,10 +20,6 @@ const initialState = {
 
 export default function(state = initialState, action) {
 	switch (action.type) {
-		case "VIZ_COLOR_UPDATE": {
-			return { ...state, chart: { ...state.chart, colorScale: action.payload } };
-		}
-
 		case "VIZ_GROWTH_UPDATE": {
 			return { ...state, chart: { ...state.chart, growth: action.payload } };
 		}
@@ -60,7 +53,20 @@ export default function(state = initialState, action) {
 		}
 
 		case "DRILLDOWN_SET": {
-			return {...state, axis: {...state.axis, x: action.payload.name }}
+			let newState = {...state, axis: {...state.axis, x: action.payload.name }};
+
+			switch (action.payload.name) {
+				case "Age":
+				case "Age Bucket":
+					newState.chart.type = 'bar';
+					break;
+
+				default:
+					newState.chart.type = 'treemap';
+					break;
+			}
+
+			return newState;
 		}
 
 		case "MEASURE_SET": {

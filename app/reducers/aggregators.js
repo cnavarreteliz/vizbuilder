@@ -1,6 +1,8 @@
 const initialState = {
 	measures: [],
 	drilldowns: [],
+	groupBy: [],
+	colorBy: [],
 	cuts: []
 };
 
@@ -11,10 +13,9 @@ export default function(state = initialState, action) {
 		}
 
 		case "DRILLDOWN_ADD": {
-			let dd =
-				state.drilldowns.find(item => item === action.payload)
-					? state.drilldowns
-					: [].concat(state.drilldowns, action.payload);
+			let dd = state.drilldowns.find(item => item === action.payload)
+				? state.drilldowns
+				: [].concat(state.drilldowns, action.payload);
 			//dd.sort((a, b) => a.fullName.localeCompare(b.fullName));
 			return { ...state, drilldowns: dd };
 		}
@@ -32,6 +33,16 @@ export default function(state = initialState, action) {
 		case "DRILLDOWN_DELETE": {
 			let dd = state.drilldowns.filter(item => item !== action.payload);
 			return { ...state, drilldowns: dd };
+		}
+
+		case "GROUPBY_SET": {
+			return { ...state, groupBy: [].concat(action.payload) };
+		}
+
+		case "COLORBY_SET": {
+			let newColor = [];
+			if (action.payload) newColor = [].concat(action.payload);
+			return { ...state, colorBy: newColor };
 		}
 
 		case "MEASURE_ADD": {

@@ -162,11 +162,12 @@ function mapDataForChart(data, chart, props) {
 
 function mapStateToProps(state) {
 	let aggr = state.aggregators,
+		colorBy = aggr.colorBy[0] || {},
 		props = {
 			x: "",
 			y: "",
 			year: "",
-			colorScale: state.visuals.chart.colorScale
+			colorScale: colorBy.name || '',
 		};
 
 	if (aggr.drilldowns.length > 1) {
@@ -187,10 +188,12 @@ function mapStateToProps(state) {
 		props.year = state.cubes.current.timeDimensions[0].name;
 	}
 
+	let chart = {...state.visuals.chart, colorScale: props.colorScale };
+
 	return {
-		chart: state.visuals.chart,
+		chart: chart,
 		axis: state.visuals.axis,
-		data: mapDataForChart(state.data.values, state.visuals.chart, props),
+		data: mapDataForChart(state.data.values, chart, props),
 		num_buckets: state.visuals.buckets
 		// data: groupLowestCategories(mapDataChart(data, chart, props)),
 		// data: mapDataChart(data, chart, props),

@@ -23,7 +23,7 @@ class CustomSelect extends React.Component {
 		options: [],
 		value: "",
 		disabled: false,
-		placeholder: { label: 'Select...', value: null, disabled: true }
+		placeholder: { label: "Select...", value: null, disabled: true }
 	};
 
 	componentWillUnmount() {
@@ -34,8 +34,13 @@ class CustomSelect extends React.Component {
 		let value = this.props.value,
 			current = this.props.options.find(item => value == item.value);
 
-		if (!current)
-			current = this.props.placeholder;
+		if (!current) current = this.props.placeholder;
+
+		let options = [];
+		if (!this.props.placeholder.disabled) {
+			options.push(this.props.placeholder);
+		}
+		options.push(...this.props.options);
 
 		return (
 			<span
@@ -69,7 +74,7 @@ class CustomSelect extends React.Component {
 				)}
 				{this.state.open && (
 					<span className="select-options">
-						{this.props.options.filter(this.filterOption).map((item, index) => (
+						{options.filter(this.filterOption).map((item, index) => (
 							<span
 								key={item.key || index}
 								className={classnames("select-option", {
@@ -116,10 +121,16 @@ class CustomSelect extends React.Component {
 	};
 
 	handleSelect = evt => {
+		let options = [];
+
+		if (!this.props.placeholder.disabled) {
+			options.push(this.props.placeholder);
+		}
+
 		let target = evt.target.textContent,
-			item = this.props.options.find(
-				item => (item.label || item.value) == target
-			);
+			item = options
+				.concat(this.props.options)
+				.find(item => (item.label || item.value) == target);
 
 		if (item && !item.disabled) {
 			this.props.onChange(item);

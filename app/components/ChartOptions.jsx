@@ -34,7 +34,7 @@ function ChartOptions(props) {
 					value={props.range}
 				/>*/}
 			</div>
-			<div className="item">
+			{/* <div className="item">
 				<div>Color </div>
 				<div>
 					<Selector
@@ -54,7 +54,7 @@ function ChartOptions(props) {
 							)}
 					/>
 				</div>
-			</div>
+			</div> */}
 			<div className="item">{YearlyGrowth(props)}</div>
 		</div>
 	);

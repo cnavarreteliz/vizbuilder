@@ -16,7 +16,7 @@ const axisConfig = {
 		fill: "#979797",
 		labelConfig: {
 			fontColor: "rgba(0, 0, 0, 0.8)",
-			fontFamily: () => "Work Sans"
+			fontFamily: () => "Pathway Gothic One"
 		},
 		stroke: "#aaaaaa",
 		strokeOpacity: 0.5
@@ -35,7 +35,7 @@ export const CHARTCONFIG = {
 		shapeConfig: {
 			labelConfig: {
 				fontColor: "rgba(0, 0, 0, 0.8)",
-				fontFamily: () => "Work Sans",
+				fontFamily: () => "Pathway Gothic One",
 				fontResize: false,
 				fontSize: 12,
 				fontWeight: 400
@@ -52,7 +52,7 @@ export const CHARTCONFIG = {
 			shapeConfig: {
 				labelConfig: {
 					fontColor: "rgba(0, 0, 0, 0.8)",
-					fontFamily: () => "Work Sans",
+					fontFamily: () => "Pathway Gothic One",
 					fontResize: false,
 					fontSize: 12,
 					fontWeight: 400
@@ -75,7 +75,7 @@ export const CHARTCONFIG = {
 			"text-transform": "uppercase",
 			"font-weight": "bold",
 			"text-align": "center",
-			"font-family": "'Work Sans', sans-serif"
+			"font-family": "Montserrat, sans-serif"
 		},
 		body(item) {
 			item = item.source;

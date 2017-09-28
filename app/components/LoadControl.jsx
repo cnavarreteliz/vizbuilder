@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import zip from 'lodash/zip';
+import zip from "lodash/zip";
+import union from "lodash/union";
 
 import { requestCubes, requestQuery } from "actions/datasource";
 import { buildQuery } from "helpers/mondrian";
@@ -15,15 +16,17 @@ class LoadControl extends React.Component {
 	}
 
 	componentDidUpdate(prev) {
-		const { cube, dd, ms, ct } = this.props;
-		
+		const { cube, dd, gb, ms, cl, ct } = this.props;
+
 		if (
 			(cube && cube.key && cube.key !== prev.cube.key) ||
 			zip(prev.dd, dd).some(simpleCompare) ||
+			zip(prev.gb, gb).some(simpleCompare) ||
 			zip(prev.ms, ms).some(simpleCompare) ||
+			zip(prev.cl, cl).some(simpleCompare) ||
 			zip(prev.ct, ct).some(simpleCompare)
 		) {
-			let query = buildQuery(cube, dd, ms, ct);
+			let query = buildQuery(cube, union(dd, gb), union(ms, cl), ct);
 			this.props.dispatch(requestQuery(query));
 		}
 	}
@@ -37,6 +40,8 @@ function mapStateToProps(state) {
 	return {
 		cube: state.cubes.current,
 		dd: state.aggregators.drilldowns,
+		gb: state.aggregators.groupBy,
+		cl: state.aggregators.colorBy,
 		ms: state.aggregators.measures,
 		ct: []
 	};

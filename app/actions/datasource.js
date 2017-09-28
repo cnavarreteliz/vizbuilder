@@ -81,7 +81,7 @@ export function requestQuery(query, attempt) {
 				error => {
 					let attempts = (attempt || 0) + 1;
 
-					if (attempts < 4) {
+					if (attempts < 3) {
 						nprogress.set(0.0);
 						return new Promise(function(resolve) {
 							setTimeout(resolve, attempts * 1000);

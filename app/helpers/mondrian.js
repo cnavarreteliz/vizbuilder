@@ -1,4 +1,5 @@
 import { Client as MondrianClient } from "mondrian-rest-client";
+import union from "lodash/union";
 
 import { CUBE_API } from "helpers/consts";
 
@@ -30,8 +31,8 @@ export function buildQuery(cube, drilldowns, measures, cuts) {
 				}
 			}
 		});
-
-		query = drilldowns.reduce(function(q, lv) {
+		
+		query = union(drilldowns).reduce(function(q, lv) {
 			return q.drilldown(lv.dimension, lv.hierarchy, lv.level);
 		}, query);
 
