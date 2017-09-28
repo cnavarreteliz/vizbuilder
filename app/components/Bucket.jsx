@@ -14,6 +14,7 @@ function AgeBucket(props) {
 		return (
 			<div className="item">
 				Interval of <Selector
+					value={props.num}
 					options={options}
 					onChange={onBucketUpdate}
 				/>{" "}
@@ -27,7 +28,8 @@ function AgeBucket(props) {
 
 function mapStateToProps(state) {
 	return {
-		show: state.visuals.axis.x === "Age"
+		show: state.visuals.axis.x === "Age",
+		num: state.visuals.buckets
 	};
 }
 
