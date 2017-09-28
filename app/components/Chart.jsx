@@ -27,7 +27,7 @@ function Chart(props) {
 		
 		let attributes = calculateGrowth(
 			data,
-			props.chart.colorScale === "colorScale" ? "colorScale" : "value"
+			props.chart.colorScale !== "" ? "colorScale" : "value"
 		);
 		
 		data = data.map(attr => ({
@@ -43,6 +43,18 @@ function Chart(props) {
 
 	//data = groupLowestCategories(data)
 
+	let colorScale
+	if (props.chart.colorScale === "" && props.chart.growth) {
+		colorScale = "growth"
+	} else if(props.chart.colorScale === "" && !props.chart.growth) {
+		colorScale = false
+	} else if (props.chart.colorScale !== "" && props.chart.growth) {
+		colorScale = "growth"
+	} else {
+		colorScale = "colorScale"
+	}
+	
+
 	let config = {
 		...CHARTCONFIG,
 		type: props.chart.type,
@@ -51,8 +63,8 @@ function Chart(props) {
 			colorScale: mean
 		},
 		data: data,
-		colorScale: props.chart.colorScale !== "growth" ? "colorScale" : "growth",
-		colorScalePosition: props.chart.colorScale !== "" ? "bottom" : false,
+		colorScale: colorScale,
+		colorScalePosition: props.chart.colorScale !== "" || props.chart.growth ? "bottom" : false,
 		colorScaleConfig: {
 			color: COLORS_RAINFALL
 		},

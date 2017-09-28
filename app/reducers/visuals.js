@@ -9,6 +9,7 @@ const initialState = {
 		panel: "PANEL_TYPE_NORMAL",
 		groupBy: ["group", "name"],
 		colorScale: "",
+		growth: false
 	},
 	axis: {
 		x: '',
@@ -24,6 +25,10 @@ export default function(state = initialState, action) {
 	switch (action.type) {
 		case "VIZ_COLOR_UPDATE": {
 			return { ...state, chart: { ...state.chart, colorScale: action.payload } };
+		}
+
+		case "VIZ_GROWTH_UPDATE": {
+			return { ...state, chart: { ...state.chart, growth: action.payload } };
 		}
 
 		case "VIZ_TYPE_UPDATE": {

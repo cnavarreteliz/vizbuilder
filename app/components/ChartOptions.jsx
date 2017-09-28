@@ -9,7 +9,7 @@ import "styles/ChartOptions.css";
 
 function YearlyGrowth(props) {
 	const { onGrowthToggle } = props;
-	if (props.current_td.length === 1) {
+	if (props.current_td.length > 0) {
 		return (
 			<Switch
 				value={false}
@@ -108,10 +108,6 @@ function mapDispatchToProps(dispatch) {
 			*/
 		},
 
-		onChangeViz(type, panel) {
-			dispatch({ type: "VIZ_TYPE_UPDATE", payload: type, panel: panel });
-		},
-
 		onSetTimeAxis(property) {
 			dispatch({ type: "DRILLDOWN_ADD", payload: property.value });
 			dispatch({
@@ -125,10 +121,6 @@ function mapDispatchToProps(dispatch) {
 			dispatch({ type: "VIZ_RANGE_UPDATE", payload: property });
 		},
 
-		onSetAxis(axis, property) {
-			dispatch({ type: "VIZ_AXIS_UPDATE", axis, payload: property });
-		},
-
 		onGrowthToggle(checked, dd) {
 			dispatch({ type: "DRILLDOWN_ADD", payload: dd });
 			dispatch({
@@ -136,8 +128,8 @@ function mapDispatchToProps(dispatch) {
 				axis: "year",
 				payload: dd.name
 			});
-			const scale = checked ? "growth" : "colorScale";
-			dispatch({ type: "VIZ_COLOR_UPDATE", payload: scale });
+			const scale = checked ? "growth" : "";
+			dispatch({ type: "VIZ_GROWTH_UPDATE", payload: checked });
 		}
 	};
 }
