@@ -1,18 +1,34 @@
 import React from "react";
 import { connect } from "react-redux";
-import Selector from "components/InputSelect"
+import Selector from "components/InputSelect";
 
-import "styles/Bucket.css"
+import "styles/Bucket.css";
 
 function AgeBucket(props) {
-    const options = Array(10).fill().map((e,i) => ({id: i + 1, value: i+ 1}))
-	const {onBucketUpdate} = props
-    
-	return (
-		<div className="item">
-			Interval of <Selector options={options} onChange={onBucketUpdate} /> years
-		</div>
-	);
+	const options = Array(10)
+		.fill()
+		.map((e, i) => ({ id: i + 1, value: i + 1 }));
+	const { onBucketUpdate } = props;
+
+	if (props.show) {
+		return (
+			<div className="item">
+				Interval of <Selector
+					options={options}
+					onChange={onBucketUpdate}
+				/>{" "}
+				years
+			</div>
+		);
+	} else {
+		return <div />;
+	}
+}
+
+function mapStateToProps(state) {
+	return {
+		show: state.visuals.axis.x === "Age"
+	};
 }
 
 function mapDispatchToProps(dispatch) {
@@ -23,4 +39,4 @@ function mapDispatchToProps(dispatch) {
 	};
 }
 
-export default connect(null, mapDispatchToProps)(AgeBucket)
+export default connect(mapStateToProps, mapDispatchToProps)(AgeBucket);
