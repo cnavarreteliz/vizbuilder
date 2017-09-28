@@ -9,11 +9,11 @@ import "styles/ChartOptions.css";
 
 function YearlyGrowth(props) {
 	const { onGrowthToggle } = props;
-	if (props.show_yg) {
+	if (props.current_td.length === 1) {
 		return (
 			<Switch
 				value={false}
-				onChange={evt => onGrowthToggle(evt.target.checked)}
+				onChange={evt => onGrowthToggle(evt.target.checked, props.current_td[0])}
 				label={"Yearly growth"}
 			/>
 		);
@@ -70,12 +70,14 @@ function prepareSelectorColor(obj) {
 }
 
 function mapStateToProps(state) {
+	let current_cb = state.cubes.current
 	return {
 		panel: state.visuals.chart.panel,
 		type: state.visuals.chart.type,
 
 		colorScale: state.visuals.chart.colorScale,
-		current: state.cubes.current,
+		current: current_cb,
+		current_td: current_cb.drilldowns.filter(dm => dm.dimensionType === 1),
 		show_yg: state.visuals.timeDimension,
 
 		range: state.visuals.range,
@@ -127,7 +129,13 @@ function mapDispatchToProps(dispatch) {
 			dispatch({ type: "VIZ_AXIS_UPDATE", axis, payload: property });
 		},
 
-		onGrowthToggle(checked) {
+		onGrowthToggle(checked, dd) {
+			dispatch({ type: "DRILLDOWN_ADD", payload: dd });
+			dispatch({
+				type: "VIZ_AXIS_UPDATE",
+				axis: "year",
+				payload: dd.name
+			});
 			const scale = checked ? "growth" : "colorScale";
 			dispatch({ type: "VIZ_COLOR_UPDATE", payload: scale });
 		}
