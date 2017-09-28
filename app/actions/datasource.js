@@ -81,8 +81,12 @@ export function requestQuery(query, attempt) {
 				error => {
 					let attempts = (attempt || 0) + 1;
 
-					if (attempts < 4)
-						return requestQuery(query, attempts)(dispatch);
+					if (attempts < 4) {
+						nprogress.set(0.0);
+						return new Promise(function(resolve) {
+							setTimeout(resolve, attempts * 1000);
+						}).then(() => requestQuery(query, attempts)(dispatch));
+					}
 
 					return dispatch({
 						type: "DATA_FETCH_ERROR",
