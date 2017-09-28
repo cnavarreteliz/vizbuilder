@@ -5,7 +5,7 @@ import Selector from "components/InputSelect";
 import "styles/Bucket.css";
 
 function AgeBucket(props) {
-	const options = Array(10)
+	const options = Array(25)
 		.fill()
 		.map((e, i) => ({ id: i + 1, value: i + 1 }));
 	const { onBucketUpdate } = props;
