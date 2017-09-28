@@ -2,6 +2,7 @@ import nprogress from "nprogress";
 
 import client from "helpers/mondrian";
 import { Cube } from "helpers/classes";
+import { pickOne } from "helpers/random";
 import { flattenDrilldowns } from "helpers/manageDimensions";
 
 export function requestCubes(dispatch, attempt) {
@@ -17,13 +18,23 @@ export function requestCubes(dispatch, attempt) {
 					.filter(Boolean)
 					.map(cb => new Cube(cb));
 
+				let cube = pickOne(cubes);
+
 				dispatch({
 					type: "CUBES_FETCH_SUCCESS",
 					payload: cubes
 				});
 				dispatch({
 					type: "CUBES_SET",
-					payload: cubes[Math.floor(Math.random() * cubes.length)]
+					payload: cube
+				});
+				dispatch({
+					type: "DRILLDOWN_SET",
+					payload: cube.dimensions[0].drilldowns[0]
+				});
+				dispatch({
+					type: "MEASURE_SET",
+					payload: cube.measures[0]
 				});
 			},
 			error => {
