@@ -11,8 +11,6 @@ import ContentDefault from "components/ContentDefault";
 import InputPopover from "components/InputPopover";
 import Toolbar from "components/Toolbar";
 
-import Selector from "components/InputSelect";
-
 import "styles/AreaContent.css";
 
 function AreaContent(props) {

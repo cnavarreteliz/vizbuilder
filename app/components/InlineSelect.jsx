@@ -13,6 +13,12 @@ function OptionElement(props) {
 }
 
 class InlineSelect extends React.Component {
+	static propTypes = {
+		options: PropTypes.array.isRequired,
+		value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		onChange: PropTypes.func
+	};
+
 	constructor(props) {
 		super(props);
 
@@ -21,8 +27,6 @@ class InlineSelect extends React.Component {
 			Math.random()
 				.toString(36)
 				.slice(2, 5);
-
-		// this.getCurrentLabel = this.getCurrentLabel.bind(this);
 	}
 
 	render() {
@@ -46,9 +50,6 @@ class InlineSelect extends React.Component {
 				<label htmlFor={this._id} className="selected">
 					{this.getCurrentLabel()}
 				</label>
-				{/* <Popover content={menu} position={Position.BOTTOM}>
-					<span className="selected">{this.getCurrentLabel()}</span>
-				</Popover> */}
 			</span>
 		);
 	}
@@ -60,11 +61,5 @@ class InlineSelect extends React.Component {
 		return option ? option.label || option.value : this.props.value;
 	}
 }
-
-InlineSelect.propTypes = {
-	options: PropTypes.array.isRequired,
-	value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	onChange: PropTypes.func
-};
 
 export default InlineSelect;
