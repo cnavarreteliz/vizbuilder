@@ -57,7 +57,7 @@ function calculateCategoryGrowth(obj) {
 }
 
 // Group alpha percent of lowest categories
-export function groupLowestCategories(data, alpha = 0.05) {
+export function groupLowestCategories(data, alpha = 0.05, min = 15) {
 	
 	if (data !== null) {
 		// Reduce
@@ -77,32 +77,33 @@ export function groupLowestCategories(data, alpha = 0.05) {
 		data = Object.keys(data).map(key => {
 			return data[key];
 		});
-		console.log(data);
 		
-		const sortdata = data.sort((a, b) => {
-			return a.value - b.value;
-		});
+		if (data.length > min) {
+			const sortdata = data.sort((a, b) => {
+				return a.value - b.value;
+			});
+	
+			let LOWESTCATEGORIES = []
+			// Pass all categories with minus alpha percent to "Other categories"
+			sortdata.reduce((a, b) => {
+				if (a + b.value > total * alpha) {
+					b.id = b.id;
+				} else {
+					LOWESTCATEGORIES.push(b.id)
+				}
+				return a + b.value;
+			}, 0);
+	
+			var output = []
+			allData = allData.map(item => {
+				if(LOWESTCATEGORIES.includes(item.id)){
+					item.id = "Other categories"
+				} 
+				return item
+			})
+		}
 
-		let LOWESTCATEGORIES = []
-		// Pass all categories with minus alpha percent to "Other categories"
-		sortdata.reduce((a, b) => {
-			if (a + b.value > total * alpha) {
-				b.id = b.id;
-			} else {
-				LOWESTCATEGORIES.push(b.id)
-			}
-			return a + b.value;
-		}, 0);
-
-		var output = []
-		allData.map(item => {
-			if(LOWESTCATEGORIES.includes(item.id)){
-				item.id = "Other categories"
-			} 
-			output.push(item)
-		})
-
-		return output;
+		return allData;
 		
 	} else {
 		return null;
