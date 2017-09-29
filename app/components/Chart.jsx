@@ -5,7 +5,7 @@ import { Tooltip } from "d3plus-tooltip";
 import { mean } from "d3-array";
 
 import { COLORS_RAINFALL } from "helpers/colors";
-import { CHARTCONFIG } from "helpers/d3plus";
+import { CHARTCONFIG, yearControls } from "helpers/d3plus";
 import { createBuckets } from "helpers/buckets";
 import { isNumeric } from "helpers/functions";
 import { groupLowestCategories, calculateGrowth } from "helpers/prepareViz";
@@ -40,7 +40,7 @@ function Chart(props) {
 		}));
 	}
 
-	//data = groupLowestCategories(data)
+	data = groupLowestCategories(data)
 
 	let colorScale;
 	if (props.chart.colorScale === "" && props.chart.growth) {
@@ -56,6 +56,7 @@ function Chart(props) {
 	let config = {
 		...CHARTCONFIG,
 		type: props.chart.type,
+		//controls: yearControls(data),
 		aggs: {
 			growth: mean,
 			colorScale: mean
@@ -116,6 +117,7 @@ function mapDataForChart(data, chart, props) {
 		case "treemap":
 		case "donut":
 		case "pie":
+			console.log(props.groupBy)
 			return data.reduce((all, item) => {
 				let value = item[props.y];
 				if (isNumeric(value))
