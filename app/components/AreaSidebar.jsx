@@ -1,56 +1,56 @@
 import React from "react";
 import { connect } from "react-redux";
-import GeminiScrollbar from "react-gemini-scrollbar";
 
-import SelectCustom from "components/SelectCustom";
-import ChartTypeSelect from "components/SelectChartType";
+import SelectDrillable from "components/SelectDrillable";
+import SelectChartType from "components/SelectChartType";
 
-import "gemini-scrollbar/gemini-scrollbar.css";
 import "styles/AreaSidebar.css";
 
 function Sidebar(props) {
 	return (
 		<div className="side-panel">
-			<p className="group">
+			<div className="group">
 				<span className="label">I want to see</span>
-				<SelectCustom
+				<SelectDrillable
 					value={props.drilldown}
-					options={props.all_dd}
-					onChange={props.onSetDrilldown}
+					items={props.all_dd}
+					onItemSelect={props.onSetDrilldown}
 				/>
-			</p>
-			<p className="group">
+			</div>
+			<div className="group">
 				<span className="label">shown as a</span>
-				<ChartTypeSelect value={props.viztype} onChange={props.onSetViztype} />
-			</p>
-			<p className="group">
+				<SelectChartType
+					value={props.viztype}
+					onItemSelect={props.onSetViztype}
+				/>
+			</div>
+			<div className="group">
 				<span className="label">sized by</span>
-				<SelectCustom
+				<SelectDrillable
 					value={props.measure}
-					options={props.all_ms}
-					onChange={props.onSetMeasure}
+					items={props.all_ms}
+					onItemSelect={props.onSetMeasure}
 				/>
-			</p>
-			<p className="group">
+			</div>
+			<div className="group">
 				<span className="label">grouped by</span>
-				<SelectCustom
+				<SelectDrillable
 					value={props.groupBy}
-					options={props.all_dd}
-					onChange={props.onSetGrouping}
+					items={props.all_dd}
+					onItemSelect={props.onSetGrouping}
 				/>
-			</p>
-			<p className="group">
+			</div>
+			<div className="group">
 				<span className="label">colored by</span>
-				<SelectCustom
+				<SelectDrillable
 					value={props.colorBy}
-					options={props.all_cl}
-					placeholder={{ label: "None", value: "" }}
-					onChange={props.onSetColorIndex}
+					items={props.all_cl}
+					onItemSelect={props.onSetColorIndex}
 				/>
-			</p>
-			<p className="group">
+			</div>
+			<div className="group">
 				<span className="label">labeled by</span>
-			</p>
+			</div>
 		</div>
 	);
 }
@@ -95,7 +95,7 @@ function mapDispatchToProps(dispatch) {
 		},
 
 		onSetViztype(item) {
-			dispatch({ type: "VIZ_TYPE_UPDATE", payload: item.value });
+			dispatch({ type: "VIZ_TYPE_UPDATE", payload: item.name });
 		},
 
 		onSetMeasure(item) {

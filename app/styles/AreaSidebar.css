@@ -7,12 +7,11 @@
     color: #444;
     background-color: #efefef;
 
-    & .label {
-        display: block;
-        margin: 0 0 0.2em;
+    & .group {
+        margin-bottom: 0.5em;
     }
 
-    & .select-box {
-        display: block;
+    & .label {
+        margin: 0 0 0.2em;
     }
 }

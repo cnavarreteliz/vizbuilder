@@ -1,18 +1,42 @@
 .select-charttype {
-    line-height: 3em;
+	&.pt-popover-target {
+		display: block;
+	}
 
-    & .select-options {
-        max-height: 12em;
-    }
+	& .select-option {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
 
-    & .select-option {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
+		padding: 0 0.5em;
 
-    & .select-option img {
-        height: 2.5em;
-        margin-right: 0.5em;
-    }
+		line-height: 3em;
+		white-space: nowrap;
+
+		cursor: default;
+
+		&.current {
+			color: #555;
+			background: #ffffff;
+		}
+
+		& .icon {
+			flex: 0 0;
+			height: 2em;
+			margin-right: 0.5em;
+		}
+		& .value {
+			flex: 1 1;
+			width: 0;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		& .pt-icon-standard {
+			flex: 0 0;
+		}
+
+		&.active {
+			background: #ccc;
+		}
+	}
 }

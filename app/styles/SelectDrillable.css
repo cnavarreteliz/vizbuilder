@@ -1,0 +1,36 @@
+.select-drillable {
+	&.pt-popover-target {
+		display: block;
+	}
+
+	& .select-option {
+		display: block;
+		padding: 0 0.5em;
+		line-height: 2em;
+		white-space: nowrap;
+		cursor: default;
+
+		&.current {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+
+			color: #555;
+			background: #ffffff;
+
+			& .value {
+				flex: 1 1;
+				width: 0;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			& .pt-icon-standard {
+				flex: 0 0;
+			}
+		}
+
+		&.active {
+			background: #ccc;
+		}
+	}
+}
