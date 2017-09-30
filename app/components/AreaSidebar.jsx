@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import SelectDrillable from "components/SelectDrillable";
 import SelectChartType from "components/SelectChartType";
 
+import { generateColorSelector } from "helpers/prepareInput"
+
 import "styles/AreaSidebar.css";
 
 function Sidebar(props) {
@@ -80,7 +82,8 @@ function mapStateToProps(state) {
 		all_cb: state.cubes.all,
 		all_dd: currentCb.drilldowns,
 		all_ms,
-		all_cl: currentCb.measures.filter(ms => colorMeasureFilter.test(ms.name))
+		all_cl: generateColorSelector(currentCb.measures)
+		//all_cl: currentCb.measures.filter(ms => colorMeasureFilter.test(ms.name))
 	};
 }
 
@@ -107,7 +110,8 @@ function mapDispatchToProps(dispatch) {
 		},
 
 		onSetColorIndex(item) {
-			dispatch({ type: "COLORBY_SET", payload: item.value });
+			dispatch({ type: "COLORBY_SET", payload: item.measure });
+			dispatch({ type: "VIZ_GROWTH_UPDATE", payload: item.growthType });
 		}
 	};
 }

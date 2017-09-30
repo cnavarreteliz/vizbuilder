@@ -24,7 +24,7 @@ function Chart(props) {
 			? createBuckets(props.data, props.num_buckets)
 			: props.data;
 
-	if (props.axis.year) {
+	if (props.growthType) {
 		let attributes = calculateGrowth(
 			data,
 			props.chart.colorScale !== "" ? "colorScale" : "value"
@@ -202,7 +202,9 @@ function mapStateToProps(state) {
 	let chart = {...state.visuals.chart, colorScale: props.colorScale };
 
 	return {
+		supercube: state.cubes.current,
 		chart: chart,
+		growthType: state.visuals.chart.growth,
 		groupBy: groupBy,
 		axis: state.visuals.axis,
 		data: mapDataForChart(state.data.values, chart, props),
