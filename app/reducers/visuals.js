@@ -6,7 +6,8 @@ const initialState = {
 	},
 	chart: {
 		type: "treemap",
-		growth: false
+		growth: false,
+		colorBy: ''
 	},
 	axis: {
 		x: '',
@@ -38,6 +39,10 @@ export default function(state = initialState, action) {
 
 		case "VIZ_BUCKET_UPDATE": {
 			return { ...state, buckets: action.payload };
+		}
+
+		case "VIZ_COLORBY_SET": {
+			return { ...state, chart: { ...state.chart, colorBy: action.payload } };
 		}
 
 		case "VIZ_PANEL_TOGGLE": {

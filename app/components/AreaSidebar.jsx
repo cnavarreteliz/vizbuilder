@@ -64,6 +64,8 @@ function mapStateToProps(state) {
 		currentGb = state.aggregators.groupBy[0] || {},
 		currentCl = state.aggregators.colorBy[0] || {};
 
+	console.log(generateColorSelector(currentCb.measures))
+
 	let colorMeasureFilter = RegExp("growth|average|median|percent", "i"),
 		treemapMeasureFilter = RegExp("average|median", "i");
 
@@ -77,7 +79,8 @@ function mapStateToProps(state) {
 		viztype: state.visuals.chart.type,
 		measure: currentMs,
 		groupBy: currentGb,
-		colorBy: currentCl,
+		//colorBy: currentCl,
+		colorBy: state.visuals.chart.colorBy || {},
 
 		all_cb: state.cubes.all,
 		all_dd: currentCb.drilldowns,
@@ -111,6 +114,8 @@ function mapDispatchToProps(dispatch) {
 
 		onSetColorIndex(item) {
 			dispatch({ type: "COLORBY_SET", payload: item.measure });
+			// This dispatch get set color by normal measure and also growth measures
+			dispatch({ type: "VIZ_COLORBY_SET", payload: item });
 			dispatch({ type: "VIZ_GROWTH_UPDATE", payload: item.growthType });
 		}
 	};

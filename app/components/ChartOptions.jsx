@@ -55,7 +55,6 @@ function ChartOptions(props) {
 					/>
 				</div>
 			</div> */}
-			<div className="item">{YearlyGrowth(props)}</div>
 		</div>
 	);
 }
