@@ -18,7 +18,7 @@ function AreaContent(props) {
 	return (
 		<div className="main-panel">
 			<header className="header">
-				<Toolbar />
+				<Toolbar component={ this } />
 				<p className="title">
 					{props.cube.name + " by "}
 					<InputPopover
@@ -26,7 +26,6 @@ function AreaContent(props) {
 						options={props.cube.getLevelHierarchy()}
 						onClick={props.onDrilldownChange}
 					/>
-					{" (All years)"}
 				</p>
 				<p className="subtitle">
 					{"SIZED BY "}

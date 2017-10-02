@@ -5,10 +5,11 @@ import { Tooltip } from "d3plus-tooltip";
 import { mean } from "d3-array";
 
 import { COLORS_RAINFALL } from "helpers/colors";
-import { CHARTCONFIG, yearControls } from "helpers/d3plus";
+import { TREEMAPCONFIG, CHARTCONFIG, yearControls } from "helpers/d3plus";
 import { createBuckets } from "helpers/buckets";
 import { isNumeric } from "helpers/functions";
 import { groupLowestCategories, calculateGrowth } from "helpers/prepareViz";
+import { prepareSupercube } from "helpers/prepareInput";
 
 import WordCloud from "react-d3-cloud";
 
@@ -18,6 +19,7 @@ import PanelTable from "components/PanelTable";
 import "styles/Chart.css";
 
 function Chart(props) {
+	prepareSupercube(props.supercube);
 	// Create buckets if drilldown selected is Age
 	let data =
 		props.axis.x === "Age"
@@ -40,7 +42,7 @@ function Chart(props) {
 		}));
 	}
 
-	data = groupLowestCategories(data)
+	data = groupLowestCategories(data);
 
 	let colorScale;
 	if (props.chart.colorScale === "" && props.chart.growth) {
@@ -68,17 +70,18 @@ function Chart(props) {
 		colorScaleConfig: {
 			color: COLORS_RAINFALL
 		}
+		
 	};
 
 	switch (config.type) {
 		case "treemap":
-			if(props.groupBy.name) {
+			if (props.groupBy.name) {
 				config = {
 					...config,
 					groupBy: ["groupBy", "id"]
-				}
+				};
 			}
-			return <Treemap config={config} />;
+			return <Treemap config={{...TREEMAPCONFIG, ...config}} />;
 
 		case "donut":
 			return <Donut config={config} />;
@@ -117,7 +120,6 @@ function mapDataForChart(data, chart, props) {
 		case "treemap":
 		case "donut":
 		case "pie":
-			console.log(props.groupBy)
 			return data.reduce((all, item) => {
 				let value = item[props.y];
 				if (isNumeric(value))
@@ -177,8 +179,8 @@ function mapStateToProps(state) {
 			x: "",
 			y: "",
 			year: "",
-			colorScale: colorBy.name || '',
-			groupBy: groupBy.name || ''
+			colorScale: colorBy.name || "",
+			groupBy: groupBy.name || ""
 		};
 
 	if (aggr.drilldowns.length > 1) {
@@ -199,10 +201,10 @@ function mapStateToProps(state) {
 		props.year = state.cubes.current.timeDimensions[0].name;
 	}
 
-	let chart = {...state.visuals.chart, colorScale: props.colorScale };
+	let chart = { ...state.visuals.chart, colorScale: props.colorScale };
 
 	return {
-		supercube: state.cubes.current,
+		supercube: state.cubes.all,
 		chart: chart,
 		growthType: state.visuals.chart.growth,
 		groupBy: groupBy,

@@ -21,48 +21,48 @@ const axisConfig = {
 		stroke: "#aaaaaa",
 		strokeOpacity: 0.5
 	},
-	titleConfig: {
-		fontColor: "rgba(0, 0, 0, 0.8)"
-	},
 	tickSize: 0
+};
+
+export const TREEMAPCONFIG = {
+	padding: 2,
+	shapeConfig: {
+		labelConfig: {
+			fontFamily: () => "'Work Sans', sans-serif",
+			fontWeight: 600,
+		},
+		labelPadding: 8
+	}
 };
 
 export const CHARTCONFIG = {
 	barPadding: 10,
+	//time: "year",
+	timelineConfig: {
+		//selection: [2009, 2016],
+		handleSize: 8
+	},
+	titleConfig: {
+		fontColor: "#4A4A4A",
+		fontFamily: () => "Work Sans"
+	},
 	legendConfig: {
-		marginLeft: 50,
+		marginLeft: 8,
 		padding: 8,
 		shapeConfig: {
+			label: false,
 			labelConfig: {
 				fontColor: "rgba(0, 0, 0, 0.8)",
-				fontFamily: () => "Pathway Gothic One",
+				fontFamily: () => "'Work Sans', sans-serif",
 				fontResize: false,
-				fontSize: 12,
-				fontWeight: 400
+				fontSize: 0,
+				fontWeight: 600
 			},
 			height: () => 25,
 			width: () => 25
 		},
 		tooltipConfig: {
 			body: false
-		},
-		legendConfig: {
-			marginLeft: 50,
-			padding: 8,
-			shapeConfig: {
-				labelConfig: {
-					fontColor: "rgba(0, 0, 0, 0.8)",
-					fontFamily: () => "Pathway Gothic One",
-					fontResize: false,
-					fontSize: 12,
-					fontWeight: 400
-				},
-				height: () => 25,
-				width: () => 25
-			},
-			tooltipConfig: {
-				body: false
-			}
 		}
 	},
 	tooltipConfig: {
@@ -116,4 +116,28 @@ function abbreviateFormat(name, value) {
 	} else {
 		return FORMATTERS.commas(value);
 	}
+}
+
+export function yearControls(
+	data,
+	yearId = "year",
+	callback = null,
+	container = undefined
+) {
+	const years = Array.from(new Set(data.map(d => d[yearId]))).sort();
+	if (years.length < 2) return [];
+
+	function change(year) {
+		if (callback) {
+			callback(year);
+		}
+		this.timeFilter(d => d[yearId] === parseFloat(year)).render();
+	}
+	const opts = {
+		checked: Math.max(...years),
+		on: { change },
+		options: years.map(year => ({ text: year, value: year })),
+		type: "Radio"
+	};
+	return !container ? [opts] : [{ ...opts, container }];
 }

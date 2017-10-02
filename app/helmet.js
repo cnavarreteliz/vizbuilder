@@ -1,4 +1,7 @@
 module.exports = {
+    link: [
+        {rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Work+Sans:400,600"}
+    ],
     meta: [
         {charset: "utf-8"},
         {"http-equiv": "X-UA-Compatible", "content": "IE=edge"},
@@ -9,7 +12,6 @@ module.exports = {
         {name: "apple-mobile-web-app-status-bar-style", content: "black"},
         {name: "apple-mobile-web-app-title", content: "VizBuilder"},
         {property: "og:title", content: "VizBuilder"},
-        // {property: "og:image", content: "https://dataafrica.io/images/africa-share.jpg"},
         {property: "og:description", content: "An experiment for Canon."},
         // {property: "fb:app_id", content: "260789081071557"}
     ],

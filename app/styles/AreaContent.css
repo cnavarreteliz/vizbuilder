@@ -11,8 +11,9 @@
 		}
 
 		& .title {
-			font-family: "Pathway Gothic One", sans-serif;
-			font-size: 32px;
+			font-family: "Work Sans", sans-serif;
+			font-size: 28px;
+			font-weight: 600;
 			text-align: center;
 		}
 

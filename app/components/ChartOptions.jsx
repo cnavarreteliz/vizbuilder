@@ -7,65 +7,20 @@ import { RangeSlider, Switch, Slider } from "@blueprintjs/core";
 
 import "styles/ChartOptions.css";
 
-function YearlyGrowth(props) {
-	const { onGrowthToggle } = props;
-	if (props.current_td.length > 0) {
-		return (
-			<Switch
-				value={false}
-				onChange={evt => onGrowthToggle(evt.target.checked, props.current_td[0])}
-				label={"Yearly growth"}
-			/>
-		);
-	}
-}
-
 function ChartOptions(props) {
 	const { onSetTimeAxis, onChangeColorScale, onChangeTimeAxis } = props;
 	return (
 		<div className="chartoptions-wrapper">
-			<div>
-				{/*<RangeSlider
-					min={FIRST_YEAR - 1}
-					max={LATEST_YEAR + 1}
-					onChange={onChangeTimeAxis}
-					stepSize={1}
-                    labelStepSize={1}
-					value={props.range}
-				/>*/}
-			</div>
-			{/* <div className="item">
-				<div>Color </div>
-				<div>
-					<Selector
-						options={prepareSelectorColor(props.y.labels).filter(
-							e =>
-								e.label.includes("Growth") ||
-								e.label.includes("Average") ||
-								e.label.includes("Median") ||
-								e.label.includes("Percent")
-						)}
-						value={props.colorScale}
-						onChange={evt =>
-							props.onChangeColorScale(
-								props.current,
-								props.y.current,
-								evt.target.value
-							)}
-					/>
-				</div>
-			</div> */}
+			{/*<RangeSlider
+				min={FIRST_YEAR}
+				max={LATEST_YEAR}
+				onChange={onChangeTimeAxis}
+				stepSize={1}
+				labelStepSize={1}
+				value={props.range}
+			/>*/}
 		</div>
 	);
-}
-
-function prepareSelectorColor(obj) {
-	return obj.map(e => {
-		return {
-			label: e.name,
-			value: e.name
-		};
-	});
 }
 
 function mapStateToProps(state) {
@@ -77,7 +32,6 @@ function mapStateToProps(state) {
 		colorScale: state.visuals.chart.colorScale,
 		current: current_cb,
 		current_td: current_cb.drilldowns.filter(dm => dm.dimensionType === 1),
-		show_yg: state.visuals.timeDimension,
 
 		range: state.visuals.range,
 

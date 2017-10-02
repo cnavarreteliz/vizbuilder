@@ -20,12 +20,13 @@ class Toolbar extends React.Component {
 
 	onImage() {
 		const { component, title } = this.props;
-		if (component.viz) {
+		console.log(this.refs.comp)
+		/*if (component.viz) {
 			const elem =
 				component.viz.container ||
 				component.viz._reactInternalInstance._renderedComponent._hostNode;
 			saveElement(elem, { filename: title, type: "png" });
-		}
+		}*/
 	}
 
 	onBlur() {

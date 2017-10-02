@@ -1,10 +1,10 @@
 import { flattenDimHierarchy } from "helpers/manageDimensions";
 
-export function SuperCube(cubes) {
+export function prepareSupercube(cubes) {
 	const output = cubes.reduce((all, cube) => {
 		flattenDimHierarchy(cube.dimensions).map(dm => {
 			let item = {
-				label: dm.name + " > " + cube.name,
+				label: dm.dimension,
 				...dm,
 				measures: cube.measures
 			};
