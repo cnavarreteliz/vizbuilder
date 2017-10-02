@@ -1,9 +1,15 @@
 import { Client as MondrianClient } from "mondrian-rest-client";
 import union from "lodash/union";
 
-import { CUBE_API } from "helpers/consts";
+var client;
 
-const client = new MondrianClient(CUBE_API);
+export function getClient() {
+	return client;
+}
+
+export function resetClient(source) {
+	client = new MondrianClient(source);
+}
 
 export function buildQuery(cube, drilldowns, measures, cuts) {
 	let query = cube.query;
@@ -43,5 +49,3 @@ export function buildQuery(cube, drilldowns, measures, cuts) {
 
 	return query.option("nonempty", true).option("debug", true);
 }
-
-export default client;

@@ -4,7 +4,7 @@ import zip from "lodash/zip";
 import union from "lodash/union";
 
 import { requestCubes, requestQuery } from "actions/datasource";
-import { buildQuery } from "helpers/mondrian";
+import { resetClient, buildQuery } from "helpers/mondrian";
 
 function simpleCompare(elements) {
 	return elements[0] !== elements[1];
@@ -12,6 +12,7 @@ function simpleCompare(elements) {
 
 class LoadControl extends React.Component {
 	componentDidMount() {
+		resetClient(this.props.src);
 		this.props.dispatch(requestCubes);
 	}
 
