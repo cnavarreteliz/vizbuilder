@@ -5,6 +5,7 @@ import App from "components/App";
 import Home from "pages/Home";
 import DataChile from "pages/DataChile";
 import DataKsa from "pages/DataKsa";
+import DataCNY from "pages/DataCNY";
 import NotFound from "pages/NotFound";
 
 export default function RouteCreate() {
@@ -13,6 +14,7 @@ export default function RouteCreate() {
 			<IndexRoute component={Home} />
 			<Route path="ksa" component={DataKsa} />
 			<Route path="chile" component={DataChile} />
+			<Route path="cny" component={DataCNY} />
 			<Route path="*" component={NotFound} status={404} />
 		</Route>
 	);
