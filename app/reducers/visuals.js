@@ -1,5 +1,3 @@
-import { FIRST_YEAR, LATEST_YEAR } from "helpers/consts";
-
 const initialState = {
 	panel: {
 		show: false
@@ -16,7 +14,6 @@ const initialState = {
 	dialogPanel : {
 		show: false
 	},
-	range: [ FIRST_YEAR, LATEST_YEAR ],
 	buckets: 10,
 	timeDimension: false
 };
