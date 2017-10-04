@@ -14,7 +14,7 @@ import { prepareSupercube } from "helpers/prepareInput";
 import WordCloud from "react-d3-cloud";
 
 import { applyFilters } from "components/FilterItem";
-import PanelTable from "components/PanelTable";
+import VizTable from "components/VizTable";
 
 import "styles/Chart.css";
 
@@ -93,7 +93,7 @@ function Chart(props) {
 			return <BarChart config={config} />;
 
 		case "table":
-			return <PanelTable data={config.data} />;
+			return <VizTable data={config.data} />;
 
 		case "bar":
 			return <BarChart config={config} />;

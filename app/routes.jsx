@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, IndexRoute } from "react-router";
 
-import App from "components/App";
+import App from "App";
 import Home from "pages/Home";
 import DataChile from "pages/DataChile";
 import DataKsa from "pages/DataKsa";
