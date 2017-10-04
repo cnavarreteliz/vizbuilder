@@ -28,6 +28,7 @@
 		"regex-escape": "^3.4.7",
 		"typeface-montserrat": "^0.0.37",
 		"typeface-pathway-gothic-one": "^0.0.35",
-		"url-loader": "^0.5.9"
+		"url-loader": "^0.5.9",
+		"numeral": "^2.0.6"
 	}
 }
