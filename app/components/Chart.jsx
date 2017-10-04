@@ -26,7 +26,7 @@ function Chart(props) {
 	
 	data =
 		props.axis.x === "Age"
-			? createBuckets(props.data, props.num_buckets)
+			? createBuckets(data, props.num_buckets)
 			: data;
 
 	if (props.growthType) {
