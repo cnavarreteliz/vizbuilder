@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Treemap, Donut, Pie, BarChart, StackedArea } from "d3plus-react";
 import { Tooltip } from "d3plus-tooltip";
-import { mean } from "d3-array";
+import { max, mean, min, sum } from "d3-array";
 
 import { COLORS_RAINFALL } from "helpers/colors";
 import { TREEMAPCONFIG, CHARTCONFIG, yearControls } from "helpers/d3plus";
@@ -19,7 +19,7 @@ import PanelTable from "components/PanelTable";
 import "styles/Chart.css";
 
 function Chart(props) {
-	prepareSupercube(props.supercube);
+
 	// Create buckets if drilldown selected is Age
 	let data =
 		props.axis.x === "Age"
@@ -42,7 +42,12 @@ function Chart(props) {
 		}));
 	}
 
+	console.log(data)
+
 	data = groupLowestCategories(data);
+
+	let max = Math.max(...data.map(d => d.year)),
+		min = Math.min(...data.map(d => d.year))
 
 	let colorScale;
 	if (props.chart.colorScale === "" && props.chart.growth) {
@@ -55,15 +60,19 @@ function Chart(props) {
 		colorScale = "colorScale";
 	}
 
+	console.log(data)
+
 	let config = {
 		...CHARTCONFIG,
 		type: props.chart.type,
 		//controls: yearControls(data),
 		aggs: {
 			growth: mean,
-			colorScale: mean
+			colorScale: mean,
+			value: measureType(props.axis.y) ? mean : sum
 		},
 		data: data,
+		domain: min < 0 ? [min, 0, max] : [min, max],
 		colorScale: colorScale,
 		colorScalePosition:
 			props.chart.colorScale !== "" || props.chart.growth ? "bottom" : false,
@@ -115,6 +124,11 @@ function Chart(props) {
 	}
 }
 
+function measureType(measure) {
+	let measureFilter = RegExp("growth|average|median|percent|avg|gini|rca", "i")
+	return measureFilter.test(measure)
+}
+
 function mapDataForChart(data, chart, props) {
 	switch (chart.type) {
 		case "treemap":
@@ -126,7 +140,7 @@ function mapDataForChart(data, chart, props) {
 					all.push({
 						id: item[props.x],
 						name: item[props.x],
-						year: item[props.year],
+						year: parseInt(item[props.year] || item.Year),
 						groupBy: item[props.groupBy],
 						colorScale: item[props.colorScale],
 						value,
@@ -143,7 +157,7 @@ function mapDataForChart(data, chart, props) {
 					all.push({
 						id: item[props.x],
 						name: item[props.x],
-						year: item[props.year],
+						year: parseInt(item[props.year] || item.Year),
 						colorScale: item[props.colorScale],
 						x: item[props.id],
 						y: value,
@@ -180,7 +194,7 @@ function mapStateToProps(state) {
 			y: "",
 			year: "",
 			colorScale: colorBy.name || "",
-			groupBy: groupBy.name || ""
+			groupBy: groupBy.level || ""
 		};
 
 	if (aggr.drilldowns.length > 1) {

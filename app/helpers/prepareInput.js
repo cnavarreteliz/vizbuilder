@@ -19,7 +19,7 @@ export function prepareSupercube(cubes) {
 		return r;
 	}, Object.create(null));
 
-	console.log(result);
+	return result;
 }
 
 export function generateColorSelector(measures) {

@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 
 import SelectDrillable from "components/SelectDrillable";
 import SelectChartType from "components/SelectChartType";
+import { Omnibox } from "@blueprintjs/labs"
 
 import { generateColorSelector } from "helpers/prepareInput"
 
@@ -11,6 +12,14 @@ import "styles/AreaSidebar.css";
 function Sidebar(props) {
 	return (
 		<div className="side-panel">
+			<div className="group">
+				<span className="label">Dataset</span>
+				<SelectDrillable
+					value={props.cube}
+					items={props.all_cb}
+					onItemSelect={props.onSetCube}
+				/>
+			</div>
 			<div className="group">
 				<span className="label">I want to see</span>
 				<SelectDrillable
@@ -64,8 +73,6 @@ function mapStateToProps(state) {
 		currentGb = state.aggregators.groupBy[0] || {},
 		currentCl = state.aggregators.colorBy[0] || {};
 
-	console.log(generateColorSelector(currentCb.measures))
-
 	let colorMeasureFilter = RegExp("growth|average|median|percent", "i"),
 		treemapMeasureFilter = RegExp("average|median", "i");
 
@@ -85,7 +92,8 @@ function mapStateToProps(state) {
 		all_cb: state.cubes.all,
 		all_dd: currentCb.drilldowns,
 		all_ms,
-		all_cl: generateColorSelector(currentCb.measures)
+		all_cl: generateColorSelector(currentCb.measures),
+		isOpen: true
 		//all_cl: currentCb.measures.filter(ms => colorMeasureFilter.test(ms.name))
 	};
 }
