@@ -15,3 +15,7 @@ export const COLORS_DISCRETE = [
 	"#3949AB", "#1E88E5", "#009688",
 	"#C0CA33"
 ]
+
+export const COLORS_DOMAIN = [
+	
+]

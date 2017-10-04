@@ -32,7 +32,8 @@ export const TREEMAPCONFIG = {
 			fontWeight: 600,
 		},
 		labelPadding: 8
-	}
+	},
+	//time: "year"
 };
 
 export const CHARTCONFIG = {

@@ -18,7 +18,10 @@ SelectChartType.defaultProps = {
 	itemRenderer({ handleClick, item, isActive }) {
 		return (
 			<span
-				className={classnames("select-option", { active: isActive })}
+				className={classnames("select-option", {
+					active: isActive,
+					disabled: item.disabled
+				})}
 				onClick={handleClick}
 			>
 				<img className="icon" src={item.icon} alt={`[${item.name} icon]`} />
@@ -32,16 +35,17 @@ SelectChartType.defaultProps = {
 };
 
 function SelectChartType(props) {
-	props.value = CHARTS.find(chart => chart.name == props.value);
-	if (!props.value) props.value = { nllabel: "Select...", icon: "", name: "" };
+	props.className = classnames("select-charttype", props.className);
+	props.items = CHARTS;
+	props.value = CHARTS.find(chart => chart.name == props.value) || {
+		nllabel: "Select...",
+		icon: "",
+		name: ""
+	};
 
 	return React.createElement(
 		Select,
-		{
-			...props,
-			className: classnames("select-charttype", props.className),
-			items: CHARTS
-		},
+		props,
 		<div className="select-option current" title={props.value.nllabel}>
 			<img
 				className="icon"

@@ -3,10 +3,10 @@ import { connect } from "react-redux";
 import FileSaver from "file-saver";
 import { Table, Column, Cell } from "@blueprintjs/table";
 
-import "styles/PanelTable.css";
+import "styles/VizTable.css";
 
 // Dinamic selector
-class PanelTable extends React.Component {
+class VizTable extends React.Component {
 	constructor(props) {
 		super(props);
 		//this.updateExtension = this.updateExtension.bind(this);
@@ -59,4 +59,4 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps)(PanelTable);
+export default connect(mapStateToProps)(VizTable);

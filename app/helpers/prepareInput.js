@@ -23,13 +23,14 @@ export function prepareSupercube(cubes) {
 }
 
 export function generateColorSelector(measures) {
-	let output = measures.reduce((all, ms) => {
-		all.push({ name: ms.name, growthType: 0, measure: ms });
-		if (!ms.name.includes("Growth")) {
-			all.push({ name: ms.name + " Growth", growthType: 1, measure: ms });
-		}
-		return all;
-	}, []);
-	output.unshift({ name: "None", growthType: 0, measure: [] })
-	return output
+	return [].concat(
+		{ name: "None", growthType: 0, measure: null },
+		measures.reduce((all, ms) => {
+			all.push({ name: ms.name, growthType: 0, measure: ms });
+			if (!(/growth/i).test(ms.name)) {
+				all.push({ name: ms.name + " Growth", growthType: 1, measure: ms });
+			}
+			return all;
+		}, [])
+	)
 }

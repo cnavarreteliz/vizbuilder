@@ -80,21 +80,22 @@ function mapStateToProps(state) {
 	if (state.visuals.chart.type === "treemap")
 		all_ms = all_ms.filter(ms => !treemapMeasureFilter.test(ms.name));
 
+	let all_cl = generateColorSelector(currentCb.measures);
+	currentCl = all_cl.find(item => item.measure == currentCl) || all_cl[0];
+
 	return {
 		cube: currentCb,
 		drilldown: currentDd,
 		viztype: state.visuals.chart.type,
 		measure: currentMs,
 		groupBy: currentGb,
-		//colorBy: currentCl,
-		colorBy: state.visuals.chart.colorBy || {},
+		colorBy: currentCl,
 
 		all_cb: state.cubes.all,
-		all_dd: currentCb.drilldowns,
+		all_dd: currentCb.drilldowns, 
 		all_ms,
 		all_cl: generateColorSelector(currentCb.measures),
 		isOpen: true
-		//all_cl: currentCb.measures.filter(ms => colorMeasureFilter.test(ms.name))
 	};
 }
 
@@ -121,10 +122,7 @@ function mapDispatchToProps(dispatch) {
 		},
 
 		onSetColorIndex(item) {
-			dispatch({ type: "COLORBY_SET", payload: item.measure });
-			// This dispatch get set color by normal measure and also growth measures
-			dispatch({ type: "VIZ_COLORBY_SET", payload: item });
-			dispatch({ type: "VIZ_GROWTH_UPDATE", payload: item.growthType });
+			dispatch({ type: "COLORBY_SET", payload: item.measure, growth: item.growthType });
 		}
 	};
 }

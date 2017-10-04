@@ -16,7 +16,7 @@
 			align-items: center;
 
 			color: #555;
-			background: #f9f9f9;
+			background: #f0f0f0;
 
 			& .value {
 				flex: 1 1;
@@ -31,6 +31,10 @@
 
 		&.active {
 			background: #ccc;
+		}
+
+		&.disabled {
+			pointer-events: none;
 		}
 	}
 }

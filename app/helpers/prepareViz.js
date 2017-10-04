@@ -1,15 +1,16 @@
 import { Array1D, Scalar, NDArrayMathGPU } from "deeplearn";
+import { isNumeric } from "helpers/functions";
 
 export function calculateGrowth(data, key = "value") {
-	const result = data.reduce((r, a) => {
-		r[a.id] = r[a.id] || [];
+	const result = data.reduce((all, item) => {
+		all[item.id] = all[item.id] || [];
 		// Create custom item
-		let item = {
-			value: a[key],
-			year: a.year
-		};
-		r[a.id].push(item);
-		return r;
+		if (isNumeric(item[key]) && item[key])
+			all[item.id].push({
+				value: item[key],
+				year: item.year
+			});
+		return all;
 	}, Object.create(null));
 
 	// Get growth by dimension
@@ -58,53 +59,51 @@ function calculateCategoryGrowth(obj) {
 
 // Group alpha percent of lowest categories
 export function groupLowestCategories(data, alpha = 0.05, min = 15) {
-	
 	if (data !== null) {
 		// Reduce
-		let allData = data
-		let total = 0
+		let allData = data;
+		let total = 0;
 		data = data.reduce((all, item) => {
 			if (item.id in all) {
-				all[item.id].value += item.value
+				all[item.id].value += item.value;
 			} else {
-				all[item.id] = item
+				all[item.id] = item;
 			}
-			total += item.value
-			return all
+			total += item.value;
+			return all;
 		}, {});
 
 		// Convert Object to Array
 		data = Object.keys(data).map(key => {
 			return data[key];
 		});
-		
+
 		if (data.length > min) {
 			const sortdata = data.sort((a, b) => {
 				return a.value - b.value;
 			});
-	
-			let LOWESTCATEGORIES = []
+
+			let LOWESTCATEGORIES = [];
 			// Pass all categories with minus alpha percent to "Other categories"
 			sortdata.reduce((a, b) => {
 				if (a + b.value > total * alpha) {
 					b.id = b.id;
 				} else {
-					LOWESTCATEGORIES.push(b.id)
+					LOWESTCATEGORIES.push(b.id);
 				}
 				return a + b.value;
 			}, 0);
-	
-			var output = []
+
+			var output = [];
 			allData = allData.map(item => {
-				if(LOWESTCATEGORIES.includes(item.id)){
-					item.id = "Other categories"
-				} 
-				return item
-			})
+				if (LOWESTCATEGORIES.includes(item.id)) {
+					item.id = "Other categories";
+				}
+				return item;
+			});
 		}
 
 		return allData;
-		
 	} else {
 		return null;
 	}

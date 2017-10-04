@@ -2,8 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import pluralize from "pluralize";
 
-// import { prepareHierarchy } from "helpers/prepareHierarchy";
-
 import Chart from "components/Chart";
 import AgeBucket from "components/Bucket";
 import ChartOptions from "components/ChartOptions";
@@ -39,7 +37,7 @@ function AreaContent(props) {
 			<Chart />
 			<div className="chartappearance-wrapper">
 				<AgeBucket />
-				<ChartOptions />
+				{/* <ChartOptions /> */}
 			</div>
 		</div>
 	);
@@ -94,11 +92,6 @@ function mapDispatchToProps(dispatch) {
 
 		onDrilldownChange(dim) {
 			dispatch({ type: "DRILLDOWN_SET", payload: dim });
-			dispatch({
-				type: "VIZ_AXIS_UPDATE",
-				axis: "x",
-				payload: dim.name
-			});
 		}
 	};
 }

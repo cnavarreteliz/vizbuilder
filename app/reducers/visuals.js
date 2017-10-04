@@ -7,7 +7,6 @@ const initialState = {
 	chart: {
 		type: "treemap",
 		growth: false,
-		colorBy: ''
 	},
 	axis: {
 		x: '',
@@ -63,11 +62,11 @@ export default function(state = initialState, action) {
 			switch (action.payload.name) {
 				case "Age":
 				case "Age Bucket":
-					newState.chart.type = 'bar';
+					newState.chart.type = "bar";
 					break;
 
 				default:
-					newState.chart.type = 'treemap';
+					newState.chart.type = "treemap";
 					break;
 			}
 
@@ -75,7 +74,14 @@ export default function(state = initialState, action) {
 		}
 
 		case "MEASURE_SET": {
-			return {...state, axis: {...state.axis, y: action.payload.name }}
+			return { ...state, axis: { ...state.axis, y: action.payload.name } };
+		}
+
+		case "COLORBY_SET": {
+			if ("growth" in action)
+				return { ...state, chart: { ...state.chart, growth: action.growth } };
+			
+			return state;
 		}
 
 		default:
