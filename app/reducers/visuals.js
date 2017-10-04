@@ -13,6 +13,9 @@ const initialState = {
 		y: '',
 		year: ''
 	},
+	dialogPanel : {
+		show: false
+	},
 	range: [ FIRST_YEAR, LATEST_YEAR ],
 	buckets: 10,
 	timeDimension: false
@@ -56,8 +59,12 @@ export default function(state = initialState, action) {
 			return {...state, axis: {...state.axis, x: action.dimension, y: action.measure } };
 		}
 
+		case "VIZ_DIALOG_TOGGLE": {
+			return { ...state, dialogPanel: { ...state.chart, show: action.payload } };
+		}
+
 		case "DRILLDOWN_SET": {
-			let newState = {...state, axis: {...state.axis, x: action.payload.name }};
+			let newState = {...state, axis: {...state.axis, x: action.payload.level }};
 
 			switch (action.payload.name) {
 				case "Age":

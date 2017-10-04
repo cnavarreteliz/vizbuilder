@@ -9,17 +9,6 @@ import "styles/VizTable.css";
 class VizTable extends React.Component {
 	constructor(props) {
 		super(props);
-		//this.updateExtension = this.updateExtension.bind(this);
-		//this.downloadFile = this.downloadFile.bind(this);
-	}
-
-	downloadFile(event, ext, extension) {
-		let data = JSON.stringify(event);
-
-		if (extension) {
-			var blob = new Blob([data], { type: "text/plain;charset=utf-8" });
-			FileSaver.saveAs(blob, `data.json`);
-		}
 	}
 
 	render() {
