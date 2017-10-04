@@ -20,11 +20,14 @@ import "styles/Chart.css";
 
 function Chart(props) {
 
+	console.log(props.chart)
 	// Create buckets if drilldown selected is Age
-	let data =
+	let data = mapDataForChart(props.data, props.chart, props.options)
+	
+	data =
 		props.axis.x === "Age"
 			? createBuckets(props.data, props.num_buckets)
-			: props.data;
+			: data;
 
 	if (props.growthType) {
 		let attributes = calculateGrowth(
@@ -42,8 +45,6 @@ function Chart(props) {
 		}));
 	}
 
-	console.log(data)
-
 	data = groupLowestCategories(data);
 
 	let max = Math.max(...data.map(d => d.year)),
@@ -60,8 +61,6 @@ function Chart(props) {
 		colorScale = "colorScale";
 	}
 
-	console.log(data)
-
 	let config = {
 		...CHARTCONFIG,
 		type: props.chart.type,
@@ -69,10 +68,9 @@ function Chart(props) {
 		aggs: {
 			growth: mean,
 			colorScale: mean,
-			value: measureType(props.axis.y) ? mean : sum
+			//value: measureType(props.axis.y) ? mean : sum
 		},
 		data: data,
-		domain: min < 0 ? [min, 0, max] : [min, max],
 		colorScale: colorScale,
 		colorScalePosition:
 			props.chart.colorScale !== "" || props.chart.growth ? "bottom" : false,
@@ -90,7 +88,7 @@ function Chart(props) {
 					groupBy: ["groupBy", "id"]
 				};
 			}
-			return <Treemap config={{...TREEMAPCONFIG, ...config}} />;
+			return <Treemap config={{...TREEMAPCONFIG, ...config, time: "year"}} />;
 
 		case "donut":
 			return <Donut config={config} />;
@@ -135,33 +133,30 @@ function mapDataForChart(data, chart, props) {
 		case "donut":
 		case "pie":
 			return data.reduce((all, item) => {
-				let value = item[props.y];
-				if (isNumeric(value))
-					all.push({
-						id: item[props.x],
-						name: item[props.x],
-						year: parseInt(item[props.year] || item.Year),
-						groupBy: item[props.groupBy],
-						colorScale: item[props.colorScale],
-						value,
-						source: item
-					});
+				all.push({
+					id: item[props.x],
+					name: item[props.x],
+					year: parseInt(item[props.year] || item.Year),
+					groupBy: item[props.groupBy],
+					colorScale: item[props.colorScale],
+					value: item[props.y],
+					source: item
+				});
 				return all;
 			}, []);
 
 		case "bar":
 		case "stacked":
 			return data.reduce((all, item) => {
-				let value = item[props.y];
-				if (isNumeric(value))
+				if (isNumeric(item[props.y]))
 					all.push({
 						id: item[props.x],
 						name: item[props.x],
 						year: parseInt(item[props.year] || item.Year),
 						colorScale: item[props.colorScale],
 						x: item[props.id],
-						y: value,
-						value,
+						y: item[props.y],
+						value: item[props.y],
 						source: item
 					});
 				return all;
@@ -190,13 +185,14 @@ function mapStateToProps(state) {
 		colorBy = aggr.colorBy[0] || {},
 		groupBy = aggr.groupBy[0] || {},
 		props = {
-			x: "",
-			y: "",
+			x: state.visuals.axis.x,
+			y: state.visuals.axis.y,
 			year: "",
 			colorScale: colorBy.name || "",
 			groupBy: groupBy.level || ""
 		};
 
+	/*
 	if (aggr.drilldowns.length > 1) {
 		let xor = aggr.drilldowns[0].dimensionType === 0;
 		props.x = aggr.drilldowns[xor ? 0 : 1].level;
@@ -204,12 +200,8 @@ function mapStateToProps(state) {
 	} else if (aggr.drilldowns.length > 0) {
 		props.x = aggr.drilldowns[0].level;
 	}
+	*/
 
-	if (aggr.measures.length > 0) {
-		props.y = aggr.measures.filter(
-			ms => ms.name === state.visuals.axis.y
-		)[0].name;
-	}
 
 	if (state.cubes.current.timeDimensions.length > 0) {
 		props.year = state.cubes.current.timeDimensions[0].name;
@@ -223,10 +215,9 @@ function mapStateToProps(state) {
 		growthType: state.visuals.chart.growth,
 		groupBy: groupBy,
 		axis: state.visuals.axis,
-		data: mapDataForChart(state.data.values, chart, props),
-		num_buckets: state.visuals.buckets
-		// data: groupLowestCategories(mapDataChart(data, chart, props)),
-		// data: mapDataChart(data, chart, props),
+		data: state.data.values,
+		num_buckets: state.visuals.buckets,
+		options: props
 	};
 }
 

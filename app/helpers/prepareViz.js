@@ -97,7 +97,7 @@ export function groupLowestCategories(data, alpha = 0.05, min = 15) {
 			var output = [];
 			allData = allData.map(item => {
 				if (LOWESTCATEGORIES.includes(item.id)) {
-					item.id = "Other categories";
+					item.id = "Other";
 				}
 				return item;
 			});
