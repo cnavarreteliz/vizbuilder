@@ -19,15 +19,10 @@ import VizTable from "components/VizTable";
 import "styles/Chart.css";
 
 function Chart(props) {
-
-	console.log(props.chart)
 	// Create buckets if drilldown selected is Age
-	let data = mapDataForChart(props.data, props.chart, props.options)
-	
-	data =
-		props.axis.x === "Age"
-			? createBuckets(data, props.num_buckets)
-			: data;
+	let data = mapDataForChart(props.data, props.chart, props.options);
+
+	data = props.axis.x === "Age" ? createBuckets(data, props.num_buckets) : data;
 
 	if (props.growthType) {
 		let attributes = calculateGrowth(
@@ -48,7 +43,7 @@ function Chart(props) {
 	data = groupLowestCategories(data);
 
 	let max = Math.max(...data.map(d => d.year)),
-		min = Math.min(...data.map(d => d.year))
+		min = Math.min(...data.map(d => d.year));
 
 	let colorScale;
 	if (props.chart.colorScale === "" && props.chart.growth) {
@@ -67,7 +62,7 @@ function Chart(props) {
 		//controls: yearControls(data),
 		aggs: {
 			growth: mean,
-			colorScale: mean,
+			colorScale: mean
 			//value: measureType(props.axis.y) ? mean : sum
 		},
 		data: data,
@@ -77,7 +72,6 @@ function Chart(props) {
 		colorScaleConfig: {
 			color: COLORS_RAINFALL
 		}
-		
 	};
 
 	switch (config.type) {
@@ -88,7 +82,7 @@ function Chart(props) {
 					groupBy: ["groupBy", "id"]
 				};
 			}
-			return <Treemap config={{...TREEMAPCONFIG, ...config, time: "year"}} />;
+			return <Treemap config={{ ...TREEMAPCONFIG, ...config, time: "year" }} />;
 
 		case "donut":
 			return <Donut config={config} />;
@@ -123,8 +117,17 @@ function Chart(props) {
 }
 
 function measureType(measure) {
-	let measureFilter = RegExp("growth|average|median|percent|avg|gini|rca", "i")
-	return measureFilter.test(measure)
+	let measureFilter = RegExp("growth|average|median|percent|avg|gini|rca", "i");
+	switch (measure.aggregator) {
+		case "SUM":
+			return false;
+		case "AVG":
+			return false;
+		case "UNKNOWN":
+		default:
+			return false;
+	}
+	return measureFilter.test(measure);
 }
 
 function mapDataForChart(data, chart, props) {
@@ -139,7 +142,7 @@ function mapDataForChart(data, chart, props) {
 					year: parseInt(item[props.year] || item.Year),
 					groupBy: item[props.groupBy],
 					colorScale: item[props.colorScale],
-					value: item[props.y],
+					value: item[props.y.name],
 					source: item
 				});
 				return all;
@@ -155,8 +158,8 @@ function mapDataForChart(data, chart, props) {
 						year: parseInt(item[props.year] || item.Year),
 						colorScale: item[props.colorScale],
 						x: item[props.id],
-						y: item[props.y],
-						value: item[props.y],
+						y: item[props.y.name],
+						value: item[props.y.name],
 						source: item
 					});
 				return all;
@@ -201,7 +204,8 @@ function mapStateToProps(state) {
 		props.x = aggr.drilldowns[0].level;
 	}
 	*/
-
+	props.y = aggr.measures.filter(ms => ms.name === state.visuals.axis.y)[0];
+	console.log(props.y);
 
 	if (state.cubes.current.timeDimensions.length > 0) {
 		props.year = state.cubes.current.timeDimensions[0].name;

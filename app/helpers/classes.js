@@ -178,6 +178,7 @@ export class Measure {
 	constructor(ms) {
 		this.key = makeRandomId();
 		this.name = ms.name;
+		this.aggregator = ms.aggregator;
 	}
 
 	get label() {

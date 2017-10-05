@@ -21,7 +21,6 @@
 		"datawheel-canon": "^0.10.4",
 		"deeplearn": "^0.2.3",
 		"file-loader": "^0.11.2",
-		"mondrian-rest-client": "git+https://github.com/Datawheel/mondrian-rest-client.git",
 		"nprogress": "^0.2.0",
 		"react-d3-cloud": "^0.5.0",
 		"react-select": "^1.0.0-rc.10",
@@ -29,6 +28,7 @@
 		"typeface-montserrat": "^0.0.37",
 		"typeface-pathway-gothic-one": "^0.0.35",
 		"url-loader": "^0.5.9",
-		"numeral": "^2.0.6"
+		"numeral": "^2.0.6",
+		"mondrian-rest-client": "git+https://github.com/Datawheel/mondrian-rest-client.git"
 	}
 }
