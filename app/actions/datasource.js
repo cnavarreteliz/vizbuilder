@@ -30,7 +30,7 @@ export function requestCubes(dispatch, attempt) {
 				});
 				dispatch({
 					type: "DRILLDOWN_SET",
-					payload: cube.dimensions[0].drilldowns[0]
+					payload: cube.dimensions[cube.dimensions.length - 1].drilldowns[0]
 				});
 				dispatch({
 					type: "MEASURE_SET",
