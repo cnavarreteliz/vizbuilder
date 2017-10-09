@@ -1,5 +1,6 @@
 import React from "react";
 import classnames from "classnames";
+import escapeRegExp from 'lodash/escapeRegExp'
 
 import { Icon } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/labs";
@@ -12,7 +13,7 @@ import "styles/SelectChartType.css";
 SelectChartType.defaultProps = {
 	itemListPredicate(query, items) {
 		query = query.trim();
-		let tester = RegExp(escape(query) || ".", "i");
+		let tester = RegExp(escapeRegExp(query) || ".", "i");
 		return items.filter(item => tester.test(item.nllabel));
 	},
 	itemRenderer({ handleClick, item, isActive }) {

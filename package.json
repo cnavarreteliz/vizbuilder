@@ -24,7 +24,6 @@
 		"nprogress": "^0.2.0",
 		"react-d3-cloud": "^0.5.0",
 		"react-select": "^1.0.0-rc.10",
-		"regex-escape": "^3.4.7",
 		"typeface-montserrat": "^0.0.37",
 		"typeface-pathway-gothic-one": "^0.0.35",
 		"url-loader": "^0.5.9",

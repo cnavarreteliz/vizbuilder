@@ -1,6 +1,6 @@
 import React from "react";
-import escape from "regex-escape";
 import classnames from "classnames";
+import escapeRegExp from "lodash/escapeRegExp";
 
 import { Icon } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/labs";
@@ -11,7 +11,7 @@ import "styles/SelectDrillable.css";
 SelectDrillable.defaultProps = {
 	itemListPredicate(query, items) {
 		query = query.trim();
-		let tester = RegExp(escape(query) || ".", "i");
+		let tester = RegExp(escapeRegExp(query) || ".", "i");
 		return items.filter(item => tester.test(item.name));
 	},
 	itemRenderer({ handleClick, item, isActive }) {
