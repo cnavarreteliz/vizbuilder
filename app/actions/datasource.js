@@ -1,15 +1,21 @@
+import { Client as MondrianClient } from "mondrian-rest-client";
 import nprogress from "nprogress";
 
-import {getClient} from "helpers/mondrian";
 import { Cube } from "helpers/classes";
 import { pickOne } from "helpers/random";
 import { flattenDrilldowns } from "helpers/manageDimensions";
+
+var client;
+
+export function resetClient(source) {
+	client = new MondrianClient(source);
+}
 
 export function requestCubes(dispatch, attempt) {
 	nprogress.start();
 	dispatch({ type: "CUBES_FETCH" });
 
-	return getClient()
+	return client
 		.cubes()
 		.then(
 			cubes => {
@@ -66,7 +72,7 @@ export function requestQuery(query, attempt) {
 		nprogress.start();
 		dispatch({ type: "DATA_FETCH" });
 
-		return getClient()
+		return client
 			.query(query)
 			.then(
 				request => {

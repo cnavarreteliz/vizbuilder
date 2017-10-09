@@ -1,15 +1,4 @@
-import { Client as MondrianClient } from "mondrian-rest-client";
 import union from "lodash/union";
-
-var client;
-
-export function getClient() {
-	return client;
-}
-
-export function resetClient(source) {
-	client = new MondrianClient(source);
-}
 
 export function buildQuery(cube, drilldowns, measures, cuts) {
 	let query = cube.query;

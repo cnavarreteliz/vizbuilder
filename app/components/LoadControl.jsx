@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import zip from "lodash/zip";
 import union from "lodash/union";
 
-import { requestCubes, requestQuery } from "actions/datasource";
-import { resetClient, buildQuery } from "helpers/mondrian";
+import { resetClient, requestCubes, requestQuery } from "actions/datasource";
+import { buildQuery } from "helpers/mondrian";
 
 function simpleCompare(elements) {
 	return elements[0] !== elements[1];
