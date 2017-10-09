@@ -60,21 +60,21 @@ export default function(state = initialState, action) {
 			return { ...state, dialogPanel: { ...state.chart, show: action.payload } };
 		}
 
-		case "DRILLDOWN_SET": {
-			let newState = {...state, axis: {...state.axis, x: action.payload.level }};
+		case "CUBES_SET": {
+			let cube = action.payload;
 
-			switch (action.payload.name) {
-				case "Age":
-				case "Age Bucket":
-					newState.chart.type = "bar";
-					break;
+			let dim = cube.dimensions[0],
+				drilldown = dim.drilldowns[0],
+				measure = cube.measures[0];
 
-				default:
-					newState.chart.type = "treemap";
-					break;
-			}
-
+			let newState = setAxisX(state, drilldown);
+			newState.axis.y = measure.name;
+			
 			return newState;
+		}
+
+		case "DRILLDOWN_SET": {
+			return setAxisX(state, action.payload);
 		}
 
 		case "MEASURE_SET": {
@@ -84,11 +84,28 @@ export default function(state = initialState, action) {
 		case "COLORBY_SET": {
 			if ("growth" in action)
 				return { ...state, chart: { ...state.chart, growth: action.growth } };
-			
+
 			return state;
 		}
 
 		default:
 			return state;
 	}
+}
+
+function setAxisX(state, payload) {
+	let newState = { ...state, axis: { ...state.axis, x: payload.level } };
+
+	switch (payload.level) {
+		case "Age":
+		case "Age Bucket":
+			newState.chart.type = "bar";
+			break;
+
+		default:
+			newState.chart.type = "treemap";
+			break;
+	}
+
+	return newState;
 }

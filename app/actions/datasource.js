@@ -24,25 +24,13 @@ export function requestCubes(dispatch, attempt) {
 					.filter(Boolean)
 					.map(cb => new Cube(cb));
 
-				let cube = pickOne(cubes);
-
 				dispatch({
 					type: "CUBES_FETCH_SUCCESS",
 					payload: cubes
 				});
 				dispatch({
 					type: "CUBES_SET",
-					payload: cube
-				});
-				dispatch({
-					type: "DRILLDOWN_SET",
-					payload: cube.dimensions[
-						Math.floor(Math.random() * (cube.dimensions.length))
-					].drilldowns[0]
-				});
-				dispatch({
-					type: "MEASURE_SET",
-					payload: cube.measures[0]
+					payload: pickOne(cubes)
 				});
 			},
 			error => {

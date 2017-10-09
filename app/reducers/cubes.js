@@ -39,13 +39,12 @@ export default function(state = initialState, action) {
 		}
 
 		case "CUBES_SET": {
-			return {
-				...state,
-				current:
-					"string" === typeof action.payload
-						? state.all.find(cube => cube.name === action.payload)
-						: action.payload
-			};
+			// action.payload should be a Cube or a cube name
+			let newCube =
+				"string" === typeof newCube
+					? state.all.find(cube => cube.name === newCube)
+					: action.payload;
+			return newCube ? { ...state, current: newCube } : state;
 		}
 
 		default:

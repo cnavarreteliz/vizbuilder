@@ -9,7 +9,14 @@ const initialState = {
 export default function(state = initialState, action) {
 	switch (action.type) {
 		case "CUBES_SET": {
-			return initialState;
+			let cube = action.payload,
+				dims = cube.dimensions[0];
+
+			return {
+				...initialState,
+				drilldowns: dims.drilldowns.slice(0, 1),
+				measures: cube.measures.slice(0, 1)
+			};
 		}
 
 		case "DRILLDOWN_ADD": {
