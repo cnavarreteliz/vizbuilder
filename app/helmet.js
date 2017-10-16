@@ -1,7 +1,4 @@
 module.exports = {
-    link: [
-        {rel: "stylesheet", href: "https://fonts.googleapis.com/css?family=Work+Sans:400,600"}
-    ],
     meta: [
         {charset: "utf-8"},
         {"http-equiv": "X-UA-Compatible", "content": "IE=edge"},

@@ -75,8 +75,7 @@ export const CHARTCONFIG = {
 			"font-size": "18px",
 			"text-transform": "uppercase",
 			"font-weight": "bold",
-			"text-align": "center",
-			"font-family": "Montserrat, sans-serif"
+			"text-align": "center"
 		},
 		body(item) {
 			item = item.source;
