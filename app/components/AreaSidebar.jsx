@@ -59,9 +59,6 @@ function Sidebar(props) {
 					onItemSelect={props.onSetColorIndex}
 				/>
 			</div>
-			<div className="group">
-				<span className="label">labeled by</span>
-			</div>
 		</div>
 	);
 }
