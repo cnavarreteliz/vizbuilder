@@ -1,15 +1,36 @@
+// @ts-check
+
 import React from "react";
 import { connect } from "react-redux";
 
 import Chart from "components/Chart";
 import AgeBucket from "components/Bucket";
-import ChartOptions from "components/ChartOptions";
 import ContentDefault from "components/ContentDefault";
 import InputPopover from "components/InputPopover";
 import Toolbar from "components/Toolbar";
 
 import "styles/AreaContent.css";
 
+/**
+ * @typedef AreaContentState
+ * @prop {object} axis The current axis' labels.
+ * @prop {Cube} cube The current Cube.
+ * @prop {Array} data The raw dataset.
+ */
+
+/**
+ * @typedef AreaContentDispatch
+ * @prop {Function} dispatch
+ * @prop {Function} onMeasureChange
+ * @prop {Function} onBucketUpdate
+ * @prop {Function} onDrilldownChange
+ */
+
+/**
+ * AreaContent component
+ * @param {AreaContentState & AreaContentDispatch} props
+ * @returns {JSX.Element}
+ */
 function AreaContent(props) {
 	if (!props.axis.x || !props.axis.y) return <ContentDefault />;
 
@@ -41,14 +62,13 @@ function AreaContent(props) {
 			<Chart />
 			<div className="chartappearance-wrapper">
 				<AgeBucket />
-				{/* <ChartOptions /> */}
 			</div>
 		</div>
 	);
 }
 
+/** @returns {AreaContentState} */
 function mapStateToProps(state) {
-
 	return {
 		axis: state.visuals.axis,
 		cube: state.cubes.current,
@@ -56,6 +76,7 @@ function mapStateToProps(state) {
 	};
 }
 
+/** @returns {AreaContentDispatch} */
 function mapDispatchToProps(dispatch) {
 	return {
 		dispatch,

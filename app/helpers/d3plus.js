@@ -36,8 +36,7 @@ export const TREEMAPCONFIG = {
 export const CHARTCONFIG = {
 	barPadding: 10,
 	titleConfig: {
-		fontColor: "#4A4A4A",
-		fontFamily: () => "Work Sans"
+		fontColor: "#4A4A4A"
 	},
 	legendConfig: {
 		marginLeft: 8,
