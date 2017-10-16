@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router";
 
-import "styles/Home.css"
+import "styles/Home.css";
+import logo_datachile from 'assets/logo-datachile.svg'
 
 function Home(props) {
 	return (
@@ -14,7 +15,7 @@ function Home(props) {
 				</li>
 				<li className="menu-item">
 					<Link to="/chile" className="site">
-						<img src="images/logo-datachile.svg" alt=""/>
+						<img src={logo_datachile} alt="DataChile" />
 					</Link>
 				</li>
 				<li className="menu-item">
