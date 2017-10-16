@@ -47,7 +47,7 @@ export const WORDCLOUD = {
 	icon: require("assets/charts/icon-wordcloud.svg")
 };
 
-const availables = [TREEMAP, DONUT, PIE, WORDCLOUD, BAR];
+const availables = [TREEMAP, DONUT, PIE, BAR];
 
 export function getChartByName(name) {
 	return availables.find(chart => chart.name === name);
@@ -62,7 +62,7 @@ export function getCoherentTypes(dds) {
 	if (hasTimeDim) {
 		return [TREEMAP, DONUT, PIE, BAR];
 	} else {
-		return [TREEMAP, DONUT, PIE, BAR, WORDCLOUD];
+		return [TREEMAP, DONUT, PIE, BAR];
 	}
 }
 
