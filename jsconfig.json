@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"baseUrl": "./",
+		"paths": {
+			"actions/*": ["app/actions/*"],
+			"assets/*": ["app/assets/*"],
+			"components/*": ["app/components/*"],
+			"helpers/*": ["app/helpers/*"],
+			"pages/*": ["app/pages/*"],
+			"reducers/*": ["app/reducers/*"],
+			"styles/*": ["app/styles/*"]
+		}
+	}
+}

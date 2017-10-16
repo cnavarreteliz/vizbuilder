@@ -1,5 +1,14 @@
+// @ts-check
+
 import union from "lodash/union";
 
+/**
+ * Creates a query to be sent to a Mondrian Server.
+ * @param {Cube} cube 
+ * @param {Array<Drillable>} drilldowns 
+ * @param {Array<Measure>} measures 
+ * @param {Array<Cut>} cuts 
+ */
 export function buildQuery(cube, drilldowns, measures, cuts) {
 	let query = cube.query;
 

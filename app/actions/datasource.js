@@ -1,3 +1,5 @@
+// @ts-check
+
 import { Client as MondrianClient } from "mondrian-rest-client";
 import nprogress from "nprogress";
 
@@ -5,12 +7,22 @@ import { Cube } from "helpers/classes";
 import { pickOne } from "helpers/random";
 import { flattenDrilldowns } from "helpers/manageDimensions";
 
+/** @type {MondrianClient} */
 var client;
 
+/**
+ * Renewes the client element with a new source database.
+ * @param {string} source URL to the new mondrian database server.
+ */
 export function resetClient(source) {
 	client = new MondrianClient(source);
 }
 
+/**
+ * Gets the available cube list from the current database.
+ * @param {Function} dispatch Redux dispatch function.
+ * @param {number} [attempt] Number of the current load attempt.
+ */
 export function requestCubes(dispatch, attempt) {
 	nprogress.start();
 	dispatch({ type: "CUBES_FETCH" });

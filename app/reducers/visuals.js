@@ -1,3 +1,4 @@
+/** @type {VisualsState} */
 const initialState = {
 	panel: {
 		show: false
@@ -18,6 +19,14 @@ const initialState = {
 	timeDimension: false
 };
 
+/**
+ * Reducer for aggregators. 
+ * These elements are set to build the query for the database.
+ * They represent the content state before getting the actual content.
+ * @param {VisualsState} state Current state
+ * @param {ReduxMessage} action Redux message.
+ * @returns {VisualsState}
+ */
 export default function(state = initialState, action) {
 	switch (action.type) {
 		case "VIZ_GROWTH_UPDATE": {
@@ -61,6 +70,7 @@ export default function(state = initialState, action) {
 		}
 
 		case "CUBES_SET": {
+			/** @type {Cube} */
 			let cube = action.payload;
 
 			let dim = cube.dimensions[0],
@@ -93,6 +103,12 @@ export default function(state = initialState, action) {
 	}
 }
 
+/**
+ * Generates a new state, and sets its X axis.
+ * @param {VisualsState} state Old state.
+ * @param {Drillable} payload Drilldown.
+ * @returns {VisualsState}
+ */
 function setAxisX(state, payload) {
 	let newState = { ...state, axis: { ...state.axis, x: payload.level } };
 
