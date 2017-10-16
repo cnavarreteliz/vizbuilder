@@ -15,8 +15,7 @@ const axisConfig = {
 	shapeConfig: {
 		fill: "#979797",
 		labelConfig: {
-			fontColor: "rgba(0, 0, 0, 0.8)",
-			fontFamily: () => "Pathway Gothic One"
+			fontColor: "rgba(0, 0, 0, 0.8)"
 		},
 		stroke: "#aaaaaa",
 		strokeOpacity: 0.5
@@ -28,21 +27,14 @@ export const TREEMAPCONFIG = {
 	padding: 2,
 	shapeConfig: {
 		labelConfig: {
-			fontFamily: () => "'Work Sans', sans-serif",
-			fontWeight: 600,
+			fontWeight: 600
 		},
 		labelPadding: 8
-	},
-	//time: "year"
+	}
 };
 
 export const CHARTCONFIG = {
 	barPadding: 10,
-	//time: "year",
-	timelineConfig: {
-		//selection: [2009, 2016],
-		handleSize: 8
-	},
 	titleConfig: {
 		fontColor: "#4A4A4A",
 		fontFamily: () => "Work Sans"
@@ -54,7 +46,6 @@ export const CHARTCONFIG = {
 			label: false,
 			labelConfig: {
 				fontColor: "rgba(0, 0, 0, 0.8)",
-				fontFamily: () => "'Work Sans', sans-serif",
 				fontResize: false,
 				fontSize: 0,
 				fontWeight: 600

@@ -21,9 +21,9 @@ import "styles/Chart.css";
 function Chart(props) {
 	// Create buckets if drilldown selected is Age
 	let data = mapDataForChart(props.data, props.chart, props.options);
-
+	console.log(data)
 	data = props.axis.x === "Age" ? createBuckets(data, props.num_buckets) : data;
-
+	
 	if (props.growthType) {
 		let attributes = calculateGrowth(
 			data,
@@ -73,6 +73,8 @@ function Chart(props) {
 			color: COLORS_RAINFALL
 		}
 	};
+
+	console.log(config)
 
 	switch (config.type) {
 		case "treemap":
@@ -151,17 +153,16 @@ function mapDataForChart(data, chart, props) {
 		case "bar":
 		case "stacked":
 			return data.reduce((all, item) => {
-				if (isNumeric(item[props.y]))
-					all.push({
-						id: item[props.x],
-						name: item[props.x],
-						year: parseInt(item[props.year] || item.Year),
-						colorScale: item[props.colorScale],
-						x: item[props.id],
-						y: item[props.y.name],
-						value: item[props.y.name],
-						source: item
-					});
+				all.push({
+					id: item[props.x],
+					name: item[props.x],
+					year: parseInt(item[props.year] || item.Year),
+					colorScale: item[props.colorScale],
+					x: item[props.x],
+					y: item[props.y.name],
+					value: item[props.y.name],
+					source: item
+				});
 				return all;
 			}, []);
 
@@ -205,7 +206,6 @@ function mapStateToProps(state) {
 	}
 	*/
 	props.y = aggr.measures.filter(ms => ms.name === state.visuals.axis.y)[0];
-	console.log(props.y);
 
 	if (state.cubes.current.timeDimensions.length > 0) {
 		props.year = state.cubes.current.timeDimensions[0].name;
