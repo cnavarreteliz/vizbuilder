@@ -41,7 +41,7 @@ export class Cube {
 
 	get drilldowns() {
 		if (!this._drilldowns) {
-			this._drilldowns = this.dimensions.reduce(function(all, dim) {
+			this._drilldowns = this.dimensions.reduce((all, dim) => {
 				return all.concat(dim.drilldowns);
 			}, []);
 		}
@@ -81,13 +81,13 @@ export class Dimension {
 	}
 
 	get drilldowns() {
-		return this.hierarchies.reduce(function(all, hr) {
+		return this.hierarchies.reduce((all, hr) => {
 			return all.concat(hr.drilldowns);
 		}, []);
 	}
 
 	getLevelHierarchy() {
-		return this.hierarchies.reduce(function(all, hr) {
+		return this.hierarchies.reduce((all, hr) => {
 			let levels = hr.levels.slice(1);
 
 			if (levels.length > 1) {
@@ -178,7 +178,7 @@ export class Measure {
 	constructor(ms) {
 		this.key = makeRandomId();
 		this.name = ms.name;
-		this.aggregator = ms.aggregator;
+		this.type = ms.aggregatorType;
 	}
 
 	get label() {
