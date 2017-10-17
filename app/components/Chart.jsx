@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Treemap, Donut, Pie, BarChart, StackedArea } from "d3plus-react";
+import { Treemap, Donut, Pie, BarChart, StackedArea, Plot } from "d3plus-react";
 import { Tooltip } from "d3plus-tooltip";
 import { max, mean, min, sum } from "d3-array";
 
@@ -21,7 +21,7 @@ import "styles/Chart.css";
 function Chart(props) {
 	// Create buckets if drilldown selected is Age
 	let data = mapDataForChart(props.data, props.chart, props.options);
-	console.log(data)
+	console.log(props.axis.x)
 	data = props.axis.x === "Age" ? createBuckets(data, props.num_buckets) : data;
 	
 	if (props.growthType) {
@@ -58,12 +58,12 @@ function Chart(props) {
 
 	let config = {
 		...CHARTCONFIG,
-		type: props.chart.type,
-		//controls: yearControls(data),
+		groupBy: ["id"],
 		aggs: {
 			growth: mean,
-			colorScale: mean
-			//value: measureType(props.axis.y) ? mean : sum
+			colorScale: mean,
+			value: measureType(props.options.y) ? mean : sum,
+			y: measureType(props.options.y) ? mean : sum,
 		},
 		data: data,
 		colorScale: colorScale,
@@ -71,7 +71,8 @@ function Chart(props) {
 			props.chart.colorScale !== "" || props.chart.growth ? "bottom" : false,
 		colorScaleConfig: {
 			color: COLORS_RAINFALL
-		}
+		},
+		type: props.chart.type
 	};
 
 	console.log(config)
@@ -93,7 +94,7 @@ function Chart(props) {
 			return <Pie config={config} />;
 
 		case "bubble":
-			return <BarChart config={config} />;
+			return <Plot config={config} />;
 
 		case "table":
 			return <VizTable data={config.data} />;
@@ -118,20 +119,19 @@ function Chart(props) {
 	}
 }
 
-function measureType(measure) {
-	let measureFilter = RegExp("growth|average|median|percent|avg|gini|rca", "i");
-	switch (measure.aggregator) {
+function measureType(ms) {
+ 	switch (ms.type) {
 		case "SUM":
 			return false;
 		case "AVG":
-			return false;
+			return true;
 		case "UNKNOWN":
 		default:
 			return false;
 	}
-	return measureFilter.test(measure);
 }
 
+// Preprocess data for charts
 function mapDataForChart(data, chart, props) {
 	switch (chart.type) {
 		case "treemap":
@@ -150,6 +150,21 @@ function mapDataForChart(data, chart, props) {
 				return all;
 			}, []);
 
+		case "bubble":
+			return data.reduce((all, item) => {
+				all.push({
+					id: item[props.x],
+					name: item[props.x],
+					year: parseInt(item[props.year] || item.Year),
+					colorScale: item[props.colorScale],
+					x: item[props.y.name],
+					y: item[props.y.name],
+					value: item[props.y.name],
+					source: item
+				});
+				return all;
+			}, []);
+			
 		case "bar":
 		case "stacked":
 			return data.reduce((all, item) => {
