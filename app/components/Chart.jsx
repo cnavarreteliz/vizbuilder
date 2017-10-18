@@ -20,8 +20,7 @@ import "styles/Chart.css";
 function Chart(props) {
 	// Create buckets if drilldown selected is Age
 	let data = mapDataForChart(props.data, props.chart, props.options);
-	console.log(props.axis.x);
-	data = props.axis.x === "Age" ? createBuckets(data, props.num_buckets) : data;
+	data = props.options.x === "Age" ? createBuckets(data, props.num_buckets) : data;
 
 	if (props.growthType) {
 		let attributes = calculateGrowth(
@@ -55,6 +54,17 @@ function Chart(props) {
 		colorScale = "colorScale";
 	}
 
+	let COLORSCALE = {
+		colorScale: props.chart.growth ? "Growth" : props.chart.colorScale,
+		colorScalePosition:
+			props.chart.colorScale !== "" || props.chart.growth ? "bottom" : false,
+		colorScaleConfig: {
+			color: COLORS_RAINFALL
+		}
+	}
+
+	console.log(props.options)
+
 	let config = {
 		...CHARTCONFIG,
 		groupBy: ["id"],
@@ -87,31 +97,37 @@ function Chart(props) {
 		on: ("click", d => { alert("Hello") })
 	};
 
-	let PLOTCONFIG = {
+	let VIZCONFIG = {
 		aggs: {
-			[props.axis.y]: measureType(props.options.y) ? mean : sum
+			[props.options.y]: measureType(props.options.y) ? mean : sum,
 		},
-		groupBy: [props.axis.x],
+		groupBy: [props.options.x],
 		data: props.data,
-		y: props.axis.y, // Y axis option
-		x: props.axis.x, // X axis option
+	}
+
+	let PLOTCONFIG = {
+		...VIZCONFIG,
+		...COLORSCALE,
+		y: props.options.y, // Y axis option
+		x: props.options.x, // X axis option
 		xConfig: {
-			title: props.axis.x
+			title: props.options.x
 		},
 		yConfig: {
-			title: props.axis.y
+			title: props.options.y
 		}
 	};
 
+	// Only use AREACONFIG if there is timeDimension in x-axis
+	let AREACONFIG = {
+		...VIZCONFIG,
+		...COLORSCALE,
+		y: props.options.y, 
+		x: "Year", 
+	}
+
 	switch (config.type) {
 		case "treemap":
-			if (props.groupBy.name) {
-				config = {
-					...config,
-					groupBy: ["groupBy", "id"]
-				};
-			}
-
 			return <Treemap config={TREEMAPCONFIG} />;
 
 		case "donut":
@@ -127,7 +143,7 @@ function Chart(props) {
 			return <BarChart config={PLOTCONFIG} />;
 
 		case "stacked":
-			return <StackedArea config={config} />;
+			return <StackedArea config={AREACONFIG} />;
 
 		default:
 			return <div />;
@@ -158,7 +174,7 @@ function mapDataForChart(data, chart, props) {
 					year: parseInt(item[props.year] || item.Year),
 					groupBy: item[props.groupBy],
 					colorScale: item[props.colorScale],
-					value: item[props.y.name],
+					value: item[props.y],
 					source: item
 				});
 				return all;
@@ -171,9 +187,9 @@ function mapDataForChart(data, chart, props) {
 					name: item[props.x],
 					year: parseInt(item[props.year] || item.Year),
 					colorScale: item[props.colorScale],
-					x: item[props.y.name],
-					y: item[props.y.name],
-					value: item[props.y.name],
+					x: item[props.y],
+					y: item[props.y],
+					value: item[props.y],
 					source: item
 				});
 				return all;
@@ -188,8 +204,8 @@ function mapDataForChart(data, chart, props) {
 					year: parseInt(item[props.year] || item.Year),
 					colorScale: item[props.colorScale],
 					x: item[props.x],
-					y: item[props.y.name],
-					value: item[props.y.name],
+					y: item[props.y],
+					value: item[props.y],
 					source: item
 				});
 				return all;
@@ -213,7 +229,7 @@ function mapStateToProps(state) {
 			groupBy: groupBy.level || ""
 		};
 
-	/*
+	
 	if (aggr.drilldowns.length > 1) {
 		let xor = aggr.drilldowns[0].dimensionType === 0;
 		props.x = aggr.drilldowns[xor ? 0 : 1].level;
@@ -221,7 +237,7 @@ function mapStateToProps(state) {
 	} else if (aggr.drilldowns.length > 0) {
 		props.x = aggr.drilldowns[0].level;
 	}
-	*/
+	
 	props.y = aggr.measures.filter(ms => ms.name === state.visuals.axis.y)[0];
 
 	if (state.cubes.current.timeDimensions.length > 0) {
@@ -229,7 +245,14 @@ function mapStateToProps(state) {
 	}
 
 	let chart = { ...state.visuals.chart, colorScale: props.colorScale };
-
+	let opt = {
+		x: props.x,
+		y: props.y.name,
+		year: props.year,
+		colorScale: colorBy.name || "",
+		groupBy: groupBy.level || ""
+	}
+	console.log(opt)
 	return {
 		chart: chart,
 		growthType: state.visuals.chart.growth,
@@ -237,7 +260,7 @@ function mapStateToProps(state) {
 		axis: state.visuals.axis,
 		data: state.data.values,
 		num_buckets: state.visuals.buckets,
-		options: props
+		options: opt
 	};
 }
 

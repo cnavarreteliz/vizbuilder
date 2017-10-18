@@ -9,6 +9,19 @@ import { generateColorSelector } from "helpers/prepareInput"
 
 import "styles/AreaSidebar.css";
 
+function Panel(props) {
+	switch(type) {
+		case "treemap":
+		case "donut":
+			return true
+			
+		case "bubble":
+		case "stacked":
+		case "bar":
+			return true
+	}
+}
+
 function Sidebar(props) {
 	return (
 		<div className="side-panel">
@@ -70,12 +83,14 @@ function mapStateToProps(state) {
 		currentGb = state.aggregators.groupBy[0] || {},
 		currentCl = state.aggregators.colorBy[0] || {};
 
+	console.log(state.aggregators.drilldowns)
+
 	let colorMeasureFilter = RegExp("growth|average|median|percent", "i"),
 		treemapMeasureFilter = RegExp("average|median", "i");
 
 	let all_ms = currentCb.measures;
-	if (state.visuals.chart.type === "treemap")
-		all_ms = all_ms.filter(ms => !treemapMeasureFilter.test(ms.name));
+	//if (state.visuals.chart.type === "treemap")
+	//all_ms = all_ms.filter(ms => !treemapMeasureFilter.test(ms.name));
 
 	let all_cl = generateColorSelector(currentCb.measures);
 	currentCl = all_cl.find(item => item.measure == currentCl) || all_cl[0];
@@ -89,7 +104,7 @@ function mapStateToProps(state) {
 		colorBy: currentCl,
 
 		all_cb: state.cubes.all,
-		all_dd: currentCb.drilldowns, 
+		all_dd: currentCb.stdDimensions, 
 		all_ms,
 		all_cl: generateColorSelector(currentCb.measures),
 		isOpen: true

@@ -20,14 +20,40 @@ export function calculateGrowth(data, key = "value") {
 	});
 	return obj;
 }
+/**
+ * Calculate Category Growth 
+ */
+function calculateCategoryGrowth2(obj, peryear = false) {
+	
+	// Verify if data is sorted by year
+	obj = obj.sort((a, b) => {
+		return a.year - b.year;
+	});
+	const tensor = obj.map(e => e.value);
+
+	// Get years list
+	const YEARS = obj.map(e => e.year);
+	
+	// Generate periods
+	const period = tensor.slice(1);
+	const lastperiod = tensor.slice(0, -1);
+	
+	// Calculate Growth per Year
+	const growth_perYear = period.reduce((result, item, key) => {
+		return (lastperiod[key] !== 0 ? (item / lastperiod[key]) - 1 : 1) + result
+	}, 0)
+
+	if (peryear)
+		return growth_perYear
+	
+	return growth_per_year.reduce((a, b) => { return a + b }, 0) / growth_per_year.length;
+}
 
 function calculateCategoryGrowth(obj) {
 	// Verify if data is sorted by year
 	obj = obj.sort((a, b) => {
 		return a.year - b.year;
 	});
-
-	console.log(obj);
 
 	const math = new NDArrayMathGPU();
 	const tensor = obj.map(e => e.value);

@@ -1,3 +1,5 @@
+import { pickOne } from "helpers/random";
+
 const initialState = {
 	measures: [],
 	drilldowns: [],
@@ -10,8 +12,8 @@ export default function(state = initialState, action) {
 	switch (action.type) {
 		case "CUBES_SET": {
 			let cube = action.payload,
-				dims = cube.dimensions[0];
-
+				//dims = cube.dimensions[0];
+				dims = pickOne(cube.dimensions.filter(dm => dm.type === 0))
 			return {
 				...initialState,
 				drilldowns: dims.drilldowns.slice(0, 1),

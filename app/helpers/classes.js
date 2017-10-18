@@ -32,7 +32,9 @@ export class Cube {
 	}
 
 	get stdDimensions() {
-		return this.dimensions.filter(dim => dim.type === 0);
+		return this.dimensions.filter(dim => dim.type === 0).reduce((all, dim) => {
+			return all.concat(dim.drilldowns);
+		}, []);
 	}
 
 	get timeDimensions() {
