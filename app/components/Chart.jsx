@@ -5,11 +5,10 @@ import { Tooltip } from "d3plus-tooltip";
 import { max, mean, min, sum } from "d3-array";
 
 import { COLORS_RAINFALL } from "helpers/colors";
-import { TREEMAPCONFIG, CHARTCONFIG, yearControls } from "helpers/d3plus";
+import { CHARTCONFIG, yearControls } from "helpers/d3plus";
 import { createBuckets } from "helpers/buckets";
 import { isNumeric } from "helpers/functions";
 import { groupLowestCategories, calculateGrowth } from "helpers/prepareViz";
-import { prepareSupercube } from "helpers/prepareInput";
 
 import WordCloud from "react-d3-cloud";
 
@@ -21,9 +20,9 @@ import "styles/Chart.css";
 function Chart(props) {
 	// Create buckets if drilldown selected is Age
 	let data = mapDataForChart(props.data, props.chart, props.options);
-	console.log(props.axis.x)
+	console.log(props.axis.x);
 	data = props.axis.x === "Age" ? createBuckets(data, props.num_buckets) : data;
-	
+
 	if (props.growthType) {
 		let attributes = calculateGrowth(
 			data,
@@ -63,7 +62,7 @@ function Chart(props) {
 			growth: mean,
 			colorScale: mean,
 			value: measureType(props.options.y) ? mean : sum,
-			y: measureType(props.options.y) ? mean : sum,
+			y: measureType(props.options.y) ? mean : sum
 		},
 		data: data,
 		colorScale: colorScale,
@@ -75,7 +74,34 @@ function Chart(props) {
 		type: props.chart.type
 	};
 
-	console.log(config)
+	let TREEMAPCONFIG = {
+		data: data,
+		groupBy: props.groupBy.name ? ["groupBy", "id"] : ["id"],
+		padding: 2,
+		shapeConfig: {
+			labelConfig: {
+				fontWeight: 600
+			},
+			labelPadding: 8
+		},
+		on: ("click", d => { alert("Hello") })
+	};
+
+	let PLOTCONFIG = {
+		aggs: {
+			[props.axis.y]: measureType(props.options.y) ? mean : sum
+		},
+		groupBy: [props.axis.x],
+		data: props.data,
+		y: props.axis.y, // Y axis option
+		x: props.axis.x, // X axis option
+		xConfig: {
+			title: props.axis.x
+		},
+		yConfig: {
+			title: props.axis.y
+		}
+	};
 
 	switch (config.type) {
 		case "treemap":
@@ -85,7 +111,8 @@ function Chart(props) {
 					groupBy: ["groupBy", "id"]
 				};
 			}
-			return <Treemap config={{ ...TREEMAPCONFIG, ...config, time: "year" }} />;
+
+			return <Treemap config={TREEMAPCONFIG} />;
 
 		case "donut":
 			return <Donut config={config} />;
@@ -96,20 +123,8 @@ function Chart(props) {
 		case "bubble":
 			return <Plot config={config} />;
 
-		case "table":
-			return <VizTable data={config.data} />;
-
 		case "bar":
-			return <BarChart config={config} />;
-
-		case "wordcloud":
-			return (
-				<WordCloud
-					data={config.data}
-					fontSizeMapper={word => Math.log2(word.value) * 5}
-					//rotate={word => (Math.random() * 6 - 3) * 30}
-				/>
-			);
+			return <BarChart config={PLOTCONFIG} />;
 
 		case "stacked":
 			return <StackedArea config={config} />;
@@ -120,11 +135,10 @@ function Chart(props) {
 }
 
 function measureType(ms) {
- 	switch (ms.type) {
-		case "SUM":
-			return false;
+	switch (ms.type) {
 		case "AVG":
 			return true;
+		case "SUM":
 		case "UNKNOWN":
 		default:
 			return false;
@@ -164,7 +178,7 @@ function mapDataForChart(data, chart, props) {
 				});
 				return all;
 			}, []);
-			
+
 		case "bar":
 		case "stacked":
 			return data.reduce((all, item) => {
@@ -178,18 +192,6 @@ function mapDataForChart(data, chart, props) {
 					value: item[props.y.name],
 					source: item
 				});
-				return all;
-			}, []);
-
-		case "wordcloud":
-			return data.reduce((all, item) => {
-				let value = item[props.y];
-				if (isNumeric(value))
-					all.push({
-						text: item[props.x],
-						value,
-						source: item
-					});
 				return all;
 			}, []);
 
@@ -229,7 +231,6 @@ function mapStateToProps(state) {
 	let chart = { ...state.visuals.chart, colorScale: props.colorScale };
 
 	return {
-		supercube: state.cubes.all,
 		chart: chart,
 		growthType: state.visuals.chart.growth,
 		groupBy: groupBy,
