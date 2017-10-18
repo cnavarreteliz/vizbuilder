@@ -1,6 +1,8 @@
 {
 	"compilerOptions": {
 		"baseUrl": "./",
+		"checkJs": true,
+		"jsx": "react",
 		"paths": {
 			"actions/*": ["app/actions/*"],
 			"assets/*": ["app/assets/*"],
@@ -9,6 +11,7 @@
 			"pages/*": ["app/pages/*"],
 			"reducers/*": ["app/reducers/*"],
 			"styles/*": ["app/styles/*"]
-		}
+		},
+		"target": "es2015"
 	}
 }

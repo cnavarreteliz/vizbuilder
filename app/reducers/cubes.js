@@ -1,3 +1,4 @@
+/** @type {CubesState} */
 const initialState = {
 	fetching: false,
 	success: null,
@@ -15,6 +16,14 @@ const initialState = {
 	}
 };
 
+/**
+ * Reducer for cubes.
+ * Cubes are retrieved when the UI is loaded. Then they are stored
+ * in state.all, and one is selected by default to state.current
+ * @param {CubesState} state Current state
+ * @param {ReduxMessage} action Redux message.
+ * @returns {CubesState}
+ */
 export default function(state = initialState, action) {
 	switch (action.type) {
 		case "CUBES_FETCH": {
@@ -45,7 +54,7 @@ export default function(state = initialState, action) {
 			let cubeName = action.payload;
 			if ("string" !== typeof cubeName)
 				cubeName = cubeName.name;
-			// Make sure the cube exists searching for it in the array
+
 			let newCube = state.all.find(cube => cube.name === cubeName);
 			return newCube ? { ...state, current: newCube } : state;
 		}

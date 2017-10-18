@@ -41,15 +41,25 @@ declare class Hierarchy extends DataFragment {
 
 declare class Dimension extends DataFragment {
 	drilldowns: Array<Drillable>;
+	getLevelHierarchy(): Array<{ key: string; label: string; value: object }>;
 }
 
 declare class Cube extends DataFragment {
-	dimensions: Array<Dimension>;
-	measures: Array<Measure>;
-	drilldowns: Array<Drillable>;
-	query: MondrianQuery;
 	_drilldowns: Array<Drillable>;
 	_source: MondrianCube;
+
+	query: MondrianQuery;
+	measures: Array<Measure>;
+	
+	dimensions: Array<Dimension>;
+	stdDimensions: Array<Dimension>;
+	timeDimensions: Array<Dimension>;
+	
+	drilldowns: Array<Drillable>;
+	stdDrilldowns: Array<Drillable>;
+	timeDrilldowns: Array<Drillable>;
+	
+	getLevelHierarchy(): Array<{ key: string; label: string; value: object }>;
 }
 
 declare class MondrianQuery {

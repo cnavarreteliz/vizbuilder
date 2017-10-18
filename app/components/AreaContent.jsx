@@ -1,5 +1,3 @@
-// @ts-check
-
 import React from "react";
 import { connect } from "react-redux";
 
@@ -67,7 +65,10 @@ function AreaContent(props) {
 	);
 }
 
-/** @returns {AreaContentState} */
+/** 
+ * @param {VizbuilderState} state
+ * @returns {AreaContentState} 
+ */
 function mapStateToProps(state) {
 	return {
 		axis: state.visuals.axis,

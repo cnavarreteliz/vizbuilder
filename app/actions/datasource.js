@@ -1,5 +1,3 @@
-// @ts-check
-
 import { Client as MondrianClient } from "mondrian-rest-client";
 import nprogress from "nprogress";
 

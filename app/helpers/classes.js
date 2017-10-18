@@ -1,5 +1,3 @@
-// @ts-check
-
 import { makeRandomId } from "helpers/random";
 
 /**

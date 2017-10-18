@@ -103,6 +103,9 @@ function Sidebar(props) {
 	);
 }
 
+/**
+ * @param {VizbuilderState} state
+ */
 function mapStateToProps(state) {
 	let currentCb = state.cubes.current,
 		currentDd = state.aggregators.drilldowns[0] || {},

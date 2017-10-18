@@ -1,5 +1,3 @@
-// @ts-check
-
 import union from "lodash/union";
 
 /**
