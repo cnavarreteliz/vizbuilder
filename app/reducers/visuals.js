@@ -5,14 +5,14 @@ const initialState = {
 	},
 	chart: {
 		type: "treemap",
-		growth: false,
+		growth: false
 	},
 	axis: {
-		x: '',
-		y: '',
-		year: ''
+		x: "",
+		y: "",
+		year: ""
 	},
-	dialogPanel : {
+	dialogPanel: {
 		show: false
 	},
 	buckets: 10,
@@ -29,45 +29,57 @@ const initialState = {
  */
 export default function(state = initialState, action) {
 	switch (action.type) {
-		case "VIZ_GROWTH_UPDATE": {
-			return { ...state, chart: { ...state.chart, growth: action.payload } };
-		}
+		// case "VIZ_GROWTH_UPDATE": {
+		// 	return { ...state, chart: { ...state.chart, growth: action.payload } };
+		// }
 
 		case "VIZ_TYPE_UPDATE": {
-			return { ...state, chart: {...state.chart, type: action.payload, panel: action.panel} };
+			return {
+				...state,
+				chart: { ...state.chart, type: action.payload, panel: action.panel }
+			};
 		}
 
-		case "VIZ_TIMEDIMENSION_UPDATE": {
-			return { ...state, timeDimension: action.payload };
-		}
+		// case "VIZ_TIMEDIMENSION_UPDATE": {
+		// 	return { ...state, timeDimension: action.payload };
+		// }
 
-		case "VIZ_RANGE_UPDATE": {
-			return { ...state, range: action.payload };
-		}
+		// case "VIZ_RANGE_UPDATE": {
+		// 	return { ...state, range: action.payload };
+		// }
 
 		case "VIZ_BUCKET_UPDATE": {
 			return { ...state, buckets: action.payload };
 		}
 
-		case "VIZ_COLORBY_SET": {
-			return { ...state, chart: { ...state.chart, colorBy: action.payload } };
-		}
+		// case "VIZ_COLORBY_SET": {
+		// 	return { ...state, chart: { ...state.chart, colorBy: action.payload } };
+		// }
 
-		case "VIZ_PANEL_TOGGLE": {
-			return { ...state, panel: {...state.panel, show: action.payload} };
-		}
+		// case "VIZ_PANEL_TOGGLE": {
+		// 	return { ...state, panel: { ...state.panel, show: action.payload } };
+		// }
 
 		case "VIZ_AXIS_UPDATE": {
-			return {...state, axis: {...state.axis, [action.axis]: action.payload}};
+			return {
+				...state,
+				axis: { ...state.axis, [action.axis]: action.payload }
+			};
 		}
 
-		case "VIZ_FULL_UPDATE": {
-			return {...state, axis: {...state.axis, x: action.dimension, y: action.measure } };
-		}
+		// case "VIZ_FULL_UPDATE": {
+		// 	return {
+		// 		...state,
+		// 		axis: { ...state.axis, x: action.dimension, y: action.measure }
+		// 	};
+		// }
 
-		case "VIZ_DIALOG_TOGGLE": {
-			return { ...state, dialogPanel: { ...state.chart, show: action.payload } };
-		}
+		// case "VIZ_DIALOG_TOGGLE": {
+		// 	return {
+		// 		...state,
+		// 		dialogPanel: { ...state.chart, show: action.payload }
+		// 	};
+		// }
 
 		case "CUBES_SET": {
 			/** @type {Cube} */
@@ -79,7 +91,7 @@ export default function(state = initialState, action) {
 
 			let newState = setAxisX(state, drilldown);
 			newState.axis.y = measure.name;
-			
+
 			return newState;
 		}
 
