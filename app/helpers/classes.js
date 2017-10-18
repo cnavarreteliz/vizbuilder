@@ -1,8 +1,22 @@
+// @ts-check
+
 import { makeRandomId } from "helpers/random";
 
+/**
+ * Reusable function to reduce drillable elements
+ * @param {Array<Drillable>} all Reducer array
+ * @param {Dimension|Hierarchy} item Element to extract
+ * @returns {Array<Drillable>}
+ */
+function reduceDrilldowns(all, item) {
+	return all.concat(item.drilldowns);
+}
+
 export class Cube {
+	key = makeRandomId();
+	_drilldowns = null;
+
 	constructor(cb) {
-		this.key = makeRandomId();
 		this.name = cb.name;
 
 		this.dimensions = []
@@ -15,7 +29,6 @@ export class Cube {
 			.filter(Boolean)
 			.map(item => new Measure(item));
 
-		this._drilldowns = null;
 		this._source = cb;
 	}
 
@@ -32,9 +45,7 @@ export class Cube {
 	}
 
 	get stdDimensions() {
-		return this.dimensions.filter(dim => dim.type === 0).reduce((all, dim) => {
-			return all.concat(dim.drilldowns);
-		}, []);
+		return this.dimensions.filter(dim => dim.type === 0);
 	}
 
 	get timeDimensions() {
@@ -42,19 +53,20 @@ export class Cube {
 	}
 
 	get drilldowns() {
-		if (!this._drilldowns) {
-			this._drilldowns = this.dimensions.reduce((all, dim) => {
-				return all.concat(dim.drilldowns);
-			}, []);
-		}
+		if (!this._drilldowns)
+			this._drilldowns = this.dimensions.reduce(reduceDrilldowns, []);
 
 		return this._drilldowns;
 	}
 
-	/**
-	* @function getLevelHierarchy
-	* @return {Hierarchy} {description}
-	*/
+	get stdDrilldowns() {
+		return this.stdDimensions.reduce(reduceDrilldowns, []);
+	}
+
+	get timeDrilldowns() {
+		return this.timeDimensions.reduce(reduceDrilldowns, []);
+	}
+
 	getLevelHierarchy() {
 		return this.dimensions.reduce(function(all, dim) {
 			return all.concat(dim.getLevelHierarchy());
@@ -63,8 +75,9 @@ export class Cube {
 }
 
 export class Dimension {
+	key = makeRandomId();
+
 	constructor(dm) {
-		this.key = makeRandomId();
 		this.name = dm.name;
 		this.type = dm.dimensionType;
 
@@ -83,9 +96,7 @@ export class Dimension {
 	}
 
 	get drilldowns() {
-		return this.hierarchies.reduce((all, hr) => {
-			return all.concat(hr.drilldowns);
-		}, []);
+		return this.hierarchies.reduce(reduceDrilldowns, []);
 	}
 
 	getLevelHierarchy() {
@@ -99,11 +110,11 @@ export class Dimension {
 					value: levels.map(lv => ({ key: lv.key, label: lv.level, value: lv }))
 				});
 			} else if (levels.length === 1) {
-				levels = levels[0];
+				let level = levels[0];
 				all.push({
-					key: levels.key,
-					label: levels.name,
-					value: levels
+					key: level.key,
+					label: level.name,
+					value: level
 				});
 			}
 
@@ -113,8 +124,9 @@ export class Dimension {
 }
 
 export class Hierarchy {
+	key = makeRandomId();
+
 	constructor(hr) {
-		this.key = makeRandomId();
 		this.name = hr.name || "";
 
 		this.levels = []
@@ -131,14 +143,13 @@ export class Hierarchy {
 		return this;
 	}
 
-	/**
-	 * @function drilldowns
-	 * @return {Level[]}
-	 */
 	get drilldowns() {
-		let hierarchy = this.name;
-
 		return this.levels.reduce(
+			/**
+			 * @param {Array<Level>} all Reduce array
+			 * @param {Level} lv Current level element
+			 * @param {number} index Current index of the element
+			 */
 			(all, lv, index) => (index > 0 ? all.concat(lv) : all),
 			[]
 		);
@@ -146,8 +157,9 @@ export class Hierarchy {
 }
 
 export class Level {
+	key = makeRandomId();
+
 	constructor(lv) {
-		this.key = makeRandomId();
 		this.level = lv.name || "";
 
 		this.hierarchy = lv.hierarchy.name || "";
@@ -177,8 +189,9 @@ export class Level {
 }
 
 export class Measure {
+	key = makeRandomId();
+
 	constructor(ms) {
-		this.key = makeRandomId();
 		this.name = ms.name;
 		this.type = ms.aggregatorType;
 	}

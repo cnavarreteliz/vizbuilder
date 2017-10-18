@@ -131,7 +131,7 @@ function mapStateToProps(state) {
 		colorBy: currentCl,
 
 		all_cb: state.cubes.all,
-		all_dd: currentCb.stdDimensions,
+		all_dd: currentCb.stdDrilldowns,
 		all_ms,
 		all_cl: generateColorSelector(currentCb.measures),
 		isOpen: true
