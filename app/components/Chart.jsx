@@ -55,7 +55,7 @@ function Chart(props) {
 	}
 
 	let COLORSCALE = {
-		colorScale: props.chart.growth ? "Growth" : props.chart.colorScale,
+		colorScale: props.chart.growth ? "growth" : props.chart.colorScale,
 		colorScalePosition:
 			props.chart.colorScale !== "" || props.chart.growth ? "bottom" : false,
 		colorScaleConfig: {
@@ -85,6 +85,8 @@ function Chart(props) {
 	};
 
 	let TREEMAPCONFIG = {
+		...COLORSCALE,
+		colorScale: colorScale,
 		data: data,
 		groupBy: props.groupBy.name ? ["groupBy", "id"] : ["id"],
 		padding: 2,
@@ -97,12 +99,16 @@ function Chart(props) {
 		on: ("click", d => { alert("Hello") })
 	};
 
+	let data2 = props.data
+	data2 = props.options.x === "Age" ? createBuckets(data2, props.num_buckets) : data2;
+	console.log(data2)
+
 	let VIZCONFIG = {
 		aggs: {
 			[props.options.y]: measureType(props.options.y) ? mean : sum,
 		},
 		groupBy: [props.options.x],
-		data: props.data,
+		data: data2,
 	}
 
 	let PLOTCONFIG = {
@@ -252,7 +258,7 @@ function mapStateToProps(state) {
 		colorScale: colorBy.name || "",
 		groupBy: groupBy.level || ""
 	}
-	console.log(opt)
+
 	return {
 		chart: chart,
 		growthType: state.visuals.chart.growth,

@@ -3,22 +3,62 @@ import { connect } from "react-redux";
 
 import SelectDrillable from "components/SelectDrillable";
 import SelectChartType from "components/SelectChartType";
-import { Omnibox } from "@blueprintjs/labs"
+import { Omnibox } from "@blueprintjs/labs";
 
-import { generateColorSelector } from "helpers/prepareInput"
+import { generateColorSelector } from "helpers/prepareInput";
 
 import "styles/AreaSidebar.css";
 
 function Panel(props) {
-	switch(type) {
+	switch (props.viztype) {
 		case "treemap":
 		case "donut":
-			return true
-			
-		case "bubble":
 		case "stacked":
 		case "bar":
-			return true
+			return (
+				<div>
+					<div className="group">
+						<span className="label">sized by</span>
+						<SelectDrillable
+							value={props.measure}
+							items={props.all_ms}
+							onItemSelect={props.onSetMeasure}
+						/>
+					</div>
+					<div className="group">
+						<span className="label">grouped by</span>
+						<SelectDrillable
+							value={props.groupBy}
+							items={props.all_dd}
+							onItemSelect={props.onSetGrouping}
+						/>
+					</div>
+				</div>
+			);
+
+		case "bubble":
+		return (
+				<div>
+					<div className="group">
+						<span className="label">X Axis</span>
+						<SelectDrillable
+							value={props.measure}
+							items={props.all_ms}
+							onItemSelect={props.onSetMeasure}
+						/>
+					</div>
+					<div className="group">
+					<span className="label">Y Axis</span>
+					<SelectDrillable
+						value={props.measure}
+						items={props.all_ms}
+						onItemSelect={props.onSetMeasure}
+					/>
+				</div>
+				</div>
+			);
+		default:
+			return <div />
 	}
 }
 
@@ -48,22 +88,9 @@ function Sidebar(props) {
 					onItemSelect={props.onSetViztype}
 				/>
 			</div>
-			<div className="group">
-				<span className="label">sized by</span>
-				<SelectDrillable
-					value={props.measure}
-					items={props.all_ms}
-					onItemSelect={props.onSetMeasure}
-				/>
-			</div>
-			<div className="group">
-				<span className="label">grouped by</span>
-				<SelectDrillable
-					value={props.groupBy}
-					items={props.all_dd}
-					onItemSelect={props.onSetGrouping}
-				/>
-			</div>
+
+			{ Panel(props) }
+
 			<div className="group">
 				<span className="label">colored by</span>
 				<SelectDrillable
@@ -83,7 +110,7 @@ function mapStateToProps(state) {
 		currentGb = state.aggregators.groupBy[0] || {},
 		currentCl = state.aggregators.colorBy[0] || {};
 
-	console.log(state.aggregators.drilldowns)
+	console.log(state.aggregators.drilldowns);
 
 	let colorMeasureFilter = RegExp("growth|average|median|percent", "i"),
 		treemapMeasureFilter = RegExp("average|median", "i");
@@ -104,7 +131,7 @@ function mapStateToProps(state) {
 		colorBy: currentCl,
 
 		all_cb: state.cubes.all,
-		all_dd: currentCb.stdDimensions, 
+		all_dd: currentCb.stdDimensions,
 		all_ms,
 		all_cl: generateColorSelector(currentCb.measures),
 		isOpen: true
@@ -134,7 +161,11 @@ function mapDispatchToProps(dispatch) {
 		},
 
 		onSetColorIndex(item) {
-			dispatch({ type: "COLORBY_SET", payload: item.measure, growth: item.growthType });
+			dispatch({
+				type: "COLORBY_SET",
+				payload: item.measure,
+				growth: item.growthType
+			});
 		}
 	};
 }

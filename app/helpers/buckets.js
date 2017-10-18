@@ -4,7 +4,7 @@ export function createBuckets(data, num) {
 		return data.map(item => {
 			let obj = {
 				...item,
-				id: searchInterval(buckets, item.id)
+				Age: searchInterval(buckets, item.Age)
 			};
 			return obj;
 		});
