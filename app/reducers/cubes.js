@@ -5,11 +5,13 @@ const initialState = {
 
 	all: [],
 	current: {
-		dimensions: [],
 		measures: [],
-		drilldowns: [],
+		dimensions: [],
 		stdDimensions: [],
-		timeDimensions: []
+		timeDimensions: [],
+		drilldowns: [],
+		stdDrilldowns: [],
+		timeDrilldowns: [],
 	}
 };
 
@@ -40,10 +42,11 @@ export default function(state = initialState, action) {
 
 		case "CUBES_SET": {
 			// action.payload should be a Cube or a cube name
-			let newCube =
-				"string" === typeof newCube
-					? state.all.find(cube => cube.name === newCube)
-					: action.payload;
+			let cubeName = action.payload;
+			if ("string" !== typeof cubeName)
+				cubeName = cubeName.name;
+			// Make sure the cube exists searching for it in the array
+			let newCube = state.all.find(cube => cube.name === cubeName);
 			return newCube ? { ...state, current: newCube } : state;
 		}
 
