@@ -1,15 +1,27 @@
 import React from "react";
 import { connect } from "react-redux";
-import zip from "lodash/zip";
+import isEqual from "lodash/isEqual";
 import union from "lodash/union";
 
 import { resetClient, requestCubes, requestQuery } from "actions/datasource";
 import { buildQuery } from "helpers/mondrian";
 
-function simpleCompare(elements) {
-	return elements[0] !== elements[1];
-}
+import { Overlay, ProgressBar } from "@blueprintjs/core";
 
+/**
+ * @typedef LoadControlProps
+ * @prop {string} src URL for the current visualization's database
+ * @prop {Cube} cube Current cube
+ * @prop {Array<Drillable>} dd Drilldowns
+ * @prop {Array<Drillable>} gb Group-by property
+ * @prop {Array<Drillable>} ct Cuts
+ * @prop {Array<Measure>} ms Measures
+ * @prop {Array<Measure>} cl Color-by property
+ * @prop {boolean} loading
+ * @prop {Function} dispatch
+ */
+
+/** @augments {React.Component<LoadControlProps>} */
 class LoadControl extends React.Component {
 	componentDidMount() {
 		resetClient(this.props.src);
@@ -20,12 +32,12 @@ class LoadControl extends React.Component {
 		const { cube, dd, gb, ms, cl, ct } = this.props;
 
 		if (
-			(cube && cube.key && cube.key !== prev.cube.key) ||
-			zip(prev.dd, dd).some(simpleCompare) ||
-			zip(prev.gb, gb).some(simpleCompare) ||
-			zip(prev.ms, ms).some(simpleCompare) ||
-			zip(prev.cl, cl).some(simpleCompare) ||
-			zip(prev.ct, ct).some(simpleCompare)
+			!isEqual(prev.cube, cube) ||
+			!isEqual(prev.dd, dd) ||
+			!isEqual(prev.gb, gb) ||
+			!isEqual(prev.ms, ms) ||
+			!isEqual(prev.cl, cl) ||
+			!isEqual(prev.ct, ct)
 		) {
 			let query = buildQuery(cube, union(dd, gb), union(ms, cl), ct);
 			this.props.dispatch(requestQuery(query));
@@ -33,10 +45,20 @@ class LoadControl extends React.Component {
 	}
 
 	render() {
-		return null;
+		return (
+			<Overlay
+			className='progress-overlay'
+				isOpen={this.props.loading}
+				canEscapeKeyClose={false}
+				canOutsideClickClose={false}
+			>
+				<ProgressBar className='progress-bar' />
+			</Overlay>
+		);
 	}
 }
 
+/** @param {VizbuilderState} state */
 function mapStateToProps(state) {
 	return {
 		cube: state.cubes.current,
@@ -44,7 +66,8 @@ function mapStateToProps(state) {
 		gb: state.aggregators.groupBy,
 		cl: state.aggregators.colorBy,
 		ms: state.aggregators.measures,
-		ct: []
+		ct: [],
+		loading: state.cubes.fetching || state.data.fetching
 	};
 }
 

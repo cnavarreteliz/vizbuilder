@@ -1,5 +1,4 @@
 import { Client as MondrianClient } from "mondrian-rest-client";
-import nprogress from "nprogress";
 
 import { Cube } from "helpers/classes";
 import { pickOne } from "helpers/random";
@@ -22,7 +21,6 @@ export function resetClient(source) {
  * @param {number} [attempt] Number of the current load attempt.
  */
 export function requestCubes(dispatch, attempt) {
-	nprogress.start();
 	dispatch({ type: "CUBES_FETCH" });
 
 	return client
@@ -55,19 +53,14 @@ export function requestCubes(dispatch, attempt) {
 					});
 				}
 			}
-		)
-		.then(() => {
-			nprogress.done();
-		});
+		);
 }
 
 export function requestQuery(query, attempt) {
 	return function(dispatch) {
-		nprogress.done();
 
 		if (!query || !query.drilldowns) return;
 
-		nprogress.start();
 		dispatch({ type: "DATA_FETCH" });
 
 		return client
@@ -88,7 +81,6 @@ export function requestQuery(query, attempt) {
 					let attempts = (attempt || 0) + 1;
 
 					if (attempts < 3) {
-						nprogress.set(0.0);
 						return new Promise(function(resolve) {
 							setTimeout(resolve, attempts * 1000);
 						}).then(() => requestQuery(query, attempts)(dispatch));
@@ -99,9 +91,6 @@ export function requestQuery(query, attempt) {
 						payload: error
 					});
 				}
-			)
-			.then(() => {
-				nprogress.done();
-			});
+			);
 	};
 }

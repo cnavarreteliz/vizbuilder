@@ -12,6 +12,11 @@ body {
 	height: 100%;
 }
 
+.progress-overlay .progress-bar {
+	margin: 49vh 10vw 0;
+	width: 80%;
+}
+
 .container {
 	display: flex;
 	flex-direction: row;
