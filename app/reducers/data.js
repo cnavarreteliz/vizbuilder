@@ -6,14 +6,19 @@ const initialState = {
 	values: [],
 	axes: [],
 	dimensions: []
-}; 
+};
 
 export default function(state = initialState, action) {
 	switch (action.type) {
-		case 'DATA_FETCH': {
-			return { ...initialState, fetching: true };
+		case "DATA_FETCH": {
+			return {
+				...state,
+				fetching: true,
+				success: null,
+				error: null
+			};
 		}
-		
+
 		case "DATA_FETCH_ERROR": {
 			return {
 				...state,
