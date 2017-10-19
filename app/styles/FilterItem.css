@@ -1,14 +1,27 @@
-.filter {
-	&-element {
-		position: relative;
-		margin-bottom: 10px;
-		padding: 0.5rem;
-		background-color: #fff;
-	}
+.filter-item {
+	display: flex;
+	flex-direction: row;
+	margin: 0.2em 0;
+	padding: 2px;
+	background: #f0f0f0;
+}
 
-	&-delete {
-		position: absolute;
-		top: 0;
-		right: 0;
-	}
+.filter-content {
+	display: block;
+	flex: 1 0;	
+}
+
+.filter-prop,
+.filter-oper,
+.filter-value {
+	display: inline-block;
+	margin-right: 0.5em;
+
+	line-height: 1.2;
+	font-size: 12px;
+}
+
+.filter-action {
+	flex: 0 0;
+	align-self: flex-start;
 }

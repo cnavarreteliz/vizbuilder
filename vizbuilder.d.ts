@@ -12,6 +12,7 @@ interface Drillable {
 }
 
 interface Filter {
+	key: string;
 	operator: number;
 	property: string;
 	value: string | number;

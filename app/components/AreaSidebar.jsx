@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 
+import FilterManager from "components/FilterManager";
 import SelectDrillable from "components/SelectDrillable";
 import SelectChartType from "components/SelectChartType";
-import { Omnibox } from "@blueprintjs/labs";
 
 import { generateColorSelector } from "helpers/prepareInput";
 
@@ -99,6 +99,14 @@ function Sidebar(props) {
 					onItemSelect={props.onSetColorIndex}
 				/>
 			</div>
+
+			<FilterManager
+				filters={props.filters}
+				measures={props.all_ms}
+				onAddFilter={props.addFilter}
+				onUpdateFilter={props.updateFilter}
+				onRemoveFilter={props.removeFilter}
+			/>
 		</div>
 	);
 }
@@ -132,6 +140,8 @@ function mapStateToProps(state) {
 		measure: currentMs,
 		groupBy: currentGb,
 		colorBy: currentCl,
+
+		filters: state.filters,
 
 		all_cb: state.cubes.all,
 		all_dd: currentCb.stdDrilldowns,
@@ -169,6 +179,18 @@ function mapDispatchToProps(dispatch) {
 				payload: item.measure,
 				growth: item.growthType
 			});
+		},
+
+		addFilter(filter) {
+			dispatch({ type: "FILTER_ADD", payload: filter });
+		},
+
+		updateFilter(filter) {
+			dispatch({ type: "FILTER_UPDATE", payload: filter });
+		},
+
+		removeFilter(filter) {
+			dispatch({ type: "FILTER_DELETE", payload: filter });
 		}
 	};
 }
