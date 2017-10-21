@@ -3,24 +3,21 @@ import { connect } from "react-redux";
 import { Treemap, Donut, Pie, BarChart, StackedArea, Plot } from "d3plus-react";
 import { Tooltip } from "d3plus-tooltip";
 import { max, mean, min, sum } from "d3-array";
+import { Tooltip2, Popover2 } from "@blueprintjs/labs";
+import { Button, Position, PopoverInteractionKind } from "@blueprintjs/core";
 
 import { COLORS_RAINFALL } from "helpers/colors";
 import { CHARTCONFIG, yearControls } from "helpers/d3plus";
 import { createBuckets } from "helpers/buckets";
-import { isNumeric } from "helpers/functions";
 import { groupLowestCategories, calculateGrowth } from "helpers/prepareViz";
-
-import WordCloud from "react-d3-cloud";
-
-import { applyFilters } from "components/FilterItem";
-import VizTable from "components/VizTable";
 
 import "styles/Chart.css";
 
 function Chart(props) {
 	// Create buckets if drilldown selected is Age
 	let data = mapDataForChart(props.data, props.chart, props.options);
-	data = props.options.x === "Age" ? createBuckets(data, props.num_buckets) : data;
+	data =
+		props.options.x === "Age" ? createBuckets(data, props.num_buckets) : data;
 
 	if (props.growthType) {
 		let attributes = calculateGrowth(
@@ -61,9 +58,9 @@ function Chart(props) {
 		colorScaleConfig: {
 			color: COLORS_RAINFALL
 		}
-	}
+	};
 
-	console.log(props.options)
+	console.log(props.options);
 
 	let config = {
 		...CHARTCONFIG,
@@ -90,26 +87,27 @@ function Chart(props) {
 		data: data,
 		groupBy: props.groupBy.name ? ["groupBy", "id"] : ["id"],
 		padding: 2,
+		legend: false,
 		shapeConfig: {
 			labelConfig: {
 				fontWeight: 600
 			},
 			labelPadding: 8
-		},
-		on: ("click", d => { alert("Hello") })
+		}
+		//on: ("click", d => { alert("Hello") })
 	};
 
-	let data2 = props.data
-	data2 = props.options.x === "Age" ? createBuckets(data2, props.num_buckets) : data2;
-	console.log(data2)
+	let data2 = props.data;
+	data2 =
+		props.options.x === "Age" ? createBuckets(data2, props.num_buckets) : data2;
 
 	let VIZCONFIG = {
 		aggs: {
-			[props.options.y]: measureType(props.options.y) ? mean : sum,
+			[props.options.y]: measureType(props.options.y) ? mean : sum
 		},
 		groupBy: [props.options.x],
 		data: data2,
-	}
+	};
 
 	let PLOTCONFIG = {
 		...VIZCONFIG,
@@ -128,13 +126,20 @@ function Chart(props) {
 	let AREACONFIG = {
 		...VIZCONFIG,
 		...COLORSCALE,
-		y: props.options.y, 
-		x: "Year", 
-	}
+		y: props.options.y,
+		x: "Year"
+	};
 
 	switch (config.type) {
 		case "treemap":
-			return <Treemap config={TREEMAPCONFIG} />;
+			return (
+				<div className="viz">
+					<Treemap config={TREEMAPCONFIG} />
+					<div className="legend-wrapper">
+						{legendControl(data2, props.options.x)}
+					</div>
+				</div>
+			);
 
 		case "donut":
 			return <Donut config={config} />;
@@ -154,6 +159,45 @@ function Chart(props) {
 		default:
 			return <div />;
 	}
+}
+
+function legendControl(data, key) {
+	const legend = Array.from(new Set(data.map(d => d[key]))).sort();
+	return legend.map(e => {
+		let popoverContent = (
+			<div>
+				<h4>{e}</h4>
+				<div className="pt-button-group pt-minimal">
+					<Button
+						className="pt-button pt-icon-eye-off"
+						tabindex="0"
+						role="button"
+					>
+						Hide
+					</Button>
+					<Button
+						className="pt-button pt-icon-pin"
+						tabindex="0"
+						role="button"
+					>
+						Isolate
+					</Button>
+				</div>
+			</div>
+		);
+		return (
+			<div className="legend">
+				<Popover2
+					content={popoverContent}
+					position={Position.TOP}
+					popoverClassName={"customtooltip"}
+					interactionKind={PopoverInteractionKind.HOVER}
+				>
+					<div className="legend" />
+				</Popover2>
+			</div>
+		);
+	});
 }
 
 function measureType(ms) {
@@ -235,7 +279,6 @@ function mapStateToProps(state) {
 			groupBy: groupBy.level || ""
 		};
 
-	
 	if (aggr.drilldowns.length > 1) {
 		let xor = aggr.drilldowns[0].dimensionType === 0;
 		props.x = aggr.drilldowns[xor ? 0 : 1].level;
@@ -243,7 +286,7 @@ function mapStateToProps(state) {
 	} else if (aggr.drilldowns.length > 0) {
 		props.x = aggr.drilldowns[0].level;
 	}
-	
+
 	props.y = aggr.measures.filter(ms => ms.name === state.visuals.axis.y)[0];
 
 	if (state.cubes.current.timeDimensions.length > 0) {
@@ -257,7 +300,7 @@ function mapStateToProps(state) {
 		year: props.year,
 		colorScale: colorBy.name || "",
 		groupBy: groupBy.level || ""
-	}
+	};
 
 	return {
 		chart: chart,

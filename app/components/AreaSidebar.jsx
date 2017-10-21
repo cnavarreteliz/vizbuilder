@@ -12,9 +12,6 @@ import "styles/AreaSidebar.css";
 function Panel(props) {
 	switch (props.viztype) {
 		case "treemap":
-		case "donut":
-		case "stacked":
-		case "bar":
 			return (
 				<div>
 					<div className="group">
@@ -33,11 +30,35 @@ function Panel(props) {
 							onItemSelect={props.onSetGrouping}
 						/>
 					</div>
+					<div className="group">
+						<span className="label">depth by</span>
+						<SelectDrillable
+							value={props.groupBy}
+							items={props.all_dd}
+							onItemSelect={props.onSetGrouping}
+						/>
+					</div>
+				</div>
+			);
+		case "donut":
+		case "pie":
+		case "stacked":
+		case "bar":
+			return (
+				<div>
+					<div className="group">
+						<span className="label">sized by</span>
+						<SelectDrillable
+							value={props.measure}
+							items={props.all_ms}
+							onItemSelect={props.onSetMeasure}
+						/>
+					</div>
 				</div>
 			);
 
 		case "bubble":
-		return (
+			return (
 				<div>
 					<div className="group">
 						<span className="label">X Axis</span>
@@ -48,17 +69,17 @@ function Panel(props) {
 						/>
 					</div>
 					<div className="group">
-					<span className="label">Y Axis</span>
-					<SelectDrillable
-						value={props.measure}
-						items={props.all_ms}
-						onItemSelect={props.onSetMeasure}
-					/>
-				</div>
+						<span className="label">Y Axis</span>
+						<SelectDrillable
+							value={props.measure}
+							items={props.all_ms}
+							onItemSelect={props.onSetMeasure}
+						/>
+					</div>
 				</div>
 			);
 		default:
-			return <div />
+			return <div />;
 	}
 }
 
@@ -89,7 +110,7 @@ function Sidebar(props) {
 				/>
 			</div>
 
-			{ Panel(props) }
+			{Panel(props)}
 
 			<div className="group">
 				<span className="label">colored by</span>

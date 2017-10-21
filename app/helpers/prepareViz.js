@@ -23,23 +23,20 @@ export function calculateGrowth(data, key = "value") {
 }
 /**
  * Calculate Yearly Growth
- * @param {Array} obj
+ * @param {Array} data
  * @param {Boolean} peryear 
- * @param {Boolean} debug
+ * @param {Boolean} debugMode
  */
 
-function calculateYearlyGrowth(obj, peryear = false, debugMode = false) {
+function calculateYearlyGrowth(data, peryear = false, debugMode = false) {
 	// Sort data by year
-	obj = obj.sort((a, b) => {
+	data = data.sort((a, b) => {
 		return a.year - b.year;
 	});
-	const tensor = obj.map(e => e.value);
-
-	// Get years list
-	const YEARS = obj.map(e => e.year);
+	const tensor = data.map(e => e.value);
 
 	if(debugMode) {
-		debug(YEARS)
+		debug(data.map(e => e.year))
 	}
 
 	const period = tensor.slice(1);
@@ -49,7 +46,6 @@ function calculateYearlyGrowth(obj, peryear = false, debugMode = false) {
 	const growth_perYear = period.map((item, key) => {
 		return lastperiod[key] !== 0 ? item / lastperiod[key] - 1 : 1;
 	});
-	console.log(growth_perYear);
 
 	if (peryear) return growth_perYear;
 

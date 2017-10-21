@@ -31,3 +31,34 @@
         }
     }
 }
+
+.viz {
+    & .legend-wrapper {
+        display: flex;
+        align-items: center;
+        flex: 1 1 auto;
+        width: 100%;
+        padding: 10px;
+        text-align: center;
+        justify-content: center;
+
+        & .legend {
+            width: 30px;
+            height: 30px;
+            background-color: tomato;
+            margin-left: 5px;
+            margin-right: 5px;
+
+        }
+    }
+
+}
+
+.customtooltip .pt-popover-content {
+    width: 220px;
+    padding: 10px;
+    & .pt-button-group {
+        width: 100%;
+        justify-content: center;
+    }
+}

@@ -27,8 +27,12 @@ function AgeBucket(props) {
 }
 
 function mapStateToProps(state) {
+	let aggr = state.aggregators,
+		xor = aggr.drilldowns[0].dimensionType === 0,
+		dim = aggr.drilldowns[xor ? 0 : 1].level;
+
 	return {
-		show: state.visuals.axis.x === "Age",
+		show: dim === "Age",
 		num: state.visuals.buckets
 	};
 }
