@@ -15,7 +15,38 @@ import "styles/Chart.css";
 
 function Chart(props) {
 	// Create buckets if drilldown selected is Age
-	let data = mapDataForChart(props.data, props.chart, props.options);
+	console.log(props.filters);
+	let data2 = props.data;
+	/*if (props.filters.options.length > 0) {
+		data2 = props.filters.options.reduce((all, filter) => {
+			let property = props.options.x;
+			data2.map(item => {
+				if(props.filters.type === "hide") {
+					if (item[property] !== filter) all.push(item);
+				} else {
+					if (item[property] === filter) all.push(item);
+				}
+			});
+			return all;
+		}, []);
+	}*/
+
+	if (props.filters.options.length > 0) {
+		let type = props.filters.type,
+			filters = props.filters.options,
+			property = props.options.x;
+
+		data2 = data2.reduce((all, item) => {
+			if (type === "hide") {
+				if (!filters.includes(item[property])) all.push(item);
+			} else {
+				if (filters.includes(item[property])) all.push(item);
+			}
+			return all;
+		}, []);
+	}
+
+	let data = mapDataForChart(data2, props.chart, props.options);
 	data =
 		props.options.x === "Age" ? createBuckets(data, props.num_buckets) : data;
 
@@ -60,8 +91,6 @@ function Chart(props) {
 		}
 	};
 
-	console.log(props.options);
-
 	let config = {
 		...CHARTCONFIG,
 		groupBy: ["id"],
@@ -97,7 +126,6 @@ function Chart(props) {
 		//on: ("click", d => { alert("Hello") })
 	};
 
-	let data2 = props.data;
 	data2 =
 		props.options.x === "Age" ? createBuckets(data2, props.num_buckets) : data2;
 
@@ -105,8 +133,9 @@ function Chart(props) {
 		aggs: {
 			[props.options.y]: measureType(props.options.y) ? mean : sum
 		},
+		legend: false,
 		groupBy: [props.options.x],
-		data: data2,
+		data: data2
 	};
 
 	let PLOTCONFIG = {
@@ -136,7 +165,7 @@ function Chart(props) {
 				<div className="viz">
 					<Treemap config={TREEMAPCONFIG} />
 					<div className="legend-wrapper">
-						{legendControl(data2, props.options.x)}
+						{legendControl(data2, props.options.x, props)}
 					</div>
 				</div>
 			);
@@ -151,7 +180,14 @@ function Chart(props) {
 			return <Plot config={config} />;
 
 		case "bar":
-			return <BarChart config={PLOTCONFIG} />;
+			return (
+				<div className="viz">
+					<BarChart config={PLOTCONFIG} />
+					<div className="legend-wrapper">
+						{legendControl(data2, props.options.x, props)}
+					</div>
+				</div>
+			);
 
 		case "stacked":
 			return <StackedArea config={AREACONFIG} />;
@@ -161,7 +197,7 @@ function Chart(props) {
 	}
 }
 
-function legendControl(data, key) {
+function legendControl(data, key, props) {
 	const legend = Array.from(new Set(data.map(d => d[key]))).sort();
 	return legend.map(e => {
 		let popoverContent = (
@@ -170,15 +206,17 @@ function legendControl(data, key) {
 				<div className="pt-button-group pt-minimal">
 					<Button
 						className="pt-button pt-icon-eye-off"
-						tabindex="0"
+						tabIndex="0"
 						role="button"
+						onClick={evt => props.hideDimension(e)}
 					>
 						Hide
 					</Button>
 					<Button
 						className="pt-button pt-icon-pin"
-						tabindex="0"
+						tabIndex="1"
 						role="button"
+						onClick={evt => props.isolateDimension(e)}
 					>
 						Isolate
 					</Button>
@@ -304,6 +342,7 @@ function mapStateToProps(state) {
 
 	return {
 		chart: chart,
+		filters: state.data.filters,
 		growthType: state.visuals.chart.growth,
 		groupBy: groupBy,
 		axis: state.visuals.axis,
@@ -313,4 +352,16 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps)(Chart);
+function mapDispatchToProps(dispatch) {
+	return {
+		hideDimension(evt) {
+			dispatch({ type: "FILTER_HIDE_DIMENSION", payload: evt });
+		},
+
+		isolateDimension(evt) {
+			dispatch({ type: "FILTER_ISOLATE_DIMENSION", payload: evt });
+		}
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Chart);

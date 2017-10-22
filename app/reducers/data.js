@@ -5,7 +5,12 @@ const initialState = {
 
 	values: [],
 	axes: [],
-	dimensions: []
+	dimensions: [],
+
+	filters: {
+		type: "",
+		options: []
+	}
 };
 
 export default function(state = initialState, action) {
@@ -35,6 +40,28 @@ export default function(state = initialState, action) {
 				success: true,
 				error: null,
 				values: action.payload
+			};
+		}
+
+		case "FILTER_ISOLATE_DIMENSION": {
+			return {
+				...state,
+				filters: {
+					...state.filters,
+					type: "isolate",
+					options: [].concat(action.payload)
+				}
+			};
+		}
+
+		case "FILTER_HIDE_DIMENSION": {
+			return {
+				...state,
+				filters: {
+					...state.filters,
+					type: "hide",
+					options: [].concat(state.filters.options, action.payload)
+				}
 			};
 		}
 
