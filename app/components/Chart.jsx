@@ -47,7 +47,7 @@ function Chart(props) {
 	if (props.growthType) {
 		let attributes = calculateGrowth(
 			data,
-			props.chart.colorScale !== "" ? "colorScale" : "value"
+			props.chart.colorScale !== "" ? "colorScale" : props.options.y
 		);
 
 		data = data.map(attr => ({
@@ -65,37 +65,8 @@ function Chart(props) {
 		color: COLORS[items.indexOf(attr[label])],
 	}));
 
-	let colorScale;
-	if (props.chart.colorScale === "" && props.chart.growth) {
-		colorScale = "Growth";
-	} else if (props.chart.colorScale === "" && !props.chart.growth) {
-		colorScale = false;
-	} else if (props.chart.colorScale !== "" && props.chart.growth) {
-		colorScale = "Growth";
-	} else {
-		colorScale = "colorScale";
-	}
-
 	let COLORSCALE = {
 		colorScale: props.chart.growth ? "Growth" : props.chart.colorScale,
-		colorScalePosition:
-			props.chart.colorScale !== "" || props.chart.growth ? "bottom" : false,
-		colorScaleConfig: {
-			color: COLORS_RAINFALL
-		}
-	};
-
-	let config = {
-		...CHARTCONFIG,
-		groupBy: ["id"],
-		aggs: {
-			growth: mean,
-			colorScale: mean,
-			value: measureType(props.options.y) ? mean : sum,
-			y: measureType(props.options.y) ? mean : sum
-		},
-		data: data2,
-		colorScale: colorScale,
 		colorScalePosition:
 			props.chart.colorScale !== "" || props.chart.growth ? "bottom" : false,
 		colorScaleConfig: {
