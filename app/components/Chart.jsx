@@ -13,7 +13,10 @@ import { groupLowestCategories, calculateGrowth } from "helpers/prepareViz";
 
 import "styles/Chart.css";
 
-function setColors() {}
+const COLORS = [
+	"#F44336", "#3F51B5", "#FFC107", "#1B5E20", "#8BC34A", "#00BCD4", "#0288D1", "#D3B33F",
+	"#9C27B0", "#E91E63", "#009688", "#DCE775", "#FFCC80", "#9575CD", "#EF9A9A"
+]
 
 function Chart(props) {
 	let data = props.data;
@@ -55,6 +58,13 @@ function Chart(props) {
 		}));
 	}
 
+	let lgs = legends(data, props.groupBy.name ? props.groupBy.name : props.options.x)
+
+	data = data.map(attr => ({
+		...attr,
+		color: COLORS[lgs.indexOf(attr[props.groupBy.name ? props.groupBy.name : props.options.x])],
+	}));
+
 	let colorScale;
 	if (props.chart.colorScale === "" && props.chart.growth) {
 		colorScale = "Growth";
@@ -93,11 +103,12 @@ function Chart(props) {
 		}
 	};
 
-	/*data =
-		props.options.x === "Age" ? createBuckets(data, props.num_buckets) : data;*/
 	let VIZCONFIG = {
 		aggs: {
 			[props.options.y]: measureType(props.options.y) ? mean : sum
+		},
+		shapeConfig: {
+			fill: d => d.color
 		},
 		legend: false,
 		groupBy: props.groupBy.name
@@ -105,21 +116,7 @@ function Chart(props) {
 			: [props.options.x],
 		data: data.map(elm => {
 			return { ...elm, value: elm[props.options.y] };
-		})
-	};
-
-	let TREEMAPCONFIG = {
-		...COLORSCALE,
-		...VIZCONFIG,
-		padding: 2,
-		shapeConfig: {
-			labelConfig: {
-				fontWeight: 600
-			},
-			labelPadding: 8
-		},
-		/*colorScale: colorScale,
-		*/
+		}),
 		on: {
 			"click.shape": d => {
 				alert(d[props.options.x]);
@@ -127,7 +124,23 @@ function Chart(props) {
 		}
 	};
 
-	let PIECONFIG = {};
+	let TREEMAPCONFIG = {
+		...COLORSCALE,
+		...VIZCONFIG,
+		padding: 2,
+		shapeConfig: {
+			fill: d => d.color,
+			labelConfig: {
+				fontWeight: 600
+			},
+			labelPadding: 8
+		}
+	};
+
+	let PIECONFIG = {
+		...COLORSCALE,
+		...VIZCONFIG
+	};
 
 	let PLOTCONFIG = {
 		...VIZCONFIG,
@@ -153,7 +166,7 @@ function Chart(props) {
 	switch (props.chart.type) {
 		case "treemap":
 			return (
-				<div className="viz">
+				<div className="chart">
 					<Treemap config={TREEMAPCONFIG} />
 					<div className="legend-wrapper">
 						{legendControl(
@@ -166,17 +179,17 @@ function Chart(props) {
 			);
 
 		case "donut":
-			return <Donut config={config} />;
+			return <Donut config={PIECONFIG} />;
 
 		case "pie":
-			return <Pie config={config} />;
+			return <Pie config={PIECONFIG} />;
 
 		case "bubble":
 			return <Plot config={config} />;
 
 		case "bar":
 			return (
-				<div className="viz">
+				<div className="chart">
 					<BarChart config={PLOTCONFIG} />
 					<div className="legend-wrapper">
 						{legendControl(
@@ -196,9 +209,13 @@ function Chart(props) {
 	}
 }
 
+function legends(data, key) {
+	return Array.from(new Set(data.map(d => d[key]))).sort();
+}
 function legendControl(data, key, props) {
 	const legend = Array.from(new Set(data.map(d => d[key]))).sort();
-	return legend.map(e => {
+
+	return legend.map((e, key) => {
 		let popoverContent = (
 			<div>
 				<h4>{e}</h4>
@@ -222,15 +239,18 @@ function legendControl(data, key, props) {
 				</div>
 			</div>
 		);
+		let divStyle = {
+			backgroundColor: COLORS[key] ? COLORS[key] : "tomato"
+		}
 		return (
-			<div className="legend">
+			<div className="legend" style={divStyle} >
 				<Popover2
 					content={popoverContent}
 					position={Position.TOP}
 					popoverClassName={"customtooltip"}
 					interactionKind={PopoverInteractionKind.HOVER}
 				>
-					<div className="legend" />
+					<div className="legend" style={divStyle} />
 				</Popover2>
 			</div>
 		);

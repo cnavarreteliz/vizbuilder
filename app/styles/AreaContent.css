@@ -39,8 +39,8 @@
 	}
 
 	& .viz {
-		flex: 1 1 auto;
-		min-height: 50%;
+		flex: 0 0 auto;
+		height: 75vh;
 
 		& svg {
 			display: block;

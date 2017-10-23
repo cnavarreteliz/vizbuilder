@@ -32,7 +32,8 @@
     }
 }
 
-.viz {
+.chart {
+
     & .legend-wrapper {
         display: flex;
         align-items: center;
