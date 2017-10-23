@@ -15,29 +15,31 @@ import "styles/Chart.css";
 
 const COLORS = [
 	"#F44336", "#3F51B5", "#FFC107", "#1B5E20", "#8BC34A", "#00BCD4", "#0288D1", "#D3B33F",
-	"#9C27B0", "#E91E63", "#009688", "#DCE775", "#FFCC80", "#9575CD", "#EF9A9A"
+	"#9C27B0", "#E91E63", "#009688", "#DCE775", "#FFCC80", "#9575CD", "#D0C96B"
 ]
 
 function Chart(props) {
-	let data = props.data;
-	data = groupLowestCategories(data);
-
+	let data = groupLowestCategories(props.data),
+		label = props.groupBy.name ? props.groupBy.name : props.options.x,
+		items = legends(data, label)
+	
+	// Apply filters hide/isolate in data
 	if (props.filters.options.length > 0) {
 		let type = props.filters.type,
 			filters = props.filters.options,
 			property = props.groupBy.name ? props.groupBy.name : props.options.x;
 
 		data = data.reduce((all, item) => {
-			if (type === "hide") {
-				if (!filters.includes(item[property])) all.push(item);
-			} else {
-				if (filters.includes(item[property])) all.push(item);
-			}
+			if (type === "hide" && !filters.includes(item[property])) 
+				all.push(item);
+			else if(type === "isolate" && filters.includes(item[property])) 
+				all.push(item)
+			
 			return all;
 		}, []);
+
 	}
 
-	let data2 = mapDataForChart(data, props.chart, props.options);
 	// Create buckets if drilldown selected is Age
 	data =
 		props.options.x === "Age" ? createBuckets(data, props.num_buckets) : data;
@@ -58,11 +60,9 @@ function Chart(props) {
 		}));
 	}
 
-	let lgs = legends(data, props.groupBy.name ? props.groupBy.name : props.options.x)
-
 	data = data.map(attr => ({
 		...attr,
-		color: COLORS[lgs.indexOf(attr[props.groupBy.name ? props.groupBy.name : props.options.x])],
+		color: COLORS[items.indexOf(attr[label])],
 	}));
 
 	let colorScale;
@@ -155,6 +155,12 @@ function Chart(props) {
 		}
 	};
 
+	let BUBBLECONFIG = {
+		...PLOTCONFIG,
+		y: props.options.y, 
+		x: props.options.y
+	}
+
 	// Only use AREACONFIG if there is timeDimension in x-axis
 	let AREACONFIG = {
 		...VIZCONFIG,
@@ -170,9 +176,7 @@ function Chart(props) {
 					<Treemap config={TREEMAPCONFIG} />
 					<div className="legend-wrapper">
 						{legendControl(
-							data,
-							props.groupBy.name ? props.groupBy.name : props.options.x,
-							props
+							data, label, props
 						)}
 					</div>
 				</div>
@@ -185,7 +189,7 @@ function Chart(props) {
 			return <Pie config={PIECONFIG} />;
 
 		case "bubble":
-			return <Plot config={config} />;
+			return <Plot config={BUBBLECONFIG} />;
 
 		case "bar":
 			return (
@@ -193,9 +197,7 @@ function Chart(props) {
 					<BarChart config={PLOTCONFIG} />
 					<div className="legend-wrapper">
 						{legendControl(
-							data,
-							props.groupBy.name ? props.groupBy.name : props.options.x,
-							props
+							data, label, props
 						)}
 					</div>
 				</div>
@@ -265,62 +267,6 @@ function measureType(ms) {
 		case "UNKNOWN":
 		default:
 			return false;
-	}
-}
-
-// Preprocess data for charts
-function mapDataForChart(data, chart, props) {
-	switch (chart.type) {
-		case "treemap":
-		case "donut":
-		case "pie":
-			return data.reduce((all, item) => {
-				all.push({
-					id: item[props.x],
-					name: item[props.x],
-					year: parseInt(item[props.year] || item.Year),
-					groupBy: item[props.groupBy],
-					colorScale: item[props.colorScale],
-					value: item[props.y],
-					source: item
-				});
-				return all;
-			}, []);
-
-		case "bubble":
-			return data.reduce((all, item) => {
-				all.push({
-					id: item[props.x],
-					name: item[props.x],
-					year: parseInt(item[props.year] || item.Year),
-					colorScale: item[props.colorScale],
-					x: item[props.y],
-					y: item[props.y],
-					value: item[props.y],
-					source: item
-				});
-				return all;
-			}, []);
-
-		case "bar":
-		case "stacked":
-			return data.reduce((all, item) => {
-				all.push({
-					id: item[props.x],
-					name: item[props.x],
-					year: parseInt(item[props.year] || item.Year),
-					colorScale: item[props.colorScale],
-					x: item[props.x],
-					y: item[props.y],
-					value: item[props.y],
-					source: item
-				});
-				return all;
-			}, []);
-
-		case "table":
-		default:
-			return data;
 	}
 }
 
