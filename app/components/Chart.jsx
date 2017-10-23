@@ -13,30 +13,18 @@ import { groupLowestCategories, calculateGrowth } from "helpers/prepareViz";
 
 import "styles/Chart.css";
 
+function setColors() {}
+
 function Chart(props) {
-	// Create buckets if drilldown selected is Age
-	console.log(props.filters);
-	let data2 = props.data;
-	/*if (props.filters.options.length > 0) {
-		data2 = props.filters.options.reduce((all, filter) => {
-			let property = props.options.x;
-			data2.map(item => {
-				if(props.filters.type === "hide") {
-					if (item[property] !== filter) all.push(item);
-				} else {
-					if (item[property] === filter) all.push(item);
-				}
-			});
-			return all;
-		}, []);
-	}*/
+	let data = props.data;
+	data = groupLowestCategories(data);
 
 	if (props.filters.options.length > 0) {
 		let type = props.filters.type,
 			filters = props.filters.options,
-			property = props.options.x;
+			property = props.groupBy.name ? props.groupBy.name : props.options.x;
 
-		data2 = data2.reduce((all, item) => {
+		data = data.reduce((all, item) => {
 			if (type === "hide") {
 				if (!filters.includes(item[property])) all.push(item);
 			} else {
@@ -46,7 +34,8 @@ function Chart(props) {
 		}, []);
 	}
 
-	let data = mapDataForChart(data2, props.chart, props.options);
+	let data2 = mapDataForChart(data, props.chart, props.options);
+	// Create buckets if drilldown selected is Age
 	data =
 		props.options.x === "Age" ? createBuckets(data, props.num_buckets) : data;
 
@@ -58,7 +47,7 @@ function Chart(props) {
 
 		data = data.map(attr => ({
 			...attr,
-			growth: attributes[attr.id],
+			Growth: attributes[attr.id],
 			source: {
 				...attr.source,
 				Growth: attributes[attr.id]
@@ -66,24 +55,19 @@ function Chart(props) {
 		}));
 	}
 
-	data = groupLowestCategories(data);
-
-	let max = Math.max(...data.map(d => d.year)),
-		min = Math.min(...data.map(d => d.year));
-
 	let colorScale;
 	if (props.chart.colorScale === "" && props.chart.growth) {
-		colorScale = "growth";
+		colorScale = "Growth";
 	} else if (props.chart.colorScale === "" && !props.chart.growth) {
 		colorScale = false;
 	} else if (props.chart.colorScale !== "" && props.chart.growth) {
-		colorScale = "growth";
+		colorScale = "Growth";
 	} else {
 		colorScale = "colorScale";
 	}
 
 	let COLORSCALE = {
-		colorScale: props.chart.growth ? "growth" : props.chart.colorScale,
+		colorScale: props.chart.growth ? "Growth" : props.chart.colorScale,
 		colorScalePosition:
 			props.chart.colorScale !== "" || props.chart.growth ? "bottom" : false,
 		colorScaleConfig: {
@@ -100,43 +84,50 @@ function Chart(props) {
 			value: measureType(props.options.y) ? mean : sum,
 			y: measureType(props.options.y) ? mean : sum
 		},
-		data: data,
+		data: data2,
 		colorScale: colorScale,
 		colorScalePosition:
 			props.chart.colorScale !== "" || props.chart.growth ? "bottom" : false,
 		colorScaleConfig: {
 			color: COLORS_RAINFALL
-		},
-		type: props.chart.type
-	};
-
-	let TREEMAPCONFIG = {
-		...COLORSCALE,
-		colorScale: colorScale,
-		data: data,
-		groupBy: props.groupBy.name ? ["groupBy", "id"] : ["id"],
-		padding: 2,
-		legend: false,
-		shapeConfig: {
-			labelConfig: {
-				fontWeight: 600
-			},
-			labelPadding: 8
 		}
-		//on: ("click", d => { alert("Hello") })
 	};
 
-	data2 =
-		props.options.x === "Age" ? createBuckets(data2, props.num_buckets) : data2;
-
+	/*data =
+		props.options.x === "Age" ? createBuckets(data, props.num_buckets) : data;*/
 	let VIZCONFIG = {
 		aggs: {
 			[props.options.y]: measureType(props.options.y) ? mean : sum
 		},
 		legend: false,
-		groupBy: [props.options.x],
-		data: data2
+		groupBy: props.groupBy.name
+			? [props.groupBy.name, props.options.x]
+			: [props.options.x],
+		data: data.map(elm => {
+			return { ...elm, value: elm[props.options.y] };
+		})
 	};
+
+	let TREEMAPCONFIG = {
+		...COLORSCALE,
+		...VIZCONFIG,
+		padding: 2,
+		shapeConfig: {
+			labelConfig: {
+				fontWeight: 600
+			},
+			labelPadding: 8
+		},
+		/*colorScale: colorScale,
+		*/
+		on: {
+			"click.shape": d => {
+				alert(d[props.options.x]);
+			}
+		}
+	};
+
+	let PIECONFIG = {};
 
 	let PLOTCONFIG = {
 		...VIZCONFIG,
@@ -159,13 +150,17 @@ function Chart(props) {
 		x: "Year"
 	};
 
-	switch (config.type) {
+	switch (props.chart.type) {
 		case "treemap":
 			return (
 				<div className="viz">
 					<Treemap config={TREEMAPCONFIG} />
 					<div className="legend-wrapper">
-						{legendControl(data2, props.options.x, props)}
+						{legendControl(
+							data,
+							props.groupBy.name ? props.groupBy.name : props.options.x,
+							props
+						)}
 					</div>
 				</div>
 			);
@@ -184,7 +179,11 @@ function Chart(props) {
 				<div className="viz">
 					<BarChart config={PLOTCONFIG} />
 					<div className="legend-wrapper">
-						{legendControl(data2, props.options.x, props)}
+						{legendControl(
+							data,
+							props.groupBy.name ? props.groupBy.name : props.options.x,
+							props
+						)}
 					</div>
 				</div>
 			);
