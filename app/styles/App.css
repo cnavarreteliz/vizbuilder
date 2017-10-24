@@ -1,8 +1,3 @@
-html {
-	margin: 0;
-	box-sizing: border-box;
-}
-
 body {
 	background-color: #eaeaf2;
 	user-select: none;
@@ -12,9 +7,20 @@ body {
 	height: 100%;
 }
 
-.progress-overlay .progress-bar {
-	margin: 49vh 10vw 0;
-	width: 80%;
+.progress-overlay {
+	& .progress-content {
+		left: 0;
+		right: 0;
+		margin: 46vh auto 0;
+		width: 80%;
+		outline: none;
+	}
+
+	& .progress-label {
+		color: #fff;
+		font-size: 1.4em;
+		text-align: center;
+	}
 }
 
 .container {
@@ -23,6 +29,8 @@ body {
 	height: 100vh;
 
 	& .side-panel {
+		padding: 1rem;
+		width: 18rem;
 	}
 
 	& .main-panel {

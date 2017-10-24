@@ -45,20 +45,35 @@ class LoadControl extends React.Component {
 	}
 
 	render() {
+		/** @type {Array<any>} */
+		let message = ['Loading...'];
+
+		let dd = this.props.dd[0],
+			ms = this.props.ms[0];
+
+		if (dd && ms)
+			message = ["Loading ", <em>{dd.level}</em>, " by ", <em>{ms.name}</em>];
+
 		return (
 			<Overlay
-			className='progress-overlay'
+				className="progress-overlay"
 				isOpen={this.props.loading}
 				canEscapeKeyClose={false}
 				canOutsideClickClose={false}
 			>
-				<ProgressBar className='progress-bar' />
+				<div className="progress-content">
+					<p className="progress-label">{message}</p>
+					<ProgressBar className="progress-bar" />
+				</div>
 			</Overlay>
 		);
 	}
 }
 
-/** @param {VizbuilderState} state */
+/** 
+ * @param {VizbuilderState} state 
+ * @returns {LoadControlProps}
+*/
 function mapStateToProps(state) {
 	return {
 		cube: state.cubes.current,
