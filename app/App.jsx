@@ -1,6 +1,5 @@
 import React from "react";
 
-import "nprogress/nprogress.css";
 import "styles/App.css";
 
 function App(props) {
