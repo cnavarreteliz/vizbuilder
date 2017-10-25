@@ -1,3 +1,4 @@
+/** @type {DataState} */
 const initialState = {
 	fetching: false,
 	success: null,
@@ -13,6 +14,12 @@ const initialState = {
 	}
 };
 
+/**
+ * Reducer for the data source.
+ * @param {DataState} state Current state
+ * @param {ReduxMessage} action Redux message.
+ * @returns {DataState}
+ */
 export default function(state = initialState, action) {
 	switch (action.type) {
 		case "DATA_FETCH": {

@@ -32,17 +32,24 @@ SelectDrillable.defaultProps = {
 	}
 };
 
+/**
+ * @param {object} props 
+ * @param {string|Array<any>} props.className 
+ * @param {Selectable} props.value
+ * @param {Array<Selectable>} props.items
+ * @param {(item: Selectable, event?: Event) => void} props.onItemSelect
+ */
 function SelectDrillable(props) {
 	props.className = classnames("select-drillable", props.className);
 
-	if (!props.value || !props.value.name)
-		props.value = { name: "Select...", disabled: true };
+	if (!props.value || !props.value.label)
+		props.value = { key: "", value: null, label: "Select...", disabled: true };
 
 	return React.createElement(
 		Select,
 		props,
-		<div className="select-option current" title={props.value.name}>
-			<span className="value">{props.value.name}</span>
+		<div className="select-option current" title={props.value.label}>
+			<span className="value">{props.value.label}</span>
 			<Icon iconName="double-caret-vertical" />
 		</div>
 	);

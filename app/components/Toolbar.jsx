@@ -11,6 +11,19 @@ import PanelInfo from "components/PanelInfo";
 import "styles/Toolbar.css";
 import "styles/Dialog.css";
 
+/** 
+ * @typedef ToolbarProps 
+ * @prop {object} axis Current axis labels
+ * @prop {string} cube Current cube's name
+ * @prop {Array<object>} data Array of data currently being viewed
+*/
+
+/**
+ * @typedef ToolbarState
+ * @prop {boolean} dialogOpen Sets if the info dialog is visible
+ */
+
+/** @augments {React.Component<ToolbarProps, ToolbarState>} */
 class Toolbar extends React.Component {
 	state = {
 		dialogOpen: false

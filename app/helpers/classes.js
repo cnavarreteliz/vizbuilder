@@ -11,8 +11,9 @@ function reduceDrilldowns(all, item) {
 }
 
 export class Cube {
+	kind = "cube";
 	key = makeRandomId();
-	_drilldowns = null;
+	_drilldowns = [];
 
 	constructor(cb) {
 		this.name = cb.name;
@@ -51,7 +52,7 @@ export class Cube {
 	}
 
 	get drilldowns() {
-		if (!this._drilldowns)
+		if (!this._drilldowns.length)
 			this._drilldowns = this.dimensions.reduce(reduceDrilldowns, []);
 
 		return this._drilldowns;
@@ -73,6 +74,7 @@ export class Cube {
 }
 
 export class Dimension {
+	kind = "dimension";
 	key = makeRandomId();
 
 	constructor(dm) {
@@ -122,6 +124,7 @@ export class Dimension {
 }
 
 export class Hierarchy {
+	kind = "hierarchy";
 	key = makeRandomId();
 
 	constructor(hr) {
@@ -155,6 +158,7 @@ export class Hierarchy {
 }
 
 export class Level {
+	kind = "level";
 	key = makeRandomId();
 
 	constructor(lv) {
@@ -187,6 +191,7 @@ export class Level {
 }
 
 export class Measure {
+	kind = "measure";
 	key = makeRandomId();
 
 	constructor(ms) {

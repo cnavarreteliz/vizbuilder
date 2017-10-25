@@ -1,7 +1,7 @@
 interface ReduxMessage<T> {
 	type: string;
 	payload: T;
-	[x:string]: any;
+	[x: string]: any;
 }
 
 interface AggregatorsState {
@@ -23,12 +23,16 @@ interface CubesState {
 
 interface DataState {
 	fetching: boolean;
-	success: boolean;
-	error: Error;
+	success: null | boolean;
+	error: null | Error;
 
-	values: Array<object>,
-	axes: Array<any>,
-	dimensions: Array<any>,
+	values: Array<object>;
+	axes: Array<any>;
+	dimensions: Array<any>;
+	filters: {
+		type: string;
+		options: Array;
+	};
 }
 
 interface VisualsState {
