@@ -6,6 +6,7 @@ import Home from "pages/Home";
 import DataChile from "pages/DataChile";
 import DataKsa from "pages/DataKsa";
 import DataCNY from "pages/DataCNY";
+import DataOEC from "pages/DataOEC";
 import NotFound from "pages/NotFound";
 
 export default function RouteCreate() {
@@ -15,6 +16,7 @@ export default function RouteCreate() {
 			<Route path="ksa" component={DataKsa} />
 			<Route path="chile" component={DataChile} />
 			<Route path="cny" component={DataCNY} />
+			<Route path="oec" component={DataOEC} />
 			<Route path="*" component={NotFound} status={404} />
 		</Route>
 	);

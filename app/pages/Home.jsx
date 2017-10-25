@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router";
 
 import "styles/Home.css";
-import logo_datachile from 'assets/logo-datachile.svg'
+import logo_datachile from "assets/logo-datachile.svg";
 
 function Home(props) {
 	return (
@@ -21,6 +21,11 @@ function Home(props) {
 				<li className="menu-item">
 					<Link to="/cny" className="site">
 						CNY Vitals
+					</Link>
+				</li>
+				<li className="menu-item">
+					<Link to="/oec" className="site">
+						OEC
 					</Link>
 				</li>
 			</ul>
