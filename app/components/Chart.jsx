@@ -6,84 +6,79 @@ import { max, mean, min, sum } from "d3-array";
 import { Tooltip2, Popover2 } from "@blueprintjs/labs";
 import { Button, Position, PopoverInteractionKind } from "@blueprintjs/core";
 
-import { COLORS_RAINFALL } from "helpers/colors";
+import { COLORS_RAINFALL, COLORS_DISCRETE } from "helpers/colors";
 import { CHARTCONFIG, yearControls } from "helpers/d3plus";
 import { createBuckets } from "helpers/buckets";
 import { groupLowestCategories, calculateGrowth } from "helpers/prepareViz";
 
 import "styles/Chart.css";
 
-const COLORS = [
-	"#F44336", "#3F51B5", "#FFC107", "#1B5E20", "#8BC34A", "#00BCD4", "#0288D1", "#D3B33F",
-	"#9C27B0", "#E91E63", "#009688", "#DCE775", "#FFCC80", "#9575CD", "#D0C96B"
-]
-
 function Chart(props) {
 	let data = groupLowestCategories(props.data),
-		label = props.groupBy.name ? props.groupBy.name : props.options.x,
-		items = legends(data, label)
-	
+		label = props.options.groupBy ? props.options.groupBy : props.options.x,
+		items = legends(data, label);
+
 	// Apply filters hide/isolate in data
 	if (props.filters.options.length > 0) {
 		let type = props.filters.type,
 			filters = props.filters.options,
-			property = props.groupBy.name ? props.groupBy.name : props.options.x;
+			property = props.options.groupBy ? props.options.groupBy : props.options.x;
 
 		data = data.reduce((all, item) => {
-			if (type === "hide" && !filters.includes(item[property])) 
+			if (type === "hide" && !filters.includes(item[property])) all.push(item);
+			else if (type === "isolate" && filters.includes(item[property]))
 				all.push(item);
-			else if(type === "isolate" && filters.includes(item[property])) 
-				all.push(item)
-			
+
 			return all;
 		}, []);
-
 	}
 
 	// Create buckets if drilldown selected is Age
 	data =
 		props.options.x === "Age" ? createBuckets(data, props.num_buckets) : data;
 
-	if (props.growthType) {
+	if (props.chart.growthType) {
 		let attributes = calculateGrowth(
 			data,
-			props.chart.colorScale !== "" ? "colorScale" : props.options.y
+			props.options.colorScale !== "" ? "colorScale" : props.options.y
 		);
 
 		data = data.map(attr => ({
 			...attr,
-			Growth: attributes[attr.id],
-			source: {
-				...attr.source,
-				Growth: attributes[attr.id]
-			}
+			Growth: attributes[attr[props.options.x]],
 		}));
 	}
 
+	let color_length = COLORS_DISCRETE.length
+	
 	data = data.map(attr => ({
 		...attr,
-		color: COLORS[items.indexOf(attr[label])],
+		color: COLORS_DISCRETE[ items.indexOf(attr[label]) % color_length ] 
 	}));
 
 	let COLORSCALE = {
-		colorScale: props.chart.growth ? "Growth" : props.chart.colorScale,
+		colorScale: props.chart.growth ? "Growth" : props.options.colorScale,
 		colorScalePosition:
-			props.chart.colorScale !== "" || props.chart.growth ? "bottom" : false,
+			props.options.colorScale !== "" || props.chart.growth ? "bottom" : false,
 		colorScaleConfig: {
 			color: COLORS_RAINFALL
 		}
 	};
 
+	// If "colorScale" is selected, shapeConfig doesn't must include "fill" option
+	let shapeConfig = props.options.colorScale !== ""
+		? {}
+		: { fill: d => d.color };
+
 	let VIZCONFIG = {
+		...COLORSCALE,
 		aggs: {
 			[props.options.y]: measureType(props.options.y) ? mean : sum
 		},
-		shapeConfig: {
-			fill: d => d.color
-		},
+		shapeConfig: shapeConfig,
 		legend: false,
-		groupBy: props.groupBy.name
-			? [props.groupBy.name, props.options.x]
+		groupBy: props.options.groupBy
+			? [props.options.groupBy, props.options.x]
 			: [props.options.x],
 		data: data.map(elm => {
 			return { ...elm, value: elm[props.options.y] };
@@ -96,11 +91,10 @@ function Chart(props) {
 	};
 
 	let TREEMAPCONFIG = {
-		...COLORSCALE,
 		...VIZCONFIG,
 		padding: 2,
 		shapeConfig: {
-			fill: d => d.color,
+			...shapeConfig,
 			labelConfig: {
 				fontWeight: 600
 			},
@@ -109,13 +103,11 @@ function Chart(props) {
 	};
 
 	let PIECONFIG = {
-		...COLORSCALE,
 		...VIZCONFIG
 	};
 
 	let PLOTCONFIG = {
 		...VIZCONFIG,
-		...COLORSCALE,
 		y: props.options.y, // Y axis option
 		x: props.options.x, // X axis option
 		xConfig: {
@@ -128,14 +120,13 @@ function Chart(props) {
 
 	let BUBBLECONFIG = {
 		...PLOTCONFIG,
-		y: props.options.y, 
+		y: props.options.y,
 		x: props.options.y
-	}
+	};
 
 	// Only use AREACONFIG if there is timeDimension in x-axis
 	let AREACONFIG = {
 		...VIZCONFIG,
-		...COLORSCALE,
 		y: props.options.y,
 		x: "Year"
 	};
@@ -146,9 +137,7 @@ function Chart(props) {
 				<div className="chart">
 					<Treemap config={TREEMAPCONFIG} />
 					<div className="legend-wrapper">
-						{legendControl(
-							data, label, props
-						)}
+						{legendControl(data, label, props)}
 					</div>
 				</div>
 			);
@@ -167,9 +156,7 @@ function Chart(props) {
 				<div className="chart">
 					<BarChart config={PLOTCONFIG} />
 					<div className="legend-wrapper">
-						{legendControl(
-							data, label, props
-						)}
+						{legendControl(data, label, props)}
 					</div>
 				</div>
 			);
@@ -185,6 +172,7 @@ function Chart(props) {
 function legends(data, key) {
 	return Array.from(new Set(data.map(d => d[key]))).sort();
 }
+
 function legendControl(data, key, props) {
 	const legend = Array.from(new Set(data.map(d => d[key]))).sort();
 
@@ -212,11 +200,13 @@ function legendControl(data, key, props) {
 				</div>
 			</div>
 		);
+		let customKey = key % COLORS_DISCRETE.length
+
 		let divStyle = {
-			backgroundColor: COLORS[key] ? COLORS[key] : "tomato"
-		}
+			backgroundColor: COLORS_DISCRETE[customKey] ? COLORS_DISCRETE[customKey] : "tomato"
+		};
 		return (
-			<div className="legend" style={divStyle} >
+			<div className="legend" style={divStyle}>
 				<Popover2
 					content={popoverContent}
 					position={Position.TOP}
@@ -261,30 +251,18 @@ function mapStateToProps(state) {
 		props.x = aggr.drilldowns[0].level;
 	}
 
-	props.y = aggr.measures.filter(ms => ms.name === state.visuals.axis.y)[0];
+	props.y = aggr.measures.filter(ms => ms.name === state.visuals.axis.y)[0].name;
 
 	if (state.cubes.current.timeDimensions.length > 0) {
 		props.year = state.cubes.current.timeDimensions[0].name;
 	}
 
-	let chart = { ...state.visuals.chart, colorScale: props.colorScale };
-	let opt = {
-		x: props.x,
-		y: props.y.name,
-		year: props.year,
-		colorScale: colorBy.name || "",
-		groupBy: groupBy.level || ""
-	};
-
 	return {
-		chart: chart,
+		chart: state.visuals.chart,
 		filters: state.data.filters,
-		growthType: state.visuals.chart.growth,
-		groupBy: groupBy,
-		axis: state.visuals.axis,
 		data: state.data.values,
 		num_buckets: state.visuals.buckets,
-		options: opt
+		options: props
 	};
 }
 

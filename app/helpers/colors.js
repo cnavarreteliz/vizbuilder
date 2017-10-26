@@ -12,8 +12,10 @@ export const COLORS_GENDER = {
 };
 
 export const COLORS_DISCRETE = [
-	"#3949AB", "#1E88E5", "#009688",
-	"#C0CA33"
+	"#F44336", "#3F51B5", "#FFC107", "#1B5E20", "#8BC34A",
+	"#00BCD4", "#0288D1", "#D3B33F", "#9C27B0", "#E91E63",
+	"#009688", "#DCE775", "#FFCC80", "#9575CD", "#D0C96B", 
+	"#3949AB", "#1E88E5", "#009688", "#C0CA33"
 ]
 
 export const COLORS_DOMAIN = [
