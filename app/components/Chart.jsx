@@ -10,7 +10,7 @@ import { COLORS_RAINFALL, COLORS_DISCRETE } from "helpers/colors";
 import { CHARTCONFIG, yearControls } from "helpers/d3plus";
 import { createBuckets } from "helpers/buckets";
 import { calculateGrowth } from "helpers/prepareViz";
-import { groupLowestCategories, applyHideIsolateFilters } from "helpers/manageData";
+import { groupLowestCategories, applyHideIsolateFilters, applyYearFilter } from "helpers/manageData";
 
 import "styles/Chart.css";
 
@@ -21,6 +21,7 @@ function Chart(props) {
 	let data = groupLowestCategories(props.data),
 		property = props.options.groupBy ? props.options.groupBy : props.options.x,
 		items = Array.from(new Set(data.map(d => d[property]))).sort(),
+		years = Array.from(new Set(data.map(d => d.Year))).sort(),
 		filters = props.filters
 	
 	// Hide/isolate in data
@@ -77,12 +78,28 @@ function Chart(props) {
 		tooltipConfig: {
 			body: false
 		}
-	};
+	}
+	
+	let SHAPECONFIG ={
+		labelConfig: {
+			fontWeight: 600
+		},
+		labelPadding: 8
+	}
+
+	// 
+	let max = Math.max(...data.map(elm => { return elm.Year })),
+		min = Math.min(...data.map(elm => { return elm.Year }))
+
+	console.log(data.length)
+	
+	//data = applyYearFilter(data, max)
+	console.log(data.length)
 
 	let VIZCONFIG = {
 		...COLORSCALE,
 		aggs: {
-			[props.options.y]: measureType(props.options.y) ? mean : sum
+			[props.options.y]: measureType(props.options.type) ? mean : sum
 		},
 		legendConfig: LEGENDCONFIG,
 		groupBy: props.options.groupBy
@@ -100,13 +117,9 @@ function Chart(props) {
 
 	let TREEMAPCONFIG = {
 		...VIZCONFIG,
+		controls: yearControls(data, "Year"),
 		padding: 2,
-		shapeConfig: {
-			labelConfig: {
-				fontWeight: 600
-			},
-			labelPadding: 8
-		}
+		shapeConfig: SHAPECONFIG
 	};
 
 	let PIECONFIG = {
@@ -163,7 +176,7 @@ function Chart(props) {
 }
 
 function measureType(ms) {
-	switch (ms.type) {
+	switch (ms) {
 		case "AVG":
 			return true;
 		case "SUM":
@@ -180,6 +193,7 @@ function mapStateToProps(state) {
 		props = {
 			x: state.visuals.axis.x,
 			y: state.visuals.axis.y,
+			type: "",
 			year: "",
 			colorScale: colorBy.name || "",
 			groupBy: groupBy.level || ""
@@ -194,6 +208,7 @@ function mapStateToProps(state) {
 	}
 
 	props.y = aggr.measures.filter(ms => ms.name === state.visuals.axis.y)[0].name;
+	props.type = aggr.measures.filter(ms => ms.name === state.visuals.axis.y)[0].type;
 
 	if (state.cubes.current.timeDimensions.length > 0) {
 		props.year = state.cubes.current.timeDimensions[0].name;

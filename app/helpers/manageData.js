@@ -8,6 +8,13 @@ export function applyHideIsolateFilters(data, filters, type, property) {
 	}, []);
 }
 
+export function applyYearFilter(data, year) {
+	return data.reduce((all, item) => {
+		if(item.Year == year) all.push(item)
+		return all;
+	}, []);
+}
+
 export function groupLowestCategories(data, alpha = 0.05, min = 15) {
 	if (data !== null) {
 		// Reduce
