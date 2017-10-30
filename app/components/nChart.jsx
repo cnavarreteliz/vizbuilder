@@ -15,24 +15,23 @@ import { groupLowestCategories, applyHideIsolateFilters } from "helpers/manageDa
 import "styles/Chart.css";
 
 function Chart(props) {
-	/**
-	 * Clean data before map in d3plus
-	 */
 	let data = groupLowestCategories(props.data),
-		property = props.options.groupBy ? props.options.groupBy : props.options.x,
-		items = Array.from(new Set(data.map(d => d[property]))).sort(),
-		filters = props.filters
-	
-	// Hide/isolate in data
-	if (filters.options.length > 0) {
-		data = applyHideIsolateFilters(data, filters.options, filters.type, property)
+		label = props.options.groupBy ? props.options.groupBy : props.options.x,
+		items = legends(data, label);
+
+	// Apply filters hide/isolate in data
+	if (props.filters.options.length > 0) {
+		let type = props.filters.type,
+			filters = props.filters.options,
+			property = props.options.groupBy ? props.options.groupBy : props.options.x;
+
+		data = applyHideIsolateFilters(data, filters, type, property)
 	}
 
-	// Custom Age Buckets
+	// Create buckets if drilldown selected is Age
 	data =
 		props.options.x === "Age" ? createBuckets(data, props.num_buckets) : data;
 
-	// Add Custom Growth scale
 	if (props.chart.growthType) {
 		let attributes = calculateGrowth(
 			data,
@@ -44,13 +43,14 @@ function Chart(props) {
 			Growth: attributes[attr[props.options.x]],
 		}));
 	}
+
+	let color_length = COLORS_DISCRETE.length
 	
 	data = data.map(attr => ({
-		...attr
+		...attr,
+		color: COLORS_DISCRETE[ items.indexOf(attr[label]) % color_length ] 
 	}));
 
-
-	// Set COLORSCALE properties
 	let COLORSCALE = {
 		colorScale: props.chart.growth ? "Growth" : props.options.colorScale,
 		colorScalePosition:
@@ -59,32 +59,19 @@ function Chart(props) {
 			color: COLORS_RAINFALL
 		}
 	};
-	
-	let LEGENDCONFIG = {
-		marginLeft: 8,
-		padding: 8,
-		shapeConfig: {
-			label: false,
-			labelConfig: {
-				fontColor: "rgba(0, 0, 0, 0.8)",
-				fontResize: false,
-				fontSize: 0,
-				fontWeight: 600
-			},
-			height: () => 25,
-			width: () => 25
-		},
-		tooltipConfig: {
-			body: false
-		}
-	};
+
+	// If "colorScale" is selected, shapeConfig doesn't must include "fill" option
+	let shapeConfig = props.options.colorScale !== ""
+		? {}
+		: { fill: d => d.color };
 
 	let VIZCONFIG = {
 		...COLORSCALE,
 		aggs: {
 			[props.options.y]: measureType(props.options.y) ? mean : sum
 		},
-		legendConfig: LEGENDCONFIG,
+		shapeConfig: shapeConfig,
+		legend: false,
 		groupBy: props.options.groupBy
 			? [props.options.groupBy, props.options.x]
 			: [props.options.x],
@@ -102,6 +89,7 @@ function Chart(props) {
 		...VIZCONFIG,
 		padding: 2,
 		shapeConfig: {
+			...shapeConfig,
 			labelConfig: {
 				fontWeight: 600
 			},
@@ -140,7 +128,14 @@ function Chart(props) {
 
 	switch (props.chart.type) {
 		case "treemap":
-			return <Treemap config={TREEMAPCONFIG} />;
+			return (
+				<div className="chart">
+					<Treemap config={TREEMAPCONFIG} />
+					<div className="legend-wrapper">
+						{legendControl(data, label, props)}
+					</div>
+				</div>
+			);
 
 		case "donut":
 			return <Donut config={PIECONFIG} />;
@@ -152,7 +147,14 @@ function Chart(props) {
 			return <Plot config={BUBBLECONFIG} />;
 
 		case "bar":
-			return <BarChart config={PLOTCONFIG} />;
+			return (
+				<div className="chart">
+					<BarChart config={PLOTCONFIG} />
+					<div className="legend-wrapper">
+						{legendControl(data, label, props)}
+					</div>
+				</div>
+			);
 
 		case "stacked":
 			return <StackedArea config={AREACONFIG} />;
@@ -160,6 +162,57 @@ function Chart(props) {
 		default:
 			return <div />;
 	}
+}
+
+function legends(data, key) {
+	return Array.from(new Set(data.map(d => d[key]))).sort();
+}
+
+function legendControl(data, key, props) {
+	const legend = Array.from(new Set(data.map(d => d[key]))).sort();
+
+	return legend.map((e, key) => {
+		let popoverContent = (
+			<div>
+				<h4>{e}</h4>
+				<div className="pt-button-group pt-minimal">
+					<Button
+						className="pt-button pt-icon-eye-off"
+						tabIndex="0"
+						role="button"
+						onClick={evt => props.hideDimension(e)}
+					>
+						Hide
+					</Button>
+					<Button
+						className="pt-button pt-icon-pin"
+						tabIndex="1"
+						role="button"
+						onClick={evt => props.isolateDimension(e)}
+					>
+						Isolate
+					</Button>
+				</div>
+			</div>
+		);
+		let customKey = key % COLORS_DISCRETE.length
+
+		let divStyle = {
+			backgroundColor: COLORS_DISCRETE[customKey] ? COLORS_DISCRETE[customKey] : "tomato"
+		};
+		return (
+			<div className="legend" style={divStyle}>
+				<Popover2
+					content={popoverContent}
+					position={Position.TOP}
+					popoverClassName={"customtooltip"}
+					interactionKind={PopoverInteractionKind.HOVER}
+				>
+					<div className="legend" style={divStyle} />
+				</Popover2>
+			</div>
+		);
+	});
 }
 
 function measureType(ms) {

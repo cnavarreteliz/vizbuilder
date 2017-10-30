@@ -23,39 +23,12 @@ const axisConfig = {
 	tickSize: 0
 };
 
-export const TREEMAPCONFIG = {
-	padding: 2,
-	shapeConfig: {
-		labelConfig: {
-			fontWeight: 600
-		},
-		labelPadding: 8
-	}
-};
-
 export const CHARTCONFIG = {
-	barPadding: 10,
+	
 	titleConfig: {
 		fontColor: "#4A4A4A"
 	},
-	legendConfig: {
-		marginLeft: 8,
-		padding: 8,
-		shapeConfig: {
-			label: false,
-			labelConfig: {
-				fontColor: "rgba(0, 0, 0, 0.8)",
-				fontResize: false,
-				fontSize: 0,
-				fontWeight: 600
-			},
-			height: () => 25,
-			width: () => 25
-		},
-		tooltipConfig: {
-			body: false
-		}
-	},
+	
 	tooltipConfig: {
 		padding: "10px",
 		width: "200px",
