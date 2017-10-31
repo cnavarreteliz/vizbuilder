@@ -24,11 +24,10 @@ const axisConfig = {
 };
 
 export const CHARTCONFIG = {
-	
 	titleConfig: {
 		fontColor: "#4A4A4A"
 	},
-	
+
 	tooltipConfig: {
 		padding: "10px",
 		width: "200px",
@@ -80,6 +79,25 @@ function abbreviateFormat(name, value) {
 		return FORMATTERS.commas(value);
 	}
 }
+
+export const LEGENDCONFIG = {
+	marginLeft: 8,
+	padding: 8,
+	shapeConfig: {
+		label: false,
+		labelConfig: {
+			fontColor: "rgba(0, 0, 0, 0.8)",
+			fontResize: false,
+			fontSize: 0,
+			fontWeight: 600
+		},
+		height: () => 25,
+		width: () => 25
+	},
+	tooltipConfig: {
+		body: false
+	}
+};
 
 export function yearControls(
 	data,

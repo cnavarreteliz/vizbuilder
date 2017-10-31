@@ -6,10 +6,14 @@ import SelectDrillable from "components/SelectDrillable";
 import SelectChartType from "components/SelectChartType";
 
 import { generateColorSelector } from "helpers/prepareInput";
+import { getCoherentMeasures } from "helpers/manageData";
 
 import "styles/AreaSidebar.css";
 
 function Panel(props) {
+
+	const measures = getCoherentMeasures(props.viztype, props.all_ms)
+	console.log(measures)
 	switch (props.viztype) {
 		case "treemap":
 			return (
@@ -18,7 +22,7 @@ function Panel(props) {
 						<span className="label">sized by</span>
 						<SelectDrillable
 							value={props.measure}
-							items={props.all_ms}
+							items={measures}
 							onItemSelect={props.onSetMeasure}
 						/>
 					</div>
@@ -50,7 +54,7 @@ function Panel(props) {
 						<span className="label">sized by</span>
 						<SelectDrillable
 							value={props.measure}
-							items={props.all_ms}
+							items={measures}
 							onItemSelect={props.onSetMeasure}
 						/>
 					</div>
@@ -64,7 +68,7 @@ function Panel(props) {
 						<span className="label">X Axis</span>
 						<SelectDrillable
 							value={props.measure}
-							items={props.all_ms}
+							items={measures}
 							onItemSelect={props.onSetMeasure}
 						/>
 					</div>
@@ -72,7 +76,7 @@ function Panel(props) {
 						<span className="label">Y Axis</span>
 						<SelectDrillable
 							value={props.measure}
-							items={props.all_ms}
+							items={measures}
 							onItemSelect={props.onSetMeasure}
 						/>
 					</div>

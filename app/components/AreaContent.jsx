@@ -7,6 +7,8 @@ import ContentDefault from "components/ContentDefault";
 import InputPopover from "components/InputPopover";
 import Toolbar from "components/Toolbar";
 
+import { setChartOptions } from "helpers/visuals";
+
 import "styles/AreaContent.css";
 
 /**
@@ -73,7 +75,7 @@ function AreaContent(props) {
  */
 function mapStateToProps(state) {
 	return {
-		axis: state.visuals.axis,
+		axis: setChartOptions(state.aggregators, state.visuals.axis.y),
 		cube: state.cubes.current,
 		data: state.data.values
 	};

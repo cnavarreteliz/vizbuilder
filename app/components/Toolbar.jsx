@@ -7,6 +7,7 @@ import { saveAs } from "file-saver";
 import { Icon, Dialog, Button, Intent, Tabs2, Tab2 } from "@blueprintjs/core";
 import VizTable from "components/VizTable";
 import PanelInfo from "components/PanelInfo";
+import PanelData from "components/PanelData";
 
 import "styles/Toolbar.css";
 import "styles/Dialog.css";
@@ -70,6 +71,7 @@ class Toolbar extends React.Component {
 									panel={<PanelInfo data={data} axis={axis} />}
 								/>
 								<Tab2 id="ng" title="Data" panel={<VizTable data={data} />} />
+								<Tab2 id="dt" title="Data2" panel={<PanelData data={data} />} />
 							</Tabs2>
 						</div>
 						<div className="pt-dialog-footer">

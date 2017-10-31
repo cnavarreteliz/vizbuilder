@@ -10,7 +10,7 @@ export function applyHideIsolateFilters(data, filters, type, property) {
 
 export function applyYearFilter(data, year) {
 	return data.reduce((all, item) => {
-		if(item.Year == year) all.push(item)
+		if (item.Year == year) all.push(item);
 		return all;
 	}, []);
 }
@@ -63,5 +63,34 @@ export function groupLowestCategories(data, alpha = 0.05, min = 15) {
 		return allData;
 	} else {
 		return null;
+	}
+}
+
+export function getCoherentMeasures(viztype, all_ms) {
+	console.log(
+		all_ms.reduce((all, item) => {
+			if(["COUNT", "SUM", "UNKNOWN"].includes(item.type))
+				all.push(item)
+			return all
+		}, [])
+	)
+	switch (viztype) {
+
+		case "treemap":
+		case "donut":
+			return all_ms.reduce((all, item) => {
+				if(["COUNT", "SUM", "UNKNOWN"].includes(item.type))
+					all.push(item)
+				return all
+			}, []);
+		case "bar":
+		case "stacked":
+			return all_ms.reduce((all, item) => {
+				if(["AVG", "COUNT", "SUM", "UNKNOWN"].includes(item.type))
+					all.push(item)
+				return all
+			}, []);
+		default:
+			return all_ms;
 	}
 }
