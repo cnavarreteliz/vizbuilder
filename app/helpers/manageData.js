@@ -15,6 +15,12 @@ export function applyYearFilter(data, year) {
 	}, []);
 }
 
+/**
+ * Group lowest categories in "Other" category.
+ * @param {number} alpha Percentage of lowest categories to group in "Other" category.
+ * @param {number} min Minimal number of needed categories for generate a grouped.
+ * @returns {boolean}
+ */
 export function groupLowestCategories(data, alpha = 0.05, min = 15) {
 	if (data !== null) {
 		// Reduce
@@ -67,15 +73,7 @@ export function groupLowestCategories(data, alpha = 0.05, min = 15) {
 }
 
 export function getCoherentMeasures(viztype, all_ms) {
-	console.log(
-		all_ms.reduce((all, item) => {
-			if(["COUNT", "SUM", "UNKNOWN"].includes(item.type))
-				all.push(item)
-			return all
-		}, [])
-	)
 	switch (viztype) {
-
 		case "treemap":
 		case "donut":
 			return all_ms.reduce((all, item) => {

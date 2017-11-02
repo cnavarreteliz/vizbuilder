@@ -11,9 +11,8 @@ import { getCoherentMeasures } from "helpers/manageData";
 import "styles/AreaSidebar.css";
 
 function Panel(props) {
+	const measures = getCoherentMeasures(props.viztype, props.all_ms);
 
-	const measures = getCoherentMeasures(props.viztype, props.all_ms)
-	console.log(measures)
 	switch (props.viztype) {
 		case "treemap":
 			return (
@@ -47,7 +46,6 @@ function Panel(props) {
 		case "donut":
 		case "pie":
 		case "stacked":
-		case "bar":
 			return (
 				<div>
 					<div className="group">
@@ -56,6 +54,30 @@ function Panel(props) {
 							value={props.measure}
 							items={measures}
 							onItemSelect={props.onSetMeasure}
+						/>
+					</div>
+				</div>
+			);
+
+		case "bar":
+			return (
+				<div>
+					<div>
+						<div className="group">
+							<span className="label">sized by</span>
+							<SelectDrillable
+								value={props.measure}
+								items={measures}
+								onItemSelect={props.onSetMeasure}
+							/>
+						</div>
+					</div>
+					<div className="group">
+						<span className="label">grouped by</span>
+						<SelectDrillable
+							value={props.groupBy}
+							items={props.all_dd}
+							onItemSelect={props.onSetGrouping}
 						/>
 					</div>
 				</div>
@@ -88,6 +110,8 @@ function Panel(props) {
 }
 
 function Sidebar(props) {
+	const measures = getCoherentMeasures(props.viztype, props.all_ms);
+
 	return (
 		<div className="side-panel">
 			<div className="group">
