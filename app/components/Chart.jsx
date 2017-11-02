@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Treemap, Donut, Pie, BarChart, StackedArea, Plot } from "d3plus-react";
+import { Treemap, Donut, Pie, BarChart, StackedArea, Plot, LinePlot } from "d3plus-react";
 import { max, mean, min, sum } from "d3-array";
 import { Tooltip2, Popover2 } from "@blueprintjs/labs";
 import { Button, Position, PopoverInteractionKind } from "@blueprintjs/core";
@@ -131,6 +131,15 @@ function Chart(props) {
 				x: props.axis_y
 			};
 			return <Plot config={BUBBLECONFIG} />;
+		}
+
+		case "lineplot": {
+			let AREACONFIG = {
+				...VIZCONFIG,
+				y: props.axis_y,
+				x: "Year"
+			};
+			return <LinePlot config={AREACONFIG} />;
 		}
 
 		case "bar": {

@@ -44,6 +44,8 @@ function Panel(props) {
 					</div>
 				</div>
 			);
+
+		case "lineplot":
 		case "donut":
 		case "pie":
 		case "stacked":

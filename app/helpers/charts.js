@@ -16,6 +16,12 @@ export const DONUT = {
 	nllabel: "donut chart",
 	icon: require("assets/charts/icon-donut.svg")
 };
+export const LINEPLOT = {
+	key: "LINEPLOT",
+	name: "lineplot",
+	nllabel: "line plot",
+	icon: require("assets/charts/icon-lineplot.svg")
+};
 export const PIE = {
 	key: "PIE",
 	name: "pie",
@@ -47,7 +53,7 @@ export const WORDCLOUD = {
 	icon: require("assets/charts/icon-wordcloud.svg")
 };
 
-const availables = [TREEMAP, DONUT, PIE, BUBBLE, STACKED, BAR];
+const availables = [TREEMAP, DONUT, PIE, LINEPLOT, BUBBLE, STACKED, BAR];
 
 export function getChartByName(name) {
 	return availables.find(chart => chart.name === name);
