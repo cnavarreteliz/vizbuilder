@@ -21,16 +21,16 @@ import {
 import "styles/Chart.css";
 
 function Chart(props) {
-	/**
-	 * Clean data before map in d3plus
-	 */
-	let data = groupLowestCategories(props.data),
-		property = props.options.groupBy ? props.options.groupBy : props.options.x,
-		items = Array.from(new Set(data.map(d => d[property]))).sort(),
-		years = Array.from(new Set(data.map(d => d.Year))).sort(),
-		filters = props.filters;
+	// Duplicate data before modifiyng
+	let data = props.data.map(attr => ({ ...attr }));
+
+	// Clean data before map in d3plus
+	data = groupLowestCategories(props.data);
+
+	let property = props.options.groupBy || props.axis_x;
 
 	// Hide/isolate Data
+	let filters = props.filters;
 	if (filters.options.length > 0) {
 		data = applyHideIsolateFilters(
 			data,
@@ -41,25 +41,21 @@ function Chart(props) {
 	}
 
 	// Custom Age Buckets
-	data =
-		props.options.x === "Age" ? createBuckets(data, props.num_buckets) : data;
+	if (props.axis_x === "Age") 
+		data = createBuckets(data, props.num_buckets);
 
 	// Add Custom Growth scale
 	if (props.chart.growthType) {
 		let attributes = calculateGrowth(
 			data,
-			props.options.colorScale !== "" ? "colorScale" : props.options.y
+			props.options.colorScale !== "" ? "colorScale" : props.axis_y
 		);
 
 		data = data.map(attr => ({
 			...attr,
-			Growth: attributes[attr[props.options.x]]
+			Growth: attributes[attr[props.axis_x]]
 		}));
 	}
-
-	data = data.map(attr => ({
-		...attr
-	}));
 
 	// Set COLORSCALE properties
 	let COLORSCALE = {
@@ -72,7 +68,6 @@ function Chart(props) {
 	};
 
 	// Set legend properties
-
 	let SHAPECONFIG = {
 		labelConfig: {
 			fontWeight: 600
@@ -80,40 +75,24 @@ function Chart(props) {
 		labelPadding: 8
 	};
 
-	let max = Math.max(
-			...data.map(elm => {
-				return elm.Year;
-			})
-		),
-		min = Math.min(
-			...data.map(elm => {
-				return elm.Year;
-			})
-		);
-
-	//data = applyYearFilter(data, max)
-
 	let VIZCONFIG = {
 		...COLORSCALE,
 		aggs: {
-			[props.options.y]: measureType(props.options.type) ? mean : sum
+			[props.axis_y]: measureType(props.options.type) ? mean : sum
 		},
 		legendConfig: LEGENDCONFIG,
 		tooltipConfig: {
-		body: d => { 
-				let content = <div>"Hello"</div>
-				return content 
-			}
+			body: d => <div>Hello</div>
 		},
 		groupBy: props.options.groupBy
-			? [props.options.groupBy, props.options.x]
-			: [props.options.x],
+			? [props.options.groupBy, props.axis_x]
+			: [props.axis_x],
 		data: data.map(item => {
-			return { ...item, value: item[props.options.y] };
+			return { ...item, value: item[props.axis_y] };
 		}),
 		on: {
 			"click.shape": d => {
-				alert(d[props.options.x]);
+				alert(d[props.axis_x]);
 			}
 		}
 	};
@@ -124,53 +103,49 @@ function Chart(props) {
 		shapeConfig: SHAPECONFIG
 	};
 
-	let PIECONFIG = {
-		...VIZCONFIG
-	};
-
 	let PLOTCONFIG = {
 		...VIZCONFIG,
-		y: [props.options.y], // Y axis option
-		x: [props.options.x], // X axis option
+		y: [props.axis_y], // Y axis option
+		x: [props.axis_x], // X axis option
 		xConfig: {
-			title: props.options.x
+			title: props.axis_x
 		},
 		yConfig: {
-			title: props.options.y
+			title: props.axis_y
 		}
 	};
 
-	let BUBBLECONFIG = {
-		...PLOTCONFIG,
-		y: props.options.y,
-		x: props.options.y
-	};
-
-	// Only use AREACONFIG if there is timeDimension in x-axis
-	let AREACONFIG = {
-		...VIZCONFIG,
-		y: props.options.y,
-		x: "Year"
-	};
-
 	switch (props.chart.type) {
-		case "treemap":
+		case "treemap": {
 			return <Treemap config={TREEMAPCONFIG} />;
+		}
 
-		case "donut":
-			return <Donut config={PIECONFIG} />;
+		case "donut": {
+			return <Donut config={VIZCONFIG} />;
+		}
 
-		case "pie":
-			return <Pie config={PIECONFIG} />;
-
-		case "bubble":
+		case "bubble": {
+			let BUBBLECONFIG = {
+				...PLOTCONFIG,
+				y: props.axis_y,
+				x: props.axis_y
+			};
 			return <Plot config={BUBBLECONFIG} />;
+		}
 
-		case "bar":
+		case "bar": {
 			return <BarChart config={PLOTCONFIG} />;
+		}
 
-		case "stacked":
+		case "stacked": {
+			// Only use AREACONFIG if there is timeDimension in x-axis
+			let AREACONFIG = {
+				...VIZCONFIG,
+				y: props.axis_y,
+				x: "Year"
+			};
 			return <StackedArea config={AREACONFIG} />;
+		}
 
 		default:
 			return <div />;
@@ -219,7 +194,6 @@ function mapStateToProps(state) {
 		axis_y: axis.y.name || '',
 		chart: state.visuals.chart,
 		filters: state.data.filters,
-		data: state.data.values,
 		num_buckets: state.visuals.buckets,
 		options: props
 	};

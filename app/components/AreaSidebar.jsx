@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import FilterManager from "components/FilterManager";
-import SelectDrillable from "components/SelectDrillable";
+import CustomSelect from "components/CustomSelect";
 import SelectChartType from "components/SelectChartType";
 
 import { generateColorSelector } from "helpers/prepareInput";
@@ -13,14 +13,14 @@ import "styles/AreaSidebar.css";
 function Panel(props) {
 
 	const measures = getCoherentMeasures(props.viztype, props.all_ms)
-	console.log(measures)
+	
 	switch (props.viztype) {
 		case "treemap":
 			return (
 				<div>
 					<div className="group">
 						<span className="label">sized by</span>
-						<SelectDrillable
+						<CustomSelect
 							value={props.measure}
 							items={measures}
 							onItemSelect={props.onSetMeasure}
@@ -28,7 +28,7 @@ function Panel(props) {
 					</div>
 					<div className="group">
 						<span className="label">grouped by</span>
-						<SelectDrillable
+						<CustomSelect
 							value={props.groupBy}
 							items={props.all_dd}
 							onItemSelect={props.onSetGrouping}
@@ -36,7 +36,7 @@ function Panel(props) {
 					</div>
 					<div className="group">
 						<span className="label">depth by</span>
-						<SelectDrillable
+						<CustomSelect
 							value={props.groupBy}
 							items={props.all_dd}
 							onItemSelect={props.onSetGrouping}
@@ -52,7 +52,7 @@ function Panel(props) {
 				<div>
 					<div className="group">
 						<span className="label">sized by</span>
-						<SelectDrillable
+						<CustomSelect
 							value={props.measure}
 							items={measures}
 							onItemSelect={props.onSetMeasure}
@@ -66,7 +66,7 @@ function Panel(props) {
 				<div>
 					<div className="group">
 						<span className="label">X Axis</span>
-						<SelectDrillable
+						<CustomSelect
 							value={props.measure}
 							items={measures}
 							onItemSelect={props.onSetMeasure}
@@ -74,7 +74,7 @@ function Panel(props) {
 					</div>
 					<div className="group">
 						<span className="label">Y Axis</span>
-						<SelectDrillable
+						<CustomSelect
 							value={props.measure}
 							items={measures}
 							onItemSelect={props.onSetMeasure}
@@ -92,7 +92,7 @@ function Sidebar(props) {
 		<div className="side-panel">
 			<div className="group">
 				<span className="label">Dataset</span>
-				<SelectDrillable
+				<CustomSelect
 					value={props.cube}
 					items={props.all_cb}
 					onItemSelect={props.onSetCube}
@@ -100,7 +100,7 @@ function Sidebar(props) {
 			</div>
 			<div className="group">
 				<span className="label">I want to see</span>
-				<SelectDrillable
+				<CustomSelect
 					value={props.drilldown}
 					items={props.all_dd}
 					onItemSelect={props.onSetDrilldown}
@@ -118,7 +118,7 @@ function Sidebar(props) {
 
 			<div className="group">
 				<span className="label">colored by</span>
-				<SelectDrillable
+				<CustomSelect
 					value={props.colorBy}
 					items={props.all_cl}
 					onItemSelect={props.onSetColorIndex}

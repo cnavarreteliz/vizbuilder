@@ -1,5 +1,4 @@
 import { Client as MondrianClient } from "mondrian-rest-client";
-import property from "lodash/property";
 import unzipWith from "lodash/unzipWith";
 
 import { Cube } from "helpers/classes";
@@ -77,21 +76,21 @@ export function requestQuery(query) {
 			.then(
 				request => {
 					/**
-				 * flattenDrilldowns inflates the values in the format that comes
-				 * from mondrian, and generates an array where each element is
-				 * an object with pairs key-value as the properties and its values
-				 * for that row.
-				 */
+					 * flattenDrilldowns inflates the values in the format that comes
+					 * from mondrian, and generates an array where each element is
+					 * an object with pairs key-value as the properties and its values
+					 * for that row.
+					 */
 					let values = flattenDrilldowns(
 						request.data.axes,
 						request.data.values
 					);
 
 					/**
-				 * this array is basically the same as req.data.axis_dimensions,
-				 * but adds a members property: an array with all the possible 
-				 * values for that axis.
-				 */
+					 * this array is basically the same as req.data.axis_dimensions,
+					 * but adds a members property: an array with all the possible 
+					 * values for that axis.
+					 */
 					let dimensions = unzipWith(
 						[request.data.axis_dimensions, request.data.axes],
 						(dimension, axes) => ({ ...dimension, members: axes.members })

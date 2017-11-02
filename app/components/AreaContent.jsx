@@ -7,8 +7,6 @@ import ContentDefault from "components/ContentDefault";
 import InputPopover from "components/InputPopover";
 import Toolbar from "components/Toolbar";
 
-import { setChartOptions } from "helpers/visuals";
-
 import "styles/AreaContent.css";
 
 /**
