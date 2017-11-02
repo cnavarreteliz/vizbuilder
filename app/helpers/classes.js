@@ -167,6 +167,7 @@ export class Level {
 	key = makeRandomId();
 
 	constructor(lv) {
+		this.source = lv;
 		this.fullName = lv.fullName;
 		
 		this.level = lv.name || "";

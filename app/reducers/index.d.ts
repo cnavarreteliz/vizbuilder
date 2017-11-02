@@ -43,7 +43,7 @@ interface DataState {
 
 interface MembersState {
 	loading: boolean;
-	[x: string]: Array<MondrianMember>;
+	[x]: Array<MondrianMember>;
 }
 
 interface VisualsState {

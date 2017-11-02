@@ -55,11 +55,13 @@ export function requestCubes(dispatch) {
 export function requestMembers(level) {
 	// TODO: add routine FETCH/SUCCESS/ERROR
 	return function(dispatch) {
-		return client.members(level).then(members => {
+		return client.members(level.source).then(members => {
 			dispatch({
-				type: "DRILLDOWN_MEMBERS_GET",
-				level: level,
-				members: members.map(m => ({ ...m, level: level }))
+				type: "MEMBERS_SET",
+				payload: {
+					level: level,
+					members: members.map(m => ({ ...m, level: level }))
+				}
 			});
 		});
 	};

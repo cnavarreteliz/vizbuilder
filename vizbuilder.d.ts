@@ -33,7 +33,7 @@ interface Filter {
 	key: string;
 	property: Level | Measure;
 	operator: FilterOperatorNumber | FilterOperatorText;
-	value: number | string;
+	value: number | string | Array<any>;
 }
 
 interface Selectable {

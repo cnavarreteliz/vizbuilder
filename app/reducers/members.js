@@ -5,7 +5,7 @@ const initialState = {
 
 /**
  * @param {MembersState} state 
- * @param {ReduxMessage<{level: Level, members: Array<MondrianMember>}>} action 
+ * @param {ReduxMessage<{level: Level, members: Array<MondrianMember>, [x:string]: any}>} action 
  * @returns {MembersState}
  */
 export default function(state = initialState, action) {
@@ -25,5 +25,22 @@ export default function(state = initialState, action) {
 				[level.fullName]: action.payload.members
 			};
 		}
+
+		case "FILTER_UPDATE": {
+			/** @type {Level} */
+			let property = action.payload.property;
+
+			if (property && property.kind == 'level') {
+				return {
+					...state,
+					[property.fullName]: []
+				}
+			}
+
+			return state;
+		}
+
+		default:
+			return state;
 	}
 }

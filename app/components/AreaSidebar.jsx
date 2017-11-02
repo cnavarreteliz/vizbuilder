@@ -5,6 +5,7 @@ import FilterManager from "components/FilterManager";
 import CustomSelect from "components/CustomSelect";
 import SelectChartType from "components/SelectChartType";
 
+import { requestMembers } from "actions/datasource";
 import { generateColorSelector } from "helpers/prepareInput";
 import { getCoherentMeasures } from "helpers/manageData";
 
@@ -12,7 +13,7 @@ import "styles/AreaSidebar.css";
 
 function Panel(props) {
 	const measures = getCoherentMeasures(props.viztype, props.all_ms);
-	
+
 	switch (props.viztype) {
 		case "treemap":
 			return (
@@ -62,19 +63,17 @@ function Panel(props) {
 		case "bar":
 			return (
 				<div>
-					<div>
-						<div className="group">
-							<span className="label">sized by</span>
-							<SelectDrillable
-								value={props.measure}
-								items={measures}
-								onItemSelect={props.onSetMeasure}
-							/>
-						</div>
+					<div className="group">
+						<span className="label">sized by</span>
+						<CustomSelect
+							value={props.measure}
+							items={measures}
+							onItemSelect={props.onSetMeasure}
+						/>
 					</div>
 					<div className="group">
 						<span className="label">grouped by</span>
-						<SelectDrillable
+						<CustomSelect
 							value={props.groupBy}
 							items={props.all_dd}
 							onItemSelect={props.onSetGrouping}
@@ -150,9 +149,8 @@ function Sidebar(props) {
 			</div>
 
 			<FilterManager
+				cube={props.cube}
 				filters={props.filters}
-				measures={props.cube.measures}
-				dimensions={props.cube.dimensions}
 				members={props.members}
 				onAddFilter={props.addFilter}
 				onUpdateFilter={props.updateFilter}
@@ -231,6 +229,10 @@ function mapDispatchToProps(dispatch) {
 		},
 
 		updateFilter(filter) {
+			console.log(filter);
+			if (filter.property && filter.property.kind == "level")
+				dispatch(requestMembers(filter.property));
+
 			dispatch({ type: "FILTER_UPDATE", payload: filter });
 		},
 

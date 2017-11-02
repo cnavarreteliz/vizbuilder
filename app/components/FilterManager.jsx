@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import map from "lodash/map";
 
 import { KIND_NUMBER, KIND_TEXT } from "helpers/operators";
 import { makeRandomId } from "helpers/random";
@@ -10,10 +11,9 @@ import CustomSelect from "components/CustomSelect";
 
 /**
  * @typedef FilterManagerProps
+ * @prop {Cube} cube Current cube
  * @prop {Array<Filter>} filters Current filters list
- * @prop {Array<Measure>} measures Available measures list
- * @prop {Array<Level>} dimensions Available level list
- * @prop {Array<MondrianMember>} members
+ * @prop {MembersState} members Available members
  * @prop {(filter: Filter) => void} onAddFilter
  * @prop {(filter: Filter) => void} onUpdateFilter
  * @prop {(filter: Filter) => void} onRemoveFilter
@@ -24,16 +24,14 @@ import CustomSelect from "components/CustomSelect";
  * @prop {boolean} isOpen Defines if the Dialog is open
  * @prop {Filter} old_filter Saves the old filter state in case of cancelling
  * @prop {number} current Index of the Filter element to edit in the Dialog
- * @prop {Dimension} dimension Saves the dimension to let choose from its drilldowns
  */
 
 /** @augments {React.Component<FilterManagerProps, FilterManagerState>} */
 class FilterManager extends React.Component {
 	static propTypes = {
+		cube: PropTypes.object.isRequired,
 		filters: PropTypes.array.isRequired,
-		measures: PropTypes.array.isRequired,
-		levels: PropTypes.array.isRequired,
-		members: PropTypes.array.isRequired,
+		members: PropTypes.object.isRequired,
 		onAddFilter: PropTypes.func.isRequired,
 		onUpdateFilter: PropTypes.func.isRequired,
 		onRemoveFilter: PropTypes.func.isRequired
@@ -43,7 +41,6 @@ class FilterManager extends React.Component {
 	state = {
 		isOpen: false,
 		old_filter: undefined,
-		dimension: undefined,
 		current: -1
 	};
 
@@ -52,28 +49,26 @@ class FilterManager extends React.Component {
 	}
 
 	render() {
+		let cube = this.props.cube;
+
 		let dialogBody = null;
 
 		let filter = this.currentFilter;
 
 		if (filter) {
-			let parent = filter.property || this.state.dimension;
+			let parent = filter.property;
 
 			let option_handler = [];
 
 			if (parent) {
 				if (parent.kind == "measure") {
 					option_handler = this.renderMeasureOptions.call(this);
-				}
-				else if (parent.kind == "dimension") {
-					option_handler = this.renderDimensionOptions.call(this);
+				} else if (parent.kind == "level") {
+					option_handler = this.renderLevelOptions.call(this);
 				}
 			}
 
-			/** @type {Array<Measure&Level>} */ 
-			let parents = []
-				.concat(this.props.measures, this.props.dimensions)
-				.filter(Boolean);
+			let parents = [].concat(cube.measures, cube.drilldowns);
 
 			dialogBody = (
 				<div className="pt-dialog-body">
@@ -82,7 +77,7 @@ class FilterManager extends React.Component {
 						<CustomSelect
 							value={parent}
 							items={parents}
-							onItemSelect={this.setPrimary}
+							onItemSelect={this.setProperty}
 						/>
 					</div>
 					{option_handler}
@@ -140,19 +135,15 @@ class FilterManager extends React.Component {
 		];
 	}
 
-	renderDimensionOptions() {
-		let dimension = this.state.dimension,
-			members = this.props.members,
-			filter = this.currentFilter;
+	renderLevelOptions() {
+		let filter = this.currentFilter,
+			fullname = filter.property.fullName;
+
+		let members = this.props.members[fullname] || [];
 
 		return [
-			<CustomSelect
-				value={filter.property}
-				items={dimension.drilldowns}
-				onItemSelect={this.setProperty}
-			/>,
-			<select multiple={true} value={filter.operator} onChange={this.setOperator}>
-				{members[dim].map(item => <option value={item.name}>{item.name}</option>)}
+			<select multiple={true} value={filter.operator} onChange={this.setValue}>
+				{members.map(item => <option value={item.name}>{item.name}</option>)}
 			</select>
 		];
 	}
@@ -197,11 +188,6 @@ class FilterManager extends React.Component {
 		});
 	};
 
-	setPrimary = primary => {
-		if (primary.kind == "measure") this.setProperty(primary);
-		else this.setState({ dimension: primary });
-	};
-
 	setProperty = value => {
 		this.props.onUpdateFilter({
 			...this.currentFilter,
@@ -217,9 +203,11 @@ class FilterManager extends React.Component {
 	};
 
 	setValue = evt => {
+		let members = this.props.members;
+
 		this.props.onUpdateFilter({
 			...this.currentFilter,
-			value: parseFloat(evt.target.value)
+			value: map(evt.target.selectedOptions, option => members[option.value]).filter(Boolean)
 		});
 	};
 }
