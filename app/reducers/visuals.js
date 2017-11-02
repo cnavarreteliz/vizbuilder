@@ -36,7 +36,7 @@ export default function(state = initialState, action) {
 		case "VIZ_TYPE_UPDATE": {
 			return {
 				...state,
-				chart: { ...state.chart, type: action.payload, panel: action.panel }
+				chart: { ...state.chart, type: action.payload }
 			};
 		}
 

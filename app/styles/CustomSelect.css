@@ -1,4 +1,4 @@
-.select-drillable {
+.custom-select {
 	&.pt-popover-target {
 		display: block;
 	}

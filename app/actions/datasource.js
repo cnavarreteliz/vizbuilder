@@ -1,4 +1,5 @@
 import { Client as MondrianClient } from "mondrian-rest-client";
+import unzipWith from "lodash/unzipWith";
 
 import { Cube } from "helpers/classes";
 import { pickOne } from "helpers/random";
@@ -17,10 +18,9 @@ export function resetClient(source) {
 
 /**
  * Gets the available cube list from the current database.
- * @param {Function} dispatch Redux dispatch function.
- * @param {number} [attempt] Number of the current load attempt.
+ * @param {(message: ReduxMessage) => void} dispatch Redux dispatch function.
  */
-export function requestCubes(dispatch, attempt) {
+export function requestCubes(dispatch) {
 	dispatch({ type: "CUBES_FETCH" });
 
 	return client
@@ -41,24 +41,32 @@ export function requestCubes(dispatch, attempt) {
 					payload: pickOne(cubes)
 				});
 			},
-			error => {
-				let attempts = (attempt || 0) + 1;
-
-				if (attempts < 3) {
-					return requestCubes(dispatch, attempts);
-				} else {
-					return dispatch({
-						type: "CUBES_FETCH_ERROR",
-						payload: error
-					});
-				}
-			}
-		);
+			error =>
+				dispatch({
+					type: "CUBES_FETCH_ERROR",
+					payload: error
+				})
+		)
+		.then(null, error => {
+			console.error(error.stack);
+		});
 }
 
-export function requestQuery(query, attempt) {
+export function requestMembers(level) {
+	// TODO: add routine FETCH/SUCCESS/ERROR
 	return function(dispatch) {
+		return client.members(level).then(members => {
+			dispatch({
+				type: "DRILLDOWN_MEMBERS_GET",
+				level: level,
+				members: members.map(m => ({ ...m, level: level }))
+			});
+		});
+	};
+}
 
+export function requestQuery(query) {
+	return function(dispatch) {
 		if (!query || !query.drilldowns) return;
 
 		dispatch({ type: "DATA_FETCH" });
@@ -67,30 +75,40 @@ export function requestQuery(query, attempt) {
 			.query(query)
 			.then(
 				request => {
-					let dataset = flattenDrilldowns(
+					/**
+					 * flattenDrilldowns inflates the values in the format that comes
+					 * from mondrian, and generates an array where each element is
+					 * an object with pairs key-value as the properties and its values
+					 * for that row.
+					 */
+					let values = flattenDrilldowns(
 						request.data.axes,
 						request.data.values
 					);
 
+					/**
+					 * this array is basically the same as req.data.axis_dimensions,
+					 * but adds a members property: an array with all the possible 
+					 * values for that axis.
+					 */
+					let dimensions = unzipWith(
+						[request.data.axis_dimensions, request.data.axes],
+						(dimension, axes) => ({ ...dimension, members: axes.members })
+					);
+
 					return dispatch({
 						type: "DATA_FETCH_SUCCESS",
-						payload: dataset
+						payload: { dimensions, values }
 					});
 				},
-				error => {
-					let attempts = (attempt || 0) + 1;
-
-					if (attempts < 3) {
-						return new Promise(function(resolve) {
-							setTimeout(resolve, attempts * 1000);
-						}).then(() => requestQuery(query, attempts)(dispatch));
-					}
-
-					return dispatch({
+				error =>
+					dispatch({
 						type: "DATA_FETCH_ERROR",
 						payload: error
-					});
-				}
-			);
+					})
+			)
+			.then(null, error => {
+				console.error(error.stack);
+			});
 	};
 }

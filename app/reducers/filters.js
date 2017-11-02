@@ -15,11 +15,15 @@ export default function(state = [], action) {
 		}
 
 		case "FILTER_UPDATE": {
-			let id = action.payload.key,
-				index = state.findIndex(item => item.key == id),
-				newFilter = { ...state[index], ...action.payload },
+			let key = action.payload.key,
 				newState = [].concat(state);
-			newState.splice(index, 1, newFilter);
+
+			let index = state.findIndex(item => item.key == key);
+			if (index > -1) {
+				let newFilter = { ...state[index], ...action.payload };
+				newState.splice(index, 1, newFilter);
+			}
+
 			return newState;
 		}
 

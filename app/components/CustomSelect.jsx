@@ -6,9 +6,9 @@ import { Icon } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/labs";
 
 import "@blueprintjs/labs/dist/blueprint-labs.css";
-import "styles/SelectDrillable.css";
+import "styles/CustomSelect.css";
 
-SelectDrillable.defaultProps = {
+CustomSelect.defaultProps = {
 	itemListPredicate(query, items) {
 		query = query.trim();
 		let tester = RegExp(escapeRegExp(query) || ".", "i");
@@ -28,19 +28,22 @@ SelectDrillable.defaultProps = {
 		);
 	},
 	popoverProps: {
-		popoverClassName: "select-drillable pt-minimal"
+		popoverClassName: "custom-select pt-minimal"
 	}
 };
 
 /**
+ * @constructor
+ * @augments {React.Component<CustomSelectProps>}
+ * @static {object} defaultProps
  * @param {object} props 
- * @param {string|Array<any>} props.className 
- * @param {Selectable} props.value
+ * @param {string|Array<any>} [props.className] 
  * @param {Array<Selectable>} props.items
  * @param {(item: Selectable, event?: Event) => void} props.onItemSelect
+ * @param {Selectable} props.value
  */
-function SelectDrillable(props) {
-	props.className = classnames("select-drillable", props.className);
+function CustomSelect(props) {
+	props.className = classnames("custom-select", props.className);
 
 	if (!props.value || !props.value.label)
 		props.value = { key: "", value: null, label: "Select...", disabled: true };
@@ -55,4 +58,4 @@ function SelectDrillable(props) {
 	);
 }
 
-export default SelectDrillable;
+export default CustomSelect;

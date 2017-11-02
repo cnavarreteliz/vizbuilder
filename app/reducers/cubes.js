@@ -6,6 +6,12 @@ const initialState = {
 
 	all: [],
 	current: {
+		key: "",
+		kind: "cube",
+		name: "",
+		_drilldowns: null,
+		_source: null,
+		query: null,
 		measures: [],
 		dimensions: [],
 		stdDimensions: [],
@@ -13,6 +19,7 @@ const initialState = {
 		drilldowns: [],
 		stdDrilldowns: [],
 		timeDrilldowns: [],
+		getLevelHierarchy: () => []
 	}
 };
 

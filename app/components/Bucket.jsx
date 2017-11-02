@@ -1,46 +1,38 @@
 import React from "react";
 import { connect } from "react-redux";
-import Selector from "components/InputSelect";
+import times from 'lodash/times'
+
+import { NumericInput } from "@blueprintjs/core";
 
 import "styles/Bucket.css";
 
 function AgeBucket(props) {
-	const options = Array(25)
-		.fill()
-		.map((e, i) => ({ id: i + 1, value: i + 1 }));
-	const { onBucketUpdate } = props;
-
 	if (props.show) {
 		return (
-			<div className="item">
-				Interval of <Selector
-					value={props.num}
-					options={options}
-					onChange={onBucketUpdate}
-				/>{" "}
-				years
+			<div className="item age-bucket">
+				{"Interval of "}
+				<NumericInput className="pt-inline" value={props.num} min={1} max={25} clampValueOnBlur={true} onValueChange={props.onBucketUpdate} />
+				{" years"}
 			</div>
 		);
-	} else {
-		return <div />;
 	}
+	
+	return <div />;
 }
 
 function mapStateToProps(state) {
-	let aggr = state.aggregators,
-		xor = aggr.drilldowns[0].dimensionType === 0,
-		dim = aggr.drilldowns[xor ? 0 : 1].level;
+	let dim = state.aggregators.drilldowns[0];
 
 	return {
-		show: dim === "Age",
+		show: dim && dim.level === "Age",
 		num: state.visuals.buckets
 	};
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
-		onBucketUpdate(evt) {
-			dispatch({ type: "VIZ_BUCKET_UPDATE", payload: evt.target.value });
+		onBucketUpdate(value) {
+			dispatch({ type: "VIZ_BUCKET_UPDATE", payload: value });
 		}
 	};
 }

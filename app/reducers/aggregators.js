@@ -1,32 +1,23 @@
-import { pickOne } from "helpers/random";
-
+/** @type {AggregatorsState} */
 const initialState = {
 	measures: [],
 	drilldowns: [],
 	groupBy: [],
 	colorBy: [],
-	cuts: []
+	cuts: {}
 };
 
 export default function(state = initialState, action) {
 	switch (action.type) {
 		case "CUBES_SET": {
-			let cube = action.payload,
-				//dims = cube.dimensions[0];
-				dims = pickOne(cube.dimensions.filter(dm => dm.type === 0))
+			/** @type {Cube} */
+			let cube = action.payload;
+
 			return {
 				...initialState,
-				drilldowns: dims.drilldowns.slice(0, 1),
+				drilldowns: cube.stdDrilldowns.slice(0, 1),
 				measures: cube.measures.slice(0, 1)
 			};
-		}
-
-		case "DRILLDOWN_ADD": {
-			let dd = state.drilldowns.find(item => item === action.payload)
-				? state.drilldowns
-				: [].concat(state.drilldowns, action.payload);
-			//dd.sort((a, b) => a.fullName.localeCompare(b.fullName));
-			return { ...state, drilldowns: dd };
 		}
 
 		case "DRILLDOWN_SET": {
@@ -39,11 +30,6 @@ export default function(state = initialState, action) {
 			return dd ? { ...state, drilldowns: [dd] } : state;
 		}
 
-		case "DRILLDOWN_DELETE": {
-			let dd = state.drilldowns.filter(item => item !== action.payload);
-			return { ...state, drilldowns: dd };
-		}
-
 		case "GROUPBY_SET": {
 			return { ...state, groupBy: [].concat(action.payload) };
 		}
@@ -52,12 +38,6 @@ export default function(state = initialState, action) {
 			let newColor = [];
 			if (action.payload) newColor = [].concat(action.payload);
 			return { ...state, colorBy: newColor };
-		}
-
-		case "MEASURE_ADD": {
-			let ms = [].concat(state.measures, action.payload);
-			ms.sort((a, b) => a.name.localeCompare(b.name));
-			return { ...state, measures: ms };
 		}
 
 		case "MEASURE_SET": {
@@ -69,37 +49,21 @@ export default function(state = initialState, action) {
 			return ms ? { ...state, measures: [action.payload] } : state;
 		}
 
-		case "MEASURE_DELETE": {
-			let ms = state.measures.filter(item => item !== action.payload);
-			return { ...state, measures: ms };
-		}
-
-		case "CUT_ADD": {
-			let ct = { ...state.cuts };
-			let name = action.payload.fullName;
-
-			ct[name] = {
-				items: [],
-				dim: action.payload
+		case "CUT_SET": {
+			/** @type {Level} */
+			let level = action.payload.level;
+			
+			return {
+				...state,
+				cuts: {
+					...state.cuts,
+					// using fullName you make sure there's no repeated property
+					[level.fullName]: {
+						level: level,
+						cutMembers: action.payload.members
+					}
+				}
 			};
-
-			return { ...state, cuts: ct };
-		}
-
-		case "CUT_EDIT": {
-			let ct = { ...state.cuts },
-				cut = { ...ct[action.cut] };
-
-			cut.items = action.payload;
-			ct[action.cut] = cut;
-
-			return { ...state, cuts: ct };
-		}
-
-		case "CUT_DELETE": {
-			let ct = { ...state.cuts };
-			delete ct[action.payload];
-			return { ...state, cuts: ct };
 		}
 
 		default:

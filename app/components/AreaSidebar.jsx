@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import FilterManager from "components/FilterManager";
-import SelectDrillable from "components/SelectDrillable";
+import CustomSelect from "components/CustomSelect";
 import SelectChartType from "components/SelectChartType";
 
 import { generateColorSelector } from "helpers/prepareInput";
@@ -12,14 +12,14 @@ import "styles/AreaSidebar.css";
 
 function Panel(props) {
 	const measures = getCoherentMeasures(props.viztype, props.all_ms);
-
+	
 	switch (props.viztype) {
 		case "treemap":
 			return (
 				<div>
 					<div className="group">
 						<span className="label">sized by</span>
-						<SelectDrillable
+						<CustomSelect
 							value={props.measure}
 							items={measures}
 							onItemSelect={props.onSetMeasure}
@@ -27,7 +27,7 @@ function Panel(props) {
 					</div>
 					<div className="group">
 						<span className="label">grouped by</span>
-						<SelectDrillable
+						<CustomSelect
 							value={props.groupBy}
 							items={props.all_dd}
 							onItemSelect={props.onSetGrouping}
@@ -35,7 +35,7 @@ function Panel(props) {
 					</div>
 					<div className="group">
 						<span className="label">depth by</span>
-						<SelectDrillable
+						<CustomSelect
 							value={props.groupBy}
 							items={props.all_dd}
 							onItemSelect={props.onSetGrouping}
@@ -50,7 +50,7 @@ function Panel(props) {
 				<div>
 					<div className="group">
 						<span className="label">sized by</span>
-						<SelectDrillable
+						<CustomSelect
 							value={props.measure}
 							items={measures}
 							onItemSelect={props.onSetMeasure}
@@ -88,7 +88,7 @@ function Panel(props) {
 				<div>
 					<div className="group">
 						<span className="label">X Axis</span>
-						<SelectDrillable
+						<CustomSelect
 							value={props.measure}
 							items={measures}
 							onItemSelect={props.onSetMeasure}
@@ -96,7 +96,7 @@ function Panel(props) {
 					</div>
 					<div className="group">
 						<span className="label">Y Axis</span>
-						<SelectDrillable
+						<CustomSelect
 							value={props.measure}
 							items={measures}
 							onItemSelect={props.onSetMeasure}
@@ -116,7 +116,7 @@ function Sidebar(props) {
 		<div className="side-panel">
 			<div className="group">
 				<span className="label">Dataset</span>
-				<SelectDrillable
+				<CustomSelect
 					value={props.cube}
 					items={props.all_cb}
 					onItemSelect={props.onSetCube}
@@ -124,7 +124,7 @@ function Sidebar(props) {
 			</div>
 			<div className="group">
 				<span className="label">I want to see</span>
-				<SelectDrillable
+				<CustomSelect
 					value={props.drilldown}
 					items={props.all_dd}
 					onItemSelect={props.onSetDrilldown}
@@ -142,7 +142,7 @@ function Sidebar(props) {
 
 			<div className="group">
 				<span className="label">colored by</span>
-				<SelectDrillable
+				<CustomSelect
 					value={props.colorBy}
 					items={props.all_cl}
 					onItemSelect={props.onSetColorIndex}
@@ -151,7 +151,9 @@ function Sidebar(props) {
 
 			<FilterManager
 				filters={props.filters}
-				measures={props.all_ms}
+				measures={props.cube.measures}
+				dimensions={props.cube.dimensions}
+				members={props.members}
 				onAddFilter={props.addFilter}
 				onUpdateFilter={props.updateFilter}
 				onRemoveFilter={props.removeFilter}
@@ -170,14 +172,8 @@ function mapStateToProps(state) {
 		currentGb = state.aggregators.groupBy[0] || {},
 		currentCl = state.aggregators.colorBy[0] || {};
 
-	console.log(state.aggregators.drilldowns);
-
 	let colorMeasureFilter = RegExp("growth|average|median|percent", "i"),
 		treemapMeasureFilter = RegExp("average|median", "i");
-
-	let all_ms = currentCb.measures;
-	//if (state.visuals.chart.type === "treemap")
-	//all_ms = all_ms.filter(ms => !treemapMeasureFilter.test(ms.name));
 
 	let all_cl = generateColorSelector(currentCb.measures);
 	currentCl = all_cl.find(item => item.measure == currentCl) || all_cl[0];
@@ -191,12 +187,12 @@ function mapStateToProps(state) {
 		colorBy: currentCl,
 
 		filters: state.filters,
+		members: state.members,
 
 		all_cb: state.cubes.all,
 		all_dd: currentCb.stdDrilldowns,
-		all_ms,
-		all_cl: generateColorSelector(currentCb.measures),
-		isOpen: true
+		all_ms: currentCb.measures,
+		all_cl: generateColorSelector(currentCb.measures)
 	};
 }
 
