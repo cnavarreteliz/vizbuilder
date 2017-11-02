@@ -17,13 +17,13 @@ class PanelInfo extends Component {
 				<p className="subtitle">
 					Total {props.axis.y}
 				</p>
-				<p className="content">
+				<div className="content">
 					<h4 className="title">Top {pluralize(props.axis.x)}</h4>
                     <p>In {info.maxYear}, Top-3 {pluralize(props.axis.x)} by {props.axis.y} are:</p>
 					{this.prepareTopCategories(info.data, props.axis.x, info.maxYear).map((item, key) => {
 						return <div className="item-ranking">{key + 1}. {item}</div>;
 					})}
-				</p>
+				</div>
 			</div>
 		);
 	}
