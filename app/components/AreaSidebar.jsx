@@ -127,7 +127,9 @@ function Sidebar(props) {
 
 			<FilterManager
 				filters={props.filters}
-				measures={props.all_ms}
+				measures={props.cube.measures}
+				dimensions={props.cube.dimensions}
+				members={props.members}
 				onAddFilter={props.addFilter}
 				onUpdateFilter={props.updateFilter}
 				onRemoveFilter={props.removeFilter}
@@ -146,14 +148,8 @@ function mapStateToProps(state) {
 		currentGb = state.aggregators.groupBy[0] || {},
 		currentCl = state.aggregators.colorBy[0] || {};
 
-	console.log(state.aggregators.drilldowns);
-
 	let colorMeasureFilter = RegExp("growth|average|median|percent", "i"),
 		treemapMeasureFilter = RegExp("average|median", "i");
-
-	let all_ms = currentCb.measures;
-	//if (state.visuals.chart.type === "treemap")
-	//all_ms = all_ms.filter(ms => !treemapMeasureFilter.test(ms.name));
 
 	let all_cl = generateColorSelector(currentCb.measures);
 	currentCl = all_cl.find(item => item.measure == currentCl) || all_cl[0];
@@ -167,12 +163,12 @@ function mapStateToProps(state) {
 		colorBy: currentCl,
 
 		filters: state.filters,
+		members: state.members,
 
 		all_cb: state.cubes.all,
 		all_dd: currentCb.stdDrilldowns,
-		all_ms,
-		all_cl: generateColorSelector(currentCb.measures),
-		isOpen: true
+		all_ms: currentCb.measures,
+		all_cl: generateColorSelector(currentCb.measures)
 	};
 }
 

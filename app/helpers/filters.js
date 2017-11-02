@@ -11,22 +11,27 @@ import { regexIncludes } from "helpers/functions";
  * @returns {Array<T>}
  */
 export function applyFilters(items, filters) {
+	if (!filters.length) return items;
+
 	let applied_items = filters.map(function(filter) {
 		return items.filter(function(item) {
 			let operator = filter.operator,
-				property = item[filter.property],
+				property = filter.property,
 				test = false;
 
-			if (operator & OPERATOR.EQUAL)
-				test = test || property == filter.value;
+			let value = item[property.name];
+			if (!value) return test;
+
+			if (operator & OPERATOR.EQUAL) 
+				test = test || value == filter.value;
 
 			if (operator & OPERATOR.HIGHER) 
-				test = test || property > filter.value;
+				test = test || value > filter.value;
 			else if (operator & OPERATOR.LOWER)
-				test = test || property < filter.value;
+				test = test || value < filter.value;
 
 			if (operator & OPERATOR.CONTAINS) {
-				test = test || regexIncludes(property, filter.value);
+				test = test || regexIncludes(value, filter.value);
 			}
 
 			return test;

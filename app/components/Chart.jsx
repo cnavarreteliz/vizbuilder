@@ -188,14 +188,35 @@ function measureType(ms) {
 	}
 }
 
-function mapStateToProps(state) {
+const fakeSelectable = {
+	name: "",
+	level: ""
+};
 
-	let props = setChartOptions(state.aggregators, state.visuals.axis.y)
-	if (state.cubes.current.timeDimensions.length > 0) {
-		props.year = state.cubes.current.timeDimensions[0].name;
-	}
+/** @param {VizbuilderState} state */
+function mapStateToProps(state) {
+	let aggr = state.aggregators;
+
+	let colorBy = aggr.colorBy[0] || fakeSelectable,
+		groupBy = aggr.groupBy[0] || fakeSelectable;
+
+	let props = {
+		x: state.data.axis.x.name,
+		y: state.data.axis.y.name,
+		type: "",
+		year: state.data.axis.time,
+		colorScale: colorBy.name,
+		groupBy: groupBy.level
+	};
+
+	let measure = aggr.measures.find(ms => ms.name === props.y);
+	if (measure) props.type = measure.type;
+
+	let axis = state.data.axis;
 
 	return {
+		axis_x: axis.x.name || '',
+		axis_y: axis.y.name || '',
 		chart: state.visuals.chart,
 		filters: state.data.filters,
 		data: state.data.values,

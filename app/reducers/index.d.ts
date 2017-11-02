@@ -1,15 +1,17 @@
 interface ReduxMessage<T> {
 	type: string;
-	payload: T;
+	payload?: T;
 	[x: string]: any;
 }
 
 interface AggregatorsState {
 	measures: Array<Measure>;
-	drilldowns: Array<Drillable>;
-	groupBy: Array<Drillable>;
+	drilldowns: Array<Level>;
+	cuts: {
+		[fullName: string]: Cut
+	};
+	groupBy: Array<Level>;
 	colorBy: Array<Measure>;
-	cuts: Array<any>;
 }
 
 interface CubesState {
@@ -26,13 +28,22 @@ interface DataState {
 	success: null | boolean;
 	error: null | Error;
 
-	values: Array<object>;
-	axes: Array<any>;
+	values: Array<{ [x: string]: string }>;
+	axis: {
+		x: any;
+		y: any;
+		time: any;
+	};
 	dimensions: Array<any>;
 	filters: {
 		type: string;
 		options: Array;
 	};
+}
+
+interface MembersState {
+	loading: boolean;
+	[x: string]: Array<MondrianMember>;
 }
 
 interface VisualsState {
@@ -60,5 +71,6 @@ interface VizbuilderState {
 	cubes: CubesState;
 	data: DataState;
 	filters: Array<Filter>;
+	members: MembersState;
 	visuals: VisualsState;
 }

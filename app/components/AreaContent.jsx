@@ -31,37 +31,31 @@ import "styles/AreaContent.css";
  * @param {AreaContentState & AreaContentDispatch} props
  * @returns {JSX.Element}
  */
-
-function AreaHeader(props) {
-	return (
-		<header className="header">
-			<Toolbar data={props.data} cube={props.cube.name} axis={props.axis} />
-			<p className="title">
-				{props.cube.name + " by "}
-				<InputPopover
-					value={props.axis.x}
-					options={props.cube.getLevelHierarchy()}
-					onClick={props.onDrilldownChange}
-				/>
-			</p>
-			<p className="subtitle">
-				{"SIZED BY "}
-				<InputPopover
-					value={props.axis.y}
-					options={props.cube.measures}
-					onClick={props.onMeasureChange}
-				/>
-			</p>
-		</header>
-	);
-}
 function AreaContent(props) {
 	if (!props.axis.x || !props.axis.y) return <ContentDefault />;
 
 	return (
 		<div className="main-panel">
-			{AreaHeader(props)}
-			<Chart />
+			<header className="header">
+				<Toolbar data={props.data} cube={props.cube.name} axis={props.axis} />
+				<p className="title">
+					{props.cube.name + " by "}
+					<InputPopover
+						value={props.axis.x}
+						options={props.cube.getLevelHierarchy()}
+						onClick={props.onDrilldownChange}
+					/>
+				</p>
+				<p className="subtitle">
+					{"SIZED BY "}
+					<InputPopover
+						value={props.axis.y}
+						options={props.cube.measures}
+						onClick={props.onMeasureChange}
+					/>
+				</p>
+			</header>
+			<Chart data={props.data} />
 			<div className="chartappearance-wrapper">
 				<AgeBucket />
 			</div>
@@ -74,8 +68,15 @@ function AreaContent(props) {
  * @returns {AreaContentState} 
  */
 function mapStateToProps(state) {
+	let dd = state.aggregators.drilldowns[0] || { name: "" },
+		ms = state.aggregators.measures[0] || { name: "" };
+
 	return {
-		axis: setChartOptions(state.aggregators, state.visuals.axis.y),
+		axis: {
+			...state.visuals.axis,
+			x: dd.name,
+			y: ms.name
+		},
 		cube: state.cubes.current,
 		data: state.data.values
 	};

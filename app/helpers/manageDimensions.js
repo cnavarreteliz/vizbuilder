@@ -1,5 +1,6 @@
 import includes from "lodash/includes";
 import zip from "lodash/zip";
+import differenceBy from "lodash/differenceBy";
 
 export function simplifyDimHierarchy(root) {
 	return root.map(item => {
@@ -77,4 +78,18 @@ export function flattenDrilldowns(levels, values) {
 				return all;
 			}, {})
 		];
+}
+
+/**
+ * Returns the first Level from *available* that doesn't belongs to a hierarchy
+ * from *excluded*.
+ * @param {Cube} cube 
+ * @param {Array<Level>} excluded 
+ * @returns {Level}
+ */
+export function pickUnconflictingTimeDrilldown(cube, excluded) {
+	let available = cube.timeDimensions.reduce(function(all, dimension) {
+		return all.concat(dimension.drilldowns);
+	}, []);
+	return differenceBy(available, excluded, "hierarchy")[0];
 }
