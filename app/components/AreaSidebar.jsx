@@ -15,6 +15,7 @@ function Panel(props) {
 	const measures = getCoherentMeasures(props.viztype, props.all_ms);
 
 	switch (props.viztype) {
+		case "table":
 		case "treemap":
 			return (
 				<div>

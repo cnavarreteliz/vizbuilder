@@ -6,6 +6,7 @@ import { Tooltip2, Popover2 } from "@blueprintjs/labs";
 import { Button, Position, PopoverInteractionKind } from "@blueprintjs/core";
 
 import Tooltip from "components/Tooltip";
+import CustomTable from "components/CustomTable";
 
 import { COLORS_RAINFALL, COLORS_DISCRETE } from "helpers/colors";
 import { CHARTCONFIG, LEGENDCONFIG, yearControls } from "helpers/d3plus";
@@ -139,11 +140,15 @@ function Chart(props) {
 				y: props.axis_y,
 				x: "Year"
 			};
-			return <LinePlot config={AREACONFIG} />;
+			return <LinePlot config={PLOTCONFIG} />;
 		}
 
 		case "bar": {
 			return <BarChart config={PLOTCONFIG} />;
+		}
+
+		case "table": {
+			return <CustomTable data={data} />;
 		}
 
 		case "stacked": {
