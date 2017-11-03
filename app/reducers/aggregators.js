@@ -49,6 +49,12 @@ export default function(state = initialState, action) {
 			return ms ? { ...state, measures: [action.payload] } : state;
 		}
 
+		case "MEASURE_ADD": {
+			let ms = [].concat(state.measures, action.payload)
+			console.log(ms)
+			return { ...state, measures: ms };
+		}
+
 		case "CUT_SET": {
 			/** @type {Level} */
 			let level = action.payload.level;

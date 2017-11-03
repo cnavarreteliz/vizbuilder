@@ -91,6 +91,8 @@ function mapStateToProps(state) {
 		state.aggregators.groupBy
 	);
 
+	console.log(measures)
+
 	let time_dd = pickUnconflictingTimeDrilldown(cube, drilldowns);
 	time_dd && drilldowns.push(time_dd);
 
