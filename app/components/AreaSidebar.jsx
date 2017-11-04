@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import FilterManager from "components/FilterManager";
 import CustomSelect from "components/CustomSelect";
 import SelectChartType from "components/SelectChartType";
+import InputTable from "components/InputTable";
 
 import { requestMembers } from "actions/datasource";
 import { generateColorSelector } from "helpers/prepareInput";
@@ -15,6 +16,26 @@ function Panel(props) {
 	const measures = getCoherentMeasures(props.viztype, props.all_ms);
 
 	switch (props.viztype) {
+		case "table":
+			return (
+				<div>
+					<div className="group">
+						<span className="label">sized by</span>
+						<CustomSelect
+							value={props.measure}
+							items={measures}
+							onItemSelect={props.onSetMeasure}
+						/>
+					</div>
+					<div className="group">
+						<span className="label">cols</span>
+						<InputTable 
+							options={measures}
+							onClick={props.onMeasureChange}
+						/>
+					</div>
+				</div>
+			);
 		case "treemap":
 			return (
 				<div>
@@ -42,6 +63,14 @@ function Panel(props) {
 							onItemSelect={props.onSetGrouping}
 						/>
 					</div>
+					<div className="group">
+						<span className="label">colored by</span>
+						<CustomSelect
+							value={props.colorBy}
+							items={props.all_cl}
+							onItemSelect={props.onSetColorIndex}
+						/>
+					</div>
 				</div>
 			);
 
@@ -57,6 +86,14 @@ function Panel(props) {
 							value={props.measure}
 							items={measures}
 							onItemSelect={props.onSetMeasure}
+						/>
+					</div>
+					<div className="group">
+						<span className="label">colored by</span>
+						<CustomSelect
+							value={props.colorBy}
+							items={props.all_cl}
+							onItemSelect={props.onSetColorIndex}
 						/>
 					</div>
 				</div>
@@ -81,6 +118,14 @@ function Panel(props) {
 							onItemSelect={props.onSetGrouping}
 						/>
 					</div>
+					<div className="group">
+						<span className="label">colored by</span>
+						<CustomSelect
+							value={props.colorBy}
+							items={props.all_cl}
+							onItemSelect={props.onSetColorIndex}
+						/>
+					</div>
 				</div>
 			);
 
@@ -101,6 +146,14 @@ function Panel(props) {
 							value={props.measure}
 							items={measures}
 							onItemSelect={props.onSetMeasure}
+						/>
+					</div>
+					<div className="group">
+						<span className="label">colored by</span>
+						<CustomSelect
+							value={props.colorBy}
+							items={props.all_cl}
+							onItemSelect={props.onSetColorIndex}
 						/>
 					</div>
 				</div>
@@ -140,15 +193,6 @@ function Sidebar(props) {
 			</div>
 
 			{Panel(props)}
-
-			<div className="group">
-				<span className="label">colored by</span>
-				<CustomSelect
-					value={props.colorBy}
-					items={props.all_cl}
-					onItemSelect={props.onSetColorIndex}
-				/>
-			</div>
 
 			<FilterManager
 				cube={props.cube}
@@ -225,13 +269,16 @@ function mapDispatchToProps(dispatch) {
 				growth: item.growthType
 			});
 		},
+		
+		onMeasureChange(measure) {
+			dispatch({ type: "MEASURE_ADD", payload: measure });
+		},
 
 		addFilter(filter) {
 			dispatch({ type: "FILTER_ADD", payload: filter });
 		},
 
 		updateFilter(filter) {
-			console.log(filter);
 			if (filter.property && filter.property.kind == "level")
 				dispatch(requestMembers(filter.property));
 

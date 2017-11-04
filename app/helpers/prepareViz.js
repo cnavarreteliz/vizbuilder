@@ -14,20 +14,18 @@ export function calculateGrowth(data, key = "value") {
 	}, Object.create(null));
 
 	// Get growth by dimension
-	const obj = {};
-	Object.keys(result).map(e => {
-		obj[e] = calculateYearlyGrowth(result[e]);
-	});
-	console.log(obj);
-	return obj;
+	return Object.keys(result).reduce((obj, res) => {
+		obj[res] = calculateYearlyGrowth(result[res]);
+		return obj;
+	}, {});
 }
+
 /**
  * Calculate Yearly Growth
  * @param {Array} data
  * @param {Boolean} peryear 
  * @param {Boolean} debugMode
  */
-
 function calculateYearlyGrowth(data, peryear = false, debugMode = false) {
 	// Sort data by year
 	data = data.sort((a, b) => {
@@ -35,8 +33,8 @@ function calculateYearlyGrowth(data, peryear = false, debugMode = false) {
 	});
 	const tensor = data.map(e => e.value);
 
-	if(debugMode) {
-		debug(data.map(e => e.year))
+	if (debugMode) {
+		debug(data.map(e => e.year));
 	}
 
 	const period = tensor.slice(1);
@@ -55,6 +53,7 @@ function calculateYearlyGrowth(data, peryear = false, debugMode = false) {
 		}, 0) / growth_perYear.length
 	);
 }
+
 /**
  * Verify if data is 
  */
@@ -63,10 +62,10 @@ function debug(tensor) {
 	const lastperiod = tensor.slice(0, -1);
 
 	const interval = period.map((item, key) => {
-		return item - lastperiod[key]
+		return item - lastperiod[key];
 	});
 
-	alert(Array.from(new Set(interval)).length)
+	alert(Array.from(new Set(interval)).length);
 }
 
 function calculateCategoryGrowth(obj) {
@@ -102,5 +101,3 @@ function calculateCategoryGrowth(obj) {
 
 	return value;
 }
-
-

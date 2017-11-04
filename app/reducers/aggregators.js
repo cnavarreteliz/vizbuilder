@@ -40,6 +40,11 @@ export default function(state = initialState, action) {
 			return { ...state, colorBy: newColor };
 		}
 
+		case "MEASURE_ADD": {
+			let ms = [].concat(state.measures, action.payload)
+			return { ...state, measures: ms };
+		}
+
 		case "MEASURE_SET": {
 			// payload can be the measure object or its name
 			let ms =
