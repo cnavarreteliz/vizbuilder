@@ -1,27 +1,3 @@
-import { flattenDimHierarchy } from "helpers/manageDimensions";
-
-export function prepareSupercube(cubes) {
-	const output = cubes.reduce((all, cube) => {
-		flattenDimHierarchy(cube.dimensions).map(dm => {
-			let item = {
-				label: dm.dimension,
-				...dm,
-				measures: cube.measures
-			};
-			all.push(item);
-		});
-		return all;
-	}, []);
-
-	const result = output.reduce((r, a) => {
-		r[a.label] = r[a.label] || [];
-		r[a.label].push(a);
-		return r;
-	}, Object.create(null));
-
-	return result;
-}
-
 export function generateColorSelector(measures) {
 	return [].concat(
 		{ name: "None", growthType: 0, measure: null },
