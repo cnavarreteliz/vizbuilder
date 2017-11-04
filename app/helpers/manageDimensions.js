@@ -89,7 +89,7 @@ export function flattenDrilldowns(levels, values) {
  */
 export function pickUnconflictingTimeDrilldown(cube, excluded) {
 	let available = cube.timeDimensions.reduce(function(all, dimension) {
-		return all.concat(dimension.drilldowns);
+		return all.concat(dimension.levels);
 	}, []);
 	return differenceBy(available, excluded, "hierarchy")[0];
 }

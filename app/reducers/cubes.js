@@ -6,19 +6,22 @@ const initialState = {
 
 	all: [],
 	current: {
+		source: null,
 		key: "",
 		kind: "cube",
+		_dimensions: [],
+		_levels: [],
+		_measures: [],
+		fullName: "",
 		name: "",
-		_drilldowns: null,
-		_source: null,
 		query: null,
 		measures: [],
 		dimensions: [],
 		stdDimensions: [],
 		timeDimensions: [],
-		drilldowns: [],
-		stdDrilldowns: [],
-		timeDrilldowns: [],
+		levels: [],
+		stdLevels: [],
+		timeLevels: [],
 		getLevelHierarchy: () => []
 	}
 };
@@ -59,8 +62,7 @@ export default function(state = initialState, action) {
 		case "CUBES_SET": {
 			// action.payload should be a Cube or a cube name
 			let cubeName = action.payload;
-			if ("string" !== typeof cubeName)
-				cubeName = cubeName.name;
+			if ("string" !== typeof cubeName) cubeName = cubeName.name;
 
 			let newCube = state.all.find(cube => cube.name === cubeName);
 			return newCube ? { ...state, current: newCube } : state;

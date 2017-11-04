@@ -174,7 +174,7 @@ function measureType(ms) {
 
 const fakeSelectable = {
 	name: "",
-	level: ""
+	levelName: ""
 };
 
 /** @param {VizbuilderState} state */
@@ -190,7 +190,7 @@ function mapStateToProps(state) {
 		type: "",
 		year: state.data.axis.time,
 		colorScale: colorBy.name,
-		groupBy: groupBy.level
+		groupBy: groupBy.levelName
 	};
 
 	let measure = aggr.measures.find(ms => ms.name === props.y);

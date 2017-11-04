@@ -1,4 +1,4 @@
-import { Client as MondrianClient } from "mondrian-rest-client";
+import { Client as MondrianRestClient } from "mondrian-rest-client";
 import unzipWith from "lodash/unzipWith";
 
 import { Cube } from "helpers/classes";
@@ -13,7 +13,7 @@ var client;
  * @param {string} source URL to the new mondrian database server.
  */
 export function resetClient(source) {
-	client = new MondrianClient(source);
+	client = new MondrianRestClient(source);
 }
 
 /**
@@ -67,6 +67,10 @@ export function requestMembers(level) {
 	};
 }
 
+/**
+ * Generates a Query object to send to the Mondrian Server.
+ * @param {MondrianQuery} query 
+ */
 export function requestQuery(query) {
 	return function(dispatch) {
 		if (!query || !query.drilldowns) return;

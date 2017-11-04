@@ -25,7 +25,7 @@ class FilterItem extends React.Component {
 		return (
 			<div className="filter-item">
 				<span className="filter-content">
-					<span className="filter-prop">{filter.property ? filter.property.label : ''}</span>
+					<span className="filter-prop">{filter.property ? filter.property.name : ''}</span>
 					<span className="filter-oper">{filter.operator}</span>
 					<span className="filter-value">{filter.value}</span>
 				</span>

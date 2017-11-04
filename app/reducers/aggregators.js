@@ -15,7 +15,7 @@ export default function(state = initialState, action) {
 
 			return {
 				...initialState,
-				drilldowns: cube.stdDrilldowns.slice(0, 1),
+				drilldowns: cube.stdLevels.slice(0, 1),
 				measures: cube.measures.slice(0, 1)
 			};
 		}

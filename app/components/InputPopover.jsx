@@ -41,7 +41,7 @@ function InputPopover(props) {
 
 function createMenuItem(item, onClick) {
 	let children = null,
-		attr = { key: item.key, text: item.label };
+		attr = { key: item.key, text: item.name };
 
 	if (Array.isArray(item.value)) {
 		children = item.value.map(createMenuItem);

@@ -68,7 +68,7 @@ class FilterManager extends React.Component {
 				}
 			}
 
-			let parents = [].concat(cube.measures, cube.drilldowns);
+			let parents = [].concat(cube.measures, cube.levels);
 
 			dialogBody = (
 				<div className="pt-dialog-body">
