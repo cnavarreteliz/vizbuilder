@@ -11,9 +11,11 @@ class InputTable extends React.Component {
 			<div className="group filters-wrapper">
 				<Popover
 					target={
+						<div>
 						<Button className="pt-fill" iconName="insert">
 							Add measure
 						</Button>
+						</div>
 					}
 					content={
 						<Menu>
@@ -30,7 +32,7 @@ class InputTable extends React.Component {
 
 	createMenuItem(item, onClick) {
 		let children = null,
-			attr = { key: item.key, text: item.label };
+			attr = { key: item.key, text: item.name };
 
 		if (Array.isArray(item.value)) {
 			children = item.value.map(createMenuItem);

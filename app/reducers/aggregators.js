@@ -41,8 +41,15 @@ export default function(state = initialState, action) {
 		}
 
 		case "MEASURE_ADD": {
-			let ms = [].concat(state.measures, action.payload)
+			let ms = [].concat(state.measures, action.payload);
 			return { ...state, measures: ms };
+		}
+
+		case "MEASURE_REMOVE": {
+			return {
+				...state,
+				measures: state.measures.filter(ms => ms !== action.payload)
+			};
 		}
 
 		case "MEASURE_SET": {
@@ -54,15 +61,10 @@ export default function(state = initialState, action) {
 			return ms ? { ...state, measures: [action.payload] } : state;
 		}
 
-		case "MEASURE_ADD": {
-			let ms = [].concat(state.measures, action.payload)
-			return { ...state, measures: ms };
-		}
-
 		case "CUT_SET": {
 			/** @type {Level} */
 			let level = action.payload.level;
-			
+
 			return {
 				...state,
 				cuts: {

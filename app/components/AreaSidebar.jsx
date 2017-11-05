@@ -10,6 +10,8 @@ import { requestMembers } from "actions/datasource";
 import { generateColorSelector } from "helpers/prepareInput";
 import { getCoherentMeasures } from "helpers/manageData";
 
+import { Tag, Intent } from "@blueprintjs/core";
+
 import "styles/AreaSidebar.css";
 
 function Panel(props) {
@@ -19,21 +21,18 @@ function Panel(props) {
 		case "table":
 			return (
 				<div>
-					<div className="group">
-						<span className="label">sized by</span>
-						<CustomSelect
-							value={props.measure}
-							items={measures}
-							onItemSelect={props.onSetMeasure}
-						/>
-					</div>
-					<div className="group">
-						<span className="label">cols</span>
-						<InputTable 
-							options={measures}
-							onClick={props.onMeasureChange}
-						/>
-					</div>
+					{props.measures.map(ms => {
+						return (
+							<Tag
+								intent={Intent.PRIMARY}
+								onRemove={evt => props.removeTag(ms)}
+							>
+								{ms.name}
+							</Tag>
+						);
+					})}
+
+					<InputTable options={measures} onClick={props.onMeasureChange} />
 				</div>
 			);
 		case "treemap":
@@ -230,6 +229,8 @@ function mapStateToProps(state) {
 		groupBy: currentGb,
 		colorBy: currentCl,
 
+		measures: state.aggregators.measures,
+
 		filters: state.filters,
 		members: state.members,
 
@@ -269,7 +270,7 @@ function mapDispatchToProps(dispatch) {
 				growth: item.growthType
 			});
 		},
-		
+
 		onMeasureChange(measure) {
 			dispatch({ type: "MEASURE_ADD", payload: measure });
 		},
@@ -287,6 +288,10 @@ function mapDispatchToProps(dispatch) {
 
 		removeFilter(filter) {
 			dispatch({ type: "FILTER_DELETE", payload: filter });
+		},
+
+		removeTag(item) {
+			dispatch({ type: "MEASURE_REMOVE", payload: item });
 		}
 	};
 }

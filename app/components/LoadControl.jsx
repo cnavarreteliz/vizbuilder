@@ -33,10 +33,14 @@ class LoadControl extends React.Component {
 	/** @param {LoadControlProps} prev */
 	componentDidUpdate(prev) {
 		const { cube, drilldowns, measures } = this.props;
+		console.log(prev.measures)
+		console.log(measures)
 
 		if (
-			differenceBy(prev.drilldowns, drilldowns, 'key').length ||
-			differenceBy(prev.measures, measures, 'key').length ||
+			//differenceBy(prev.drilldowns, drilldowns, 'key').length ||
+			//differenceBy(prev.measures, measures, 'key').length ||
+			!isEqual(prev.drilldowns, drilldowns) ||
+			!isEqual(prev.measures, measures) ||
 			!isEqual(prev.cube, cube)
 		) {
 			let query = buildQuery(cube, drilldowns, measures, []);
