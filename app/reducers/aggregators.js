@@ -51,7 +51,6 @@ export default function(state = initialState, action) {
 
 		case "MEASURE_ADD": {
 			let ms = [].concat(state.measures, action.payload)
-			console.log(ms)
 			return { ...state, measures: ms };
 		}
 
