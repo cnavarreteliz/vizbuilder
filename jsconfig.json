@@ -1,9 +1,11 @@
 {
 	"compilerOptions": {
+		"allowSyntheticDefaultImports": true,
 		"baseUrl": "./",
 		"checkJs": true,
 		"jsx": "react",
 		"paths": {
+			"@blueprintjs/core": ["node_modules/@blueprintjs/core"],
 			"actions/*": ["app/actions/*"],
 			"assets/*": ["app/assets/*"],
 			"components/*": ["app/components/*"],

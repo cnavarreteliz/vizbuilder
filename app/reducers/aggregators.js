@@ -15,7 +15,7 @@ export default function(state = initialState, action) {
 
 			return {
 				...initialState,
-				drilldowns: cube.stdDrilldowns.slice(0, 1),
+				drilldowns: cube.stdLevels.slice(0, 1),
 				measures: cube.measures.slice(0, 1)
 			};
 		}
@@ -38,6 +38,11 @@ export default function(state = initialState, action) {
 			let newColor = [];
 			if (action.payload) newColor = [].concat(action.payload);
 			return { ...state, colorBy: newColor };
+		}
+
+		case "MEASURE_ADD": {
+			let ms = [].concat(state.measures, action.payload)
+			return { ...state, measures: ms };
 		}
 
 		case "MEASURE_SET": {

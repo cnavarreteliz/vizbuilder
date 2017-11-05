@@ -11,11 +11,6 @@ import { pickUnconflictingTimeDrilldown } from "helpers/manageDimensions";
 import { Overlay, ProgressBar } from "@blueprintjs/core";
 import { ErrorToaster } from "components/ErrorToaster";
 
-const compareByKeys = (prev, next) => {
-	console.log(prev.kind, prev.key, next.key);
-	return prev.key == next.key;
-}
-
 /**
  * @typedef LoadControlProps
  * @prop {string} [src] URL for the current visualization's database
@@ -91,8 +86,6 @@ function mapStateToProps(state) {
 		state.aggregators.groupBy
 	);
 
-	console.log(measures)
-
 	let time_dd = pickUnconflictingTimeDrilldown(cube, drilldowns);
 	time_dd && drilldowns.push(time_dd);
 
@@ -106,8 +99,6 @@ function mapStateToProps(state) {
 		},
 		{ measure: [], level: [] }
 	);
-
-	console.log(filters);
 
 	return {
 		cube,

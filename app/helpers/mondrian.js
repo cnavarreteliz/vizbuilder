@@ -3,22 +3,22 @@ import union from "lodash/union";
 /**
  * Creates a query to be sent to a Mondrian Server.
  * @param {Cube} cube 
- * @param {Array<Level>} drilldowns 
+ * @param {Array<Level>} levels 
  * @param {Array<Measure>} measures 
  * @param {Array<Cut>} cuts 
  */
-export function buildQuery(cube, drilldowns, measures, cuts) {
+export function buildQuery(cube, levels, measures, cuts) {
 	let query = cube.query;
 
 	if (!query) return;
 
-	if (drilldowns.length > 0) {
+	if (levels.length > 0) {
 		query = measures.reduce(function(q, ms) {
 			return q.measure(ms.name);
 		}, query);
 
-		query = drilldowns.reduce(function(q, lv) {
-			return q.drilldown(lv.dimension, lv.hierarchy, lv.level);
+		query = levels.reduce(function(q, lv) {
+			return q.drilldown(lv.dimensionName, lv.hierarchyName, lv.levelName);
 		}, query);
 
 		query = cuts.reduce(function(q, ct) {
@@ -34,8 +34,8 @@ export function buildQuery(cube, drilldowns, measures, cuts) {
 }
 
 /**
- * @param {MondrianMember} member 
+ * @param {Member} member 
  */
 const generateMemberKey = member =>
-	`[${member.level.dimension}].[${member.level.hierarchy}].[${member.level
-		.name}].&[${member.key}]`;
+	`[${member.level.dimensionName}].[${member.level.hierarchyName}].[${member
+		.level.levelName}].&[${member.key}]`;

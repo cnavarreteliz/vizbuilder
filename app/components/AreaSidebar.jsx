@@ -234,7 +234,7 @@ function mapStateToProps(state) {
 		members: state.members,
 
 		all_cb: state.cubes.all,
-		all_dd: currentCb.stdDrilldowns,
+		all_dd: currentCb.stdLevels,
 		all_ms: currentCb.measures,
 		all_cl: generateColorSelector(currentCb.measures)
 	};
@@ -279,7 +279,6 @@ function mapDispatchToProps(dispatch) {
 		},
 
 		updateFilter(filter) {
-			console.log(filter);
 			if (filter.property && filter.property.kind == "level")
 				dispatch(requestMembers(filter.property));
 

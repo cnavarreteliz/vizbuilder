@@ -1,21 +1,3 @@
-interface ChartType {
-	key: string;
-	name: string;
-	nllabel: string;
-	icon: string;
-}
-
-interface Drillable {
-	level: string;
-	hierarchy: string;
-	dimension: string;
-}
-
-interface Cut {
-	level: Level;
-	members: Array<MondrianMember>;
-}
-
 enum FilterOperatorNumber {
 	EQUAL = 1,
 	LOWER = 2,
@@ -24,11 +6,25 @@ enum FilterOperatorNumber {
 	HIGHEREQUAL = 5,
 	NOTEQUAL = 6
 }
+
 enum FilterOperatorText {
 	EQUAL = 1,
 	NOTEQUAL = 6,
 	CONTAINS = 8
 }
+
+interface ChartType {
+	key: string;
+	name: string;
+	nllabel: string;
+	icon: string;
+}
+
+interface Cut {
+	level: Level;
+	members: Array<Member>;
+}
+
 interface Filter {
 	key: string;
 	property: Level | Measure;
@@ -37,173 +33,116 @@ interface Filter {
 }
 
 interface Selectable {
-	key: string;
-	readonly label: string;
-	readonly value: Selectable;
+	name: string;
+	value: any;
 	disabled?: boolean;
 }
 
-declare class Measure implements Selectable {
+declare class DataStructure implements Selectable {
+	source: any;
 	key: string;
-	kind: string;
-	name: string;
-	type: any;
+	
+	readonly fullName: string;
+	readonly name: string;
+	readonly value: any;
+}
 
-	readonly label: string;
+declare class Measure extends DataStructure {
+	source: MondrianMeasure;
+	key: string;
+	
+	kind: string;
+	type: AggregatorType;
+
+	constructor(item: MondrianMeasure);
+	
+	readonly fullName: string;
+	readonly name: string;
 	readonly value: Measure;
 }
 
-declare class Level implements Selectable, Drillable {
+declare class Level extends DataStructure {
+	source: MondrianLevel;
 	key: string;
+	
 	kind: string;
-	name: string;
-	fullName: string;
-	level: string;
-	hierarchy: string;
-	dimension: string;
-	dimensionType: number;
 
-	readonly label: string;
+	private _publicName: string;
+
+	constructor(item: MondrianLevel);
+	
+	readonly fullName: string;
+	readonly name: string;
 	readonly value: Level;
+	
+	readonly levelName: string;
+	readonly hierarchyName: string;
+	readonly dimensionName: string;
+	readonly dimensionType: DimensionType;
 }
 
-declare class Hierarchy implements Selectable {
+declare class Hierarchy extends DataStructure {
+	source: MondrianHierarchy;
 	key: string;
+	
 	kind: string;
-	name: string;
-	levels: Array<Level>;
 
-	readonly label: string;
+	private _levels: Array<Level>;
+	
+	constructor(item: MondrianHierarchy);
+	
+	readonly fullName: string;
+	readonly name: string;
 	readonly value: Hierarchy;
-	readonly drilldowns: Array<Level>;
+	
+	readonly levels: Array<Level>;
 }
 
-declare class Dimension implements Selectable {
+declare class Dimension extends DataStructure {
+	source: MondrianDimension;
 	key: string;
+	
 	kind: string;
-	name: string;
-	type: number;
-	hierarchies: Array<Hierarchy>;
-
-	readonly label: string;
+	
+	private _hierarchies: Array<Hierarchy>;	
+	
+	constructor(item: MondrianDimension);
+	
+	readonly fullName: string;
+	readonly name: string;
 	readonly value: Dimension;
-	readonly drilldowns: Array<Level>;
+	
+	readonly type: DimensionType;
+	readonly hierarchies: Array<Hierarchy>;
+	readonly levels: Array<Level>;
 
 	getLevelHierarchy(): Array<Selectable>;
 }
 
-declare class Cube implements Selectable {
-	_drilldowns: Array<Level>;
-	_source: MondrianCube;
-
+declare class Cube extends DataStructure {
+	source: MondrianCube;
 	key: string;
+
 	kind: string;
-	name: string;
-	dimensions: Array<Dimension>;
-	measures: Array<Measure>;
+
+	private _dimensions: Array<Dimension>;
+	private _levels: Array<Level>;
+	private _measures: Array<Measure>;
+	
+	constructor(item: MondrianCube);
+	
+	readonly fullName: string;
+	readonly name: string;
+	readonly value: Cube;
 
 	readonly query: MondrianQuery;
+	readonly measures: Array<Measure>;
+	readonly dimensions: Array<Dimension>;
 	readonly stdDimensions: Array<Dimension>;
 	readonly timeDimensions: Array<Dimension>;
-	readonly drilldowns: Array<Level>;
-	readonly stdDrilldowns: Array<Level>;
-	readonly timeDrilldowns: Array<Level>;
+	readonly levels: Array<Level>;
+	readonly stdLevels: Array<Level>;
+	readonly timeLevels: Array<Level>;
 
 	getLevelHierarchy(): Array<Selectable>;
-}
-
-declare class MondrianQuery {
-	cube: MondrianCube;
-	private measures;
-	private drilldowns;
-	private cuts;
-	private properties;
-	private captions;
-	options: {
-		[opt: string]: boolean;
-	};
-
-	constructor(cube: MondrianCube);
-
-	readonly qs: string;
-
-	getDrilldowns(): Drillable[];
-	getMeasures(): Measure[];
-	drilldown(...parts: string[]): MondrianQuery;
-	measure(measureName: string): MondrianQuery;
-	cut(member: string): MondrianQuery;
-	property(...parts: string[]): MondrianQuery;
-	caption(...parts: string[]): MondrianQuery;
-	option(option: string, value: boolean): MondrianQuery;
-	path(format?: string): string;
-	private getLevel(...parts);
-	private getProperty(...parts);
-}
-declare class MondrianClient {
-	private api_base;
-	private cubesCache;
-
-	constructor(api_base: string);
-
-	cubes(): Promise<MondrianCube[]>;
-	cube(name: string): Promise<MondrianCube>;
-	query(
-		query: MondrianQuery,
-		format?: string,
-		method?: string
-	): Promise<Aggregation>;
-	members(
-		level: Level,
-		getChildren?: boolean,
-		caption?: string
-	): Promise<Member[]>;
-	member(
-		level: Level,
-		key: string,
-		getChildren?: boolean,
-		caption?: string
-	): Promise<Member>;
-}
-
-declare class MondrianCube {
-	static fromJSON(json: {}): MondrianCube;
-
-	name: string;
-	caption: string;
-	dimensions: Dimension[];
-	namedSets: NamedSet[];
-	measures: Measure[];
-	annotations: Annotations;
-	dimensionsByName: {
-		[d: string]: Dimension;
-	};
-
-	constructor(
-		name: string,
-		dimensions: Dimension[],
-		namedSets: NamedSet[],
-		measures: Measure[],
-		annotations: Annotations
-	);
-
-	readonly standardDimensions: Dimension[];
-	readonly timeDimension: Dimension;
-	readonly defaultMeasure: Measure;
-	readonly query: MondrianQuery;
-
-	findMeasure(name: string): Measure;
-	findNamedSet(dimension: string): any;
-}
-
-interface MondrianMember {
-	level: Level;
-	allMember: boolean;
-	caption: string;
-	depth: number;
-	drillable: boolean;
-	fullName: string;
-	key: number | string;
-	name: string;
-	numChildren: number;
-	parentName: string;
 }

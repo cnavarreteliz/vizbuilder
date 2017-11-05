@@ -11,12 +11,10 @@ import CustomTable from "components/CustomTable";
 import { COLORS_RAINFALL, COLORS_DISCRETE } from "helpers/colors";
 import { CHARTCONFIG, LEGENDCONFIG, yearControls } from "helpers/d3plus";
 import { createBuckets } from "helpers/buckets";
-import { setChartOptions } from "helpers/visuals";
 import { calculateGrowth } from "helpers/prepareViz";
 import {
 	groupLowestCategories,
-	applyHideIsolateFilters,
-	applyYearFilter
+	applyHideIsolateFilters
 } from "helpers/manageData";
 
 import "styles/Chart.css";
@@ -179,7 +177,7 @@ function measureType(ms) {
 
 const fakeSelectable = {
 	name: "",
-	level: ""
+	levelName: ""
 };
 
 /** @param {VizbuilderState} state */
@@ -195,7 +193,7 @@ function mapStateToProps(state) {
 		type: "",
 		year: state.data.axis.time,
 		colorScale: colorBy.name,
-		groupBy: groupBy.level
+		groupBy: groupBy.levelName
 	};
 
 	let measure = aggr.measures.find(ms => ms.name === props.y);

@@ -5,7 +5,7 @@ const initialState = {
 
 /**
  * @param {MembersState} state 
- * @param {ReduxMessage<{level: Level, members: Array<MondrianMember>, [x:string]: any}>} action 
+ * @param {ReduxMessage<{level: Level, members: Array<Member>, [x:string]: any}>} action 
  * @returns {MembersState}
  */
 export default function(state = initialState, action) {

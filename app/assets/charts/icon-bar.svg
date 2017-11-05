@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-  <rect x="20.48" y="21.259" width="10.268" height="451.817" style="fill: rgb(63, 81, 181);"/>
-  <rect x="54.496" y="73.483" width="75.08" height="396.166" style="fill: rgb(33, 150, 243);"/>
-  <rect x="132.575" y="216.054" width="75.08" height="261.182" style="fill: rgb(136, 176, 216);"/>
-  <rect x="365.614" y="236.222" width="75.08" height="235.623" style="fill: rgb(33, 150, 243);"/>
-  <rect x="287.534" y="344.449" width="75.08" height="126.198" style="fill: rgb(136, 176, 216);"/>
-  <rect x="20.453" y="468.471" width="446.315" height="10.269" style="fill: rgb(63, 81, 181);"/>
-  <rect x="210.454" y="371.342" width="75.08" height="97.709" style="fill: rgb(33, 150, 243);"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+  <path fill="#2196F3" d="M45 70h75v400H45z"/>
+  <path fill="#88B0D8" d="M130 210h75v260h-75z"/>
+  <path fill="#2196F3" d="M215 380h75v90h-75z"/>
+  <path fill="#88B0D8" d="M300 345h75v125h-75z"/>
+  <path fill="#2196F3" d="M385 235h75v235h-75z"/>
+  <path fill="#3F51B5" d="M20 20h10v460H20z"/>
+  <path fill="#3F51B5" d="M20 470h460v10H20z"/>
 </svg>

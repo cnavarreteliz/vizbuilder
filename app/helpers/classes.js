@@ -1,3 +1,4 @@
+import { unique } from "shorthash";
 import { makeRandomId } from "helpers/random";
 
 /**
@@ -6,54 +7,52 @@ import { makeRandomId } from "helpers/random";
  * @param {Dimension|Hierarchy} item Element to extract
  * @returns {Array<Drillable>}
  */
-function reduceDrilldowns(all, item) {
-	return all.concat(item.drilldowns);
-}
+const reduceDrilldowns = (all, item) => all.concat(item.levels);
 
-export class Cube {
-	kind = "cube";
-	key = makeRandomId();
-	name = "";
-	dimensions = [];
-	measures = [];
-
-	_drilldowns = [];
-	_source = {};
-
-	static initialCube() {
-		let cube = new Cube();
-		cube.key = '';
-		return cube;
+class DataStructure {
+	constructor(item) {
+		this.source = item;
+		this.key = unique(item.fullName || item.name);
 	}
 
-	constructor(cb) {
-		if (cb) {
-			this.name = cb.name;
-
-			this.dimensions = []
-				.concat(cb.dimensions)
-				.filter(Boolean)
-				.map(item => new Dimension(item));
-
-			this.measures = []
-				.concat(cb.measures)
-				.filter(Boolean)
-				.map(item => new Measure(item));
-
-			this._source = cb;
-		}
+	get fullName() {
+		return this.source.fullName;
 	}
 
-	get label() {
-		return this.name;
+	get name() {
+		return this.source.name;
 	}
 
 	get value() {
 		return this;
 	}
+}
+
+export class Cube extends DataStructure {
+	kind = "cube";
+
+	_measures = [];
+	_dimensions = [];
+	_levels = [];
 
 	get query() {
-		return this._source.query;
+		return this.source.query;
+	}
+
+	get measures() {
+		if (!this._measures.length)
+			this._measures = this.source.measures.map(item => new Measure(item));
+
+		return this._measures;
+	}
+
+	get dimensions() {
+		if (!this._dimensions.length)
+			this._dimensions = this.source.dimensions.map(
+				item => new Dimension(item)
+			);
+
+		return this._dimensions;
 	}
 
 	get stdDimensions() {
@@ -64,18 +63,18 @@ export class Cube {
 		return this.dimensions.filter(dim => dim.type === 1);
 	}
 
-	get drilldowns() {
-		if (!this._drilldowns.length)
-			this._drilldowns = this.dimensions.reduce(reduceDrilldowns, []);
+	get levels() {
+		if (!this._levels.length)
+			this._levels = this.dimensions.reduce(reduceDrilldowns, []);
 
-		return this._drilldowns;
+		return this._levels;
 	}
 
-	get stdDrilldowns() {
+	get stdLevels() {
 		return this.stdDimensions.reduce(reduceDrilldowns, []);
 	}
 
-	get timeDrilldowns() {
+	get timeLevels() {
 		return this.timeDimensions.reduce(reduceDrilldowns, []);
 	}
 
@@ -86,29 +85,23 @@ export class Cube {
 	}
 }
 
-export class Dimension {
+export class Dimension extends DataStructure {
 	kind = "dimension";
-	key = makeRandomId();
 
-	constructor(dm) {
-		this.name = dm.name;
-		this.type = dm.dimensionType;
+	_hierarchies = [];
 
-		this.hierarchies = []
-			.concat(dm.hierarchies)
-			.filter(Boolean)
-			.map(item => new Hierarchy(item));
+	get type() {
+		return this.source.dimensionType;
 	}
 
-	get label() {
-		return this.name;
+	get hierarchies() {
+		if (!this._hierarchies.length)
+			this._hierarchies = this.source.hierarchies.map(h => new Hierarchy(h));
+
+		return this._hierarchies;
 	}
 
-	get value() {
-		return this;
-	}
-
-	get drilldowns() {
+	get levels() {
 		return this.hierarchies.reduce(reduceDrilldowns, []);
 	}
 
@@ -136,82 +129,66 @@ export class Dimension {
 	}
 }
 
-export class Hierarchy {
+export class Hierarchy extends DataStructure {
 	kind = "hierarchy";
-	key = makeRandomId();
 
-	constructor(hr) {
-		this.name = hr.name || "";
+	_levels = [];
 
-		this.levels = []
-			.concat(hr.levels)
-			.filter(Boolean)
-			.map(item => new Level(item));
-	}
+	get levels() {
+		if (!this._levels.length)
+			this._levels = this.source.levels
+				.filter((item, index) => index > 0)
+				.map(item => new Level(item));
 
-	get label() {
-		return this.name;
-	}
-
-	get value() {
-		return this;
-	}
-
-	get drilldowns() {
-		return this.levels.filter((item, index) => index > 0);
+		return this._levels;
 	}
 }
 
-export class Level {
+export class Level extends DataStructure {
 	kind = "level";
-	key = makeRandomId();
+	_publicName = "";
 
-	constructor(lv) {
-		this.source = lv;
-		this.fullName = lv.fullName;
-		
-		this.level = lv.name || "";
+	constructor(item) {
+		super(item);
 
-		this.hierarchy = lv.hierarchy.name || "";
+		let lv_name = RegExp(item.name, "i"),
+			hr_name = RegExp(this.hierarchyName, "i");
 
-		this.dimension = lv.hierarchy.dimension.name || "";
-		this.dimensionType = lv.hierarchy.dimension.dimensionType;
-
-		if (this.hierarchy.includes(this.level)) {
-			this.name = this.hierarchy;
-		} else if (
-			this.level !== this.hierarchy &&
-			!this.level.includes(this.hierarchy)
-		) {
-			this.name = `${this.level} (${this.hierarchy})`;
+		if (lv_name.test(this.hierarchyName)) {
+			this._publicName = this.hierarchyName;
+		} else if (hr_name.test(item.name)) {
+			let level = item.name.replace(hr_name, "").trim();
+			this._publicName = `${this.hierarchyName} > ${level}`;
 		} else {
-			this.name = this.level;
+			this._publicName = item.name;
 		}
 	}
 
-	get label() {
-		return this.name;
+	get name() {
+		return this._publicName;
 	}
 
-	get value() {
-		return this;
+	get levelName() {
+		return this.source.name;
+	}
+
+	get hierarchyName() {
+		return this.source.hierarchy.name;
+	}
+
+	get dimensionName() {
+		return this.source.hierarchy.dimension.name;
+	}
+
+	get dimensionType() {
+		return this.source.hierarchy.dimension.dimensionType;
 	}
 }
 
-export class Measure {
+export class Measure extends DataStructure {
 	kind = "measure";
-	key = makeRandomId();
 
-	constructor(ms) {
-		this.name = ms.name;
-		this.type = ms.aggregatorType;
-	}
-
-	get label() {
-		return this.name;
-	}
-
-	get value() {
-		return this;
+	get type() {
+		return this.source.aggregatorType;
 	}
 }

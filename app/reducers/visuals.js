@@ -85,11 +85,10 @@ export default function(state = initialState, action) {
 			/** @type {Cube} */
 			let cube = action.payload;
 
-			let dim = cube.dimensions[0],
-				drilldown = dim.drilldowns[0],
+			let level = cube.stdLevels[0],
 				measure = cube.measures[0];
 
-			let newState = setAxisX(state, drilldown);
+			let newState = setAxisX(state, level);
 			newState.axis.y = measure.name;
 
 			return newState;
@@ -118,13 +117,13 @@ export default function(state = initialState, action) {
 /**
  * Generates a new state, and sets its X axis.
  * @param {VisualsState} state Old state.
- * @param {Drillable} payload Drilldown.
+ * @param {Level} payload Drilldown.
  * @returns {VisualsState}
  */
 function setAxisX(state, payload) {
-	let newState = { ...state, axis: { ...state.axis, x: payload.level } };
+	let newState = { ...state, axis: { ...state.axis, x: payload.levelName } };
 
-	switch (payload.level) {
+	switch (payload.levelName) {
 		case "Age":
 		case "Age Bucket":
 			newState.chart.type = "bar";
