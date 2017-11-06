@@ -7,7 +7,7 @@ import LoadControl from "components/LoadControl";
 function DataKsa(props) {
 	return (
 		<div className="container data-oec">
-			<LoadControl src='https://mondrian-rest.jazzido.com/' />
+			<LoadControl src='http://oec-cube.datawheel.us/' />
 			<AreaSidebar />
 			<AreaContent />
 		</div>

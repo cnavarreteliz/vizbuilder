@@ -74,6 +74,10 @@ function Chart(props) {
 		labelPadding: 8
 	};
 
+	console.log(props.axis_x)
+	console.log(props.axis_y)
+	console.log(data)
+
 	let VIZCONFIG = {
 		...COLORSCALE,
 		aggs: {
@@ -202,7 +206,7 @@ function mapStateToProps(state) {
 	let axis = state.data.axis;
 
 	return {
-		axis_x: axis.x.name || '',
+		axis_x: axis.x.level || '',
 		axis_y: axis.y.name || '',
 		chart: state.visuals.chart,
 		filters: state.data.filters,
