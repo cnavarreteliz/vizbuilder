@@ -6,6 +6,8 @@ import CustomSelect from "components/CustomSelect";
 import SelectChartType from "components/SelectChartType";
 import InputTable from "components/InputTable";
 
+import union from "lodash/union";
+
 import { requestMembers } from "actions/datasource";
 import { generateColorSelector } from "helpers/prepareInput";
 import { getCoherentMeasures } from "helpers/manageData";
@@ -21,7 +23,7 @@ function Panel(props) {
 		case "table":
 			return (
 				<div>
-					{props.measures.map(ms => {
+					{union(props.measures, props.drilldowns).map(ms => {
 						return (
 							<Tag
 								intent={Intent.PRIMARY}
@@ -32,7 +34,10 @@ function Panel(props) {
 						);
 					})}
 
-					<InputTable options={measures} onClick={props.onMeasureChange} />
+					<InputTable
+						options={union(measures, props.all_dd)}
+						onClick={props.onMeasureChange}
+					/>
 				</div>
 			);
 		case "treemap":
@@ -48,14 +53,6 @@ function Panel(props) {
 					</div>
 					<div className="group">
 						<span className="label">grouped by</span>
-						<CustomSelect
-							value={props.groupBy}
-							items={props.all_dd}
-							onItemSelect={props.onSetGrouping}
-						/>
-					</div>
-					<div className="group">
-						<span className="label">depth by</span>
 						<CustomSelect
 							value={props.groupBy}
 							items={props.all_dd}
@@ -271,8 +268,12 @@ function mapDispatchToProps(dispatch) {
 			});
 		},
 
-		onMeasureChange(measure) {
-			dispatch({ type: "MEASURE_ADD", payload: measure });
+		onMeasureChange(item) {
+			if (item.kind === "measure") {
+				dispatch({ type: "MEASURE_ADD", payload: item });
+			} else if(item.kind === "level") {
+				dispatch({ type: "DRILLDOWN_ADD", payload: item });
+			}
 		},
 
 		addFilter(filter) {
@@ -291,7 +292,11 @@ function mapDispatchToProps(dispatch) {
 		},
 
 		removeTag(item) {
-			dispatch({ type: "MEASURE_REMOVE", payload: item });
+			if (item.kind === "measure") {
+				dispatch({ type: "MEASURE_DELETE", payload: item });
+			} else if(item.kind === "level") {
+				dispatch({ type: "DRILLDOWN_DELETE", payload: item });
+			}
 		}
 	};
 }

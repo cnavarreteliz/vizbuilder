@@ -30,6 +30,14 @@ export default function(state = initialState, action) {
 			return dd ? { ...state, drilldowns: [dd] } : state;
 		}
 
+		case "DRILLDOWN_ADD": {
+			let dd = state.drilldowns.some(item => item === action.payload)
+				? state.drilldowns
+				: [].concat(state.drilldowns, action.payload);
+
+			return { ...state, drilldowns: dd };
+		}
+
 		case "GROUPBY_SET": {
 			return { ...state, groupBy: [].concat(action.payload) };
 		}
@@ -41,14 +49,24 @@ export default function(state = initialState, action) {
 		}
 
 		case "MEASURE_ADD": {
-			let ms = [].concat(state.measures, action.payload);
+			let ms = state.measures.some(item => item === action.payload)
+				? state.measures
+				: [].concat(state.measures, action.payload);
+			
 			return { ...state, measures: ms };
 		}
 
-		case "MEASURE_REMOVE": {
+		case "MEASURE_DELETE": {
 			return {
 				...state,
 				measures: state.measures.filter(ms => ms !== action.payload)
+			};
+		}
+
+		case "DRILLDOWN_DELETE": {
+			return {
+				...state,
+				drilldowns: state.drilldowns.filter(dd => dd !== action.payload)
 			};
 		}
 

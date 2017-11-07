@@ -22,7 +22,7 @@ import "styles/Chart.css";
 function Chart(props) {
 	// Duplicate data before modifiyng
 	let data = props.data.map(attr => ({ ...attr }));
-
+	
 	// Clean data before map in d3plus
 	data = groupLowestCategories(props.data);
 
