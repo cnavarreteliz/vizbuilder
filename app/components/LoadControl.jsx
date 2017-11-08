@@ -31,7 +31,7 @@ class LoadControl extends React.Component {
 
 	/** @param {LoadControlProps} prev */
 	componentDidUpdate(prev) {
-		const { cube, drilldowns, measures, cuts } = this.props;
+		const { cube, drilldowns, measures, cuts, urlQuery } = this.props;
 
 		if (
 			!isEqual(prev.drilldowns, drilldowns) ||
@@ -41,6 +41,13 @@ class LoadControl extends React.Component {
 		) {
 			let query = buildQuery(cube, drilldowns, measures, cuts);
 			query && this.props.dispatch(requestQuery(query));
+
+			if(urlQuery) {
+				this.props.onSetCube(cube);
+				this.props.onSetDrilldown(drilldowns);
+				this.props.onSetMeasure(measures)
+			}
+
 		}
 	}
 
@@ -73,26 +80,39 @@ class LoadControl extends React.Component {
 	}
 }
 
-
-
 function getDataFromQuery(query, data) {
 	let output = {
 		cube: [],
 		drilldowns: [],
 		measures: []
+	};
+
+	if (data.length > 0) {
+		let currentCb;
+		query.split("&").map(item => {
+			let params = item.split("=");
+			
+			if (params[0] === "cb") {
+				currentCb = data.find(item => item.name === params[1]);
+				output.cube = currentCb;
+			} else if (params[0] === "dd") {
+				params[1].split(",").map(level => {
+					output.drilldowns.push(
+						currentCb.levels.find(item => item._publicName === decodeURI(level))
+					);
+				});
+			} else if (params[0] === "ms") {
+				params[1].split(",").map(ms => {
+					
+					output.measures.push(
+						currentCb.measures.find(item => item.name === decodeURI(ms))
+					);
+				});
+			}
+		});
 	}
-	query.split("&").map(item => {
-		let params = item.split("=")
-		if (params[0] === "cb") {
-			output.cube = data.find(item => item.name === params[1])
-		} else if(params[0] === "dd") {
 
-		} else if(params[0] === "ms") {
-
-		}
-	})
-
-	return output
+	return output;
 }
 
 /** 
@@ -113,7 +133,7 @@ function mapStateToProps(state, ownProps) {
 	let time_dd = pickUnconflictingTimeDrilldown(cube, drilldowns);
 	time_dd && drilldowns.push(time_dd);
 
-	let filters = state.filters.reduce(
+	/* let filters = state.filters.reduce(
 		(all, filter) => {
 			if (filter.property) {
 				let kind = filter.property.kind;
@@ -122,11 +142,15 @@ function mapStateToProps(state, ownProps) {
 			return all;
 		},
 		{ measure: [], level: [] }
-	);
+	); */
 
-	let hash = ownProps.search.substring(1)
+	let hash = ownProps.search.substring(1);
 	if (ownProps.slug === "query" && hash.length > 0) {
-		console.log(getDataFromQuery(hash, state.cubes.all))
+		let query = getDataFromQuery(hash, state.cubes.all)
+		if(query.cube) cube = query.cube
+		if(query.drilldowns) drilldowns = query.drilldowns
+		if(query.measures) measures = query.measures
+		
 	}
 
 	return {
@@ -135,7 +159,8 @@ function mapStateToProps(state, ownProps) {
 		measures: union(measures, filters.ms),
 		cuts: filters.lv,
 		loading: state.cubes.fetching || state.data.fetching,
-		error: state.cubes.error || state.data.error
+		error: state.cubes.error || state.data.error,
+		urlQuery: hash.length > 0
 	};
 }
 
@@ -159,5 +184,21 @@ function filterKindReducer(all, filter) {
 
 	return all;
 }
+function mapDispatchToProps(dispatch) {
+	return {
+		dispatch,
 
-export default connect(mapStateToProps)(LoadControl);
+		onSetCube(item) {
+			dispatch({ type: "CUBES_SET", payload: item });
+		},
+
+		onSetDrilldown(item) {
+			dispatch({ type: "DRILLDOWN_SET", payload: item });
+		},
+
+		onSetMeasure(item) {
+			dispatch({ type: "MEASURE_SET", payload: item });
+		}
+	}
+}
+export default connect(mapStateToProps, mapDispatchToProps)(LoadControl);
