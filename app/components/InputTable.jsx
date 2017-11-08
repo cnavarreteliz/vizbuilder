@@ -8,14 +8,12 @@ import { MenuItem } from "@blueprintjs/core/dist/components/menu/menuItem";
 class InputTable extends React.Component {
 	render() {
 		return (
-			<div className="group filters-wrapper">
+			<div className="group">
 				<Popover
 					target={
-						<div>
-						<Button className="pt-fill" iconName="insert">
-							Add measure
+						<Button className="pt-fill pt-button" iconName="insert">
+							Add attribute
 						</Button>
-						</div>
 					}
 					content={
 						<Menu>

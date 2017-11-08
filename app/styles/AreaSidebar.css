@@ -3,8 +3,16 @@
     color: #444;
     background-color: #ffffff;
 
+    & .pt-tag {
+        margin-right: 2px;
+    }
+
     & .group {
         margin-bottom: 0.5em;
+        
+        & .pt-popover-target {
+            display: block;
+        }
     }
 
     & .label {

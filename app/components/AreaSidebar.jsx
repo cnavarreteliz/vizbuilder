@@ -12,7 +12,7 @@ import { requestMembers } from "actions/datasource";
 import { generateColorSelector } from "helpers/prepareInput";
 import { getCoherentMeasures } from "helpers/manageData";
 
-import { Tag, Intent } from "@blueprintjs/core";
+import { Tag, Intent, Button } from "@blueprintjs/core";
 
 import "styles/AreaSidebar.css";
 
@@ -23,17 +23,35 @@ function Panel(props) {
 		case "table":
 			return (
 				<div>
-					{union(props.measures, props.drilldowns).map(ms => {
-						return (
-							<Tag
-								intent={Intent.PRIMARY}
-								onRemove={evt => props.removeTag(ms)}
-							>
-								{ms.name}
-							</Tag>
-						);
-					})}
-
+					<span className="label">attributes</span>
+					{/*<p>
+						{union(props.measures, props.drilldowns).map(item => {
+							return (
+								<Tag
+									onRemove={evt => props.removeTag(item)}
+									className={"pt-intent-primary"}
+								>
+									{item.name}
+								</Tag>
+							);
+						})}
+					</p>*/}
+					<p>
+						{union(props.measures, props.drilldowns).map(item => {
+							return (
+								<div className="filter-item">
+									<span className="filter-content">
+										<span className="filter-prop">{item.name}</span>
+									</span>
+									<Button
+										className="filter-action remove pt-intent-danger pt-minimal"
+										iconName="trash"
+										onClick={evt => props.removeTag(item)}
+									/>
+								</div>
+							);
+						})}
+					</p>
 					<InputTable
 						options={union(measures, props.all_dd)}
 						onClick={props.onMeasureChange}
@@ -227,6 +245,7 @@ function mapStateToProps(state) {
 		colorBy: currentCl,
 
 		measures: state.aggregators.measures,
+		drilldowns: state.aggregators.drilldowns,
 
 		filters: state.filters,
 		members: state.members,
@@ -271,7 +290,7 @@ function mapDispatchToProps(dispatch) {
 		onMeasureChange(item) {
 			if (item.kind === "measure") {
 				dispatch({ type: "MEASURE_ADD", payload: item });
-			} else if(item.kind === "level") {
+			} else if (item.kind === "level") {
 				dispatch({ type: "DRILLDOWN_ADD", payload: item });
 			}
 		},
@@ -294,7 +313,7 @@ function mapDispatchToProps(dispatch) {
 		removeTag(item) {
 			if (item.kind === "measure") {
 				dispatch({ type: "MEASURE_DELETE", payload: item });
-			} else if(item.kind === "level") {
+			} else if (item.kind === "level") {
 				dispatch({ type: "DRILLDOWN_DELETE", payload: item });
 			}
 		}
