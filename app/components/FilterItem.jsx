@@ -22,12 +22,23 @@ class FilterItem extends React.Component {
 	render() {
 		let filter = this.props.item;
 
+		if (!filter.property) return null;
+
+		let value = filter.value;
+
+		if (Array.isArray(value)) 
+			value = `[${value.join(', ')}]`;
+		
+		let operator = '';
+		if (filter.property.kind == 'measure')
+			operator = filter.operator;
+
 		return (
 			<div className="filter-item">
 				<span className="filter-content">
-					<span className="filter-prop">{filter.property ? filter.property.name : ''}</span>
-					<span className="filter-oper">{filter.operator}</span>
-					<span className="filter-value">{filter.value}</span>
+					<span className="filter-prop">{filter.property.name}</span>
+					<span className="filter-oper">{operator}</span>
+					<span className="filter-value">{value}</span>
 				</span>
 				<Button
 					className="filter-action remove pt-intent-danger pt-minimal"

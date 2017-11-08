@@ -1,19 +1,9 @@
 {
 	"compilerOptions": {
 		"allowSyntheticDefaultImports": true,
-		"baseUrl": "./",
+		"baseUrl": "./app/",
 		"checkJs": true,
 		"jsx": "react",
-		"paths": {
-			"@blueprintjs/core": ["node_modules/@blueprintjs/core"],
-			"actions/*": ["app/actions/*"],
-			"assets/*": ["app/assets/*"],
-			"components/*": ["app/components/*"],
-			"helpers/*": ["app/helpers/*"],
-			"pages/*": ["app/pages/*"],
-			"reducers/*": ["app/reducers/*"],
-			"styles/*": ["app/styles/*"]
-		},
 		"target": "es2015"
 	}
 }

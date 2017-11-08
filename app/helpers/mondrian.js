@@ -5,7 +5,7 @@ import union from "lodash/union";
  * @param {Cube} cube 
  * @param {Array<Level>} levels 
  * @param {Array<Measure>} measures 
- * @param {Array<Cut>} cuts 
+ * @param {Array<Filter>} cuts 
  */
 export function buildQuery(cube, levels, measures, cuts) {
 	let query = cube.query;
@@ -22,20 +22,20 @@ export function buildQuery(cube, levels, measures, cuts) {
 		}, query);
 
 		query = cuts.reduce(function(q, ct) {
+			let level = ct.property;
+
+			let cut_expression = ct.value.map(
+				key =>
+					`[${level.dimensionName}].[${level.hierarchyName}].[${level.levelName}].&[${key}]`
+			);
+
 			return q.cut(
-				ct.members.length === 1
-					? generateMemberKey(ct.members[0])
-					: `{${ct.members.map(generateMemberKey).join(",")}}`
+				cut_expression.length > 1
+					? `{${cut_expression.join(",")}}`
+					: cut_expression[0]
 			);
 		}, query);
 	}
 
 	return query.option("nonempty", true).option("debug", !true);
 }
-
-/**
- * @param {Member} member 
- */
-const generateMemberKey = member =>
-	`[${member.level.dimensionName}].[${member.level.hierarchyName}].[${member
-		.level.levelName}].&[${member.key}]`;

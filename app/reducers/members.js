@@ -26,20 +26,6 @@ export default function(state = initialState, action) {
 			};
 		}
 
-		case "FILTER_UPDATE": {
-			/** @type {Level} */
-			let property = action.payload.property;
-
-			if (property && property.kind == 'level') {
-				return {
-					...state,
-					[property.fullName]: []
-				}
-			}
-
-			return state;
-		}
-
 		default:
 			return state;
 	}

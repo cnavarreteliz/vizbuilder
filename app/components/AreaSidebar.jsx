@@ -215,6 +215,7 @@ function Sidebar(props) {
 				onAddFilter={props.addFilter}
 				onUpdateFilter={props.updateFilter}
 				onRemoveFilter={props.removeFilter}
+				onLevelChosen={props.requestMembers}
 			/>
 		</div>
 	);
@@ -295,14 +296,15 @@ function mapDispatchToProps(dispatch) {
 			}
 		},
 
+		requestMembers(level) {
+			dispatch(requestMembers(level));
+		},
+
 		addFilter(filter) {
 			dispatch({ type: "FILTER_ADD", payload: filter });
 		},
 
 		updateFilter(filter) {
-			if (filter.property && filter.property.kind == "level")
-				dispatch(requestMembers(filter.property));
-
 			dispatch({ type: "FILTER_UPDATE", payload: filter });
 		},
 
