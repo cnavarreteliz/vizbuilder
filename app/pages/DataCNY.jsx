@@ -7,7 +7,8 @@ import LoadControl from "components/LoadControl";
 function DataCNY(props) {
 	return (
 		<div className="container data-cny">
-			<LoadControl src='https://cny-bullfrog.datawheel.us/' />
+			<LoadControl src='https://cny-bullfrog.datawheel.us/' slug={props.params.slug}
+				search={props.location.search}/>
 			<AreaSidebar />
 			<AreaContent />
 		</div>

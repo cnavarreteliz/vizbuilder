@@ -7,11 +7,15 @@ import LoadControl from "components/LoadControl";
 function DataKsa(props) {
 	return (
 		<div className="container data-ksa">
-			<LoadControl src='https://jobsksa-monet.datawheel.us/' />
+			<LoadControl
+				src="https://jobsksa-monet.datawheel.us/"
+				slug={props.params.slug}
+				search={props.location.search}
+			/>
 			<AreaSidebar />
 			<AreaContent />
 		</div>
 	);
 }
 
-export default DataKsa
+export default DataKsa;
