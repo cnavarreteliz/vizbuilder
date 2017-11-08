@@ -33,8 +33,6 @@ class LoadControl extends React.Component {
 	/** @param {LoadControlProps} prev */
 	componentDidUpdate(prev) {
 		const { cube, drilldowns, measures } = this.props;
-		console.log(prev.measures)
-		console.log(measures)
 
 		if (
 			//differenceBy(prev.drilldowns, drilldowns, 'key').length ||
@@ -77,11 +75,33 @@ class LoadControl extends React.Component {
 	}
 }
 
+
+
+function getDataFromQuery(query, data) {
+	let output = {
+		cube: [],
+		drilldowns: [],
+		measures: []
+	}
+	query.split("&").map(item => {
+		let params = item.split("=")
+		if (params[0] === "cb") {
+			output.cube = data.find(item => item.name === params[1])
+		} else if(params[0] === "dd") {
+
+		} else if(params[0] === "ms") {
+
+		}
+	})
+
+	return output
+}
+
 /** 
  * @param {VizbuilderState} state 
  * @returns {LoadControlProps}
 */
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
 	let cube = state.cubes.current;
 
 	let measures = union(state.aggregators.measures, state.aggregators.colorBy);
@@ -103,6 +123,11 @@ function mapStateToProps(state) {
 		},
 		{ measure: [], level: [] }
 	);
+
+	let hash = ownProps.search.substring(1)
+	if (ownProps.slug === "query" && hash.length > 0) {
+		console.log(getDataFromQuery(hash, state.cubes.all))
+	}
 
 	return {
 		cube,

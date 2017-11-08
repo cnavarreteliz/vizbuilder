@@ -13,10 +13,10 @@ export default function RouteCreate() {
 	return (
 		<Route path="/" component={App}>
 			<IndexRoute component={Home} />
-			<Route path="ksa" component={DataKsa} />
-			<Route path="chile" component={DataChile} />
-			<Route path="cny" component={DataCNY} />
-			<Route path="oec" component={DataOEC} />
+			<Route path="ksa(/:slug)" component={DataKsa} />
+			<Route path="chile(/:slug)" component={DataChile} />
+			<Route path="cny(/:slug)" component={DataCNY} />
+			<Route path="oec(/:slug)" component={DataOEC} />
 			<Route path="*" component={NotFound} status={404} />
 		</Route>
 	);
