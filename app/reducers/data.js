@@ -46,8 +46,8 @@ export default function(state = initialState, action) {
 
 		case "DATA_FETCH_SUCCESS": {
 			let dimensions = action.payload.dimensions,
-				measures = dimensions.find(dim => dim.type == "measures");
-
+				measure = dimensions.find(dim => dim.type == "measures");
+			
 			return {
 				...state,
 				fetching: false,
@@ -57,7 +57,7 @@ export default function(state = initialState, action) {
 				axis: {
 					time: dimensions.find(dim => dim.type == "time"),
 					x: dimensions.find(dim => dim.type == "standard"),
-					y: measures.members[0]
+					y: measure.members[0]
 				}
 			};
 		}

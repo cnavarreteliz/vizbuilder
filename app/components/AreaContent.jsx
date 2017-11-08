@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 
+import { applyFilters } from "helpers/filters";
+
 import Chart from "components/Chart";
 import AgeBucket from "components/Bucket";
 import ContentDefault from "components/ContentDefault";
@@ -68,6 +70,8 @@ function AreaContent(props) {
 function mapStateToProps(state) {
 	let dd = state.aggregators.drilldowns[0] || { name: "" },
 		ms = state.aggregators.measures[0] || { name: "" };
+	
+	let measure_filters = state.filters.filter(filter => filter.property && filter.property.kind == 'measure' && filter.value);
 
 	return {
 		axis: {
@@ -76,7 +80,7 @@ function mapStateToProps(state) {
 			y: ms.name
 		},
 		cube: state.cubes.current,
-		data: state.data.values
+		data: applyFilters(state.data.values, measure_filters)
 	};
 }
 

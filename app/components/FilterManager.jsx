@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import map from "lodash/map";
 
-import { KIND_NUMBER, KIND_TEXT } from "helpers/operators";
+import { OPERATOR_NUMBER } from "helpers/operators";
 import { makeRandomId } from "helpers/random";
 
 import { Button, Dialog, Intent } from "@blueprintjs/core";
@@ -17,6 +17,7 @@ import CustomSelect from "components/CustomSelect";
  * @prop {(filter: Filter) => void} onAddFilter
  * @prop {(filter: Filter) => void} onUpdateFilter
  * @prop {(filter: Filter) => void} onRemoveFilter
+ * @prop {(level: Level) => void} onLevelChosen
  */
 
 /**
@@ -34,7 +35,8 @@ class FilterManager extends React.Component {
 		members: PropTypes.object.isRequired,
 		onAddFilter: PropTypes.func.isRequired,
 		onUpdateFilter: PropTypes.func.isRequired,
-		onRemoveFilter: PropTypes.func.isRequired
+		onRemoveFilter: PropTypes.func.isRequired,
+		onLevelChosen: PropTypes.func.isRequired
 	};
 
 	/** @type {FilterManagerState} */
@@ -129,9 +131,9 @@ class FilterManager extends React.Component {
 		let filter = this.currentFilter;
 		return [
 			<select value={filter.operator} onChange={this.setOperator}>
-				{Object.keys(KIND_NUMBER).map(ms => <option value={ms}>{ms}</option>)}
+				{Object.keys(OPERATOR_NUMBER).map(ms => <option value={ms}>{ms}</option>)}
 			</select>,
-			<input type="number" value={filter.value} onInput={this.setValue} />
+			<input type="number" value={filter.value} onInput={this.setMeasureValue} />
 		];
 	}
 
@@ -142,8 +144,8 @@ class FilterManager extends React.Component {
 		let members = this.props.members[fullname] || [];
 
 		return [
-			<select multiple={true} value={filter.operator} onChange={this.setValue}>
-				{members.map(item => <option value={item.name}>{item.name}</option>)}
+			<select multiple={true} value={filter.value} onChange={this.setLevelValue}>
+				{members.map(m => <option key={m.key} value={m.key}>{m.caption}</option>)}
 			</select>
 		];
 	}
@@ -188,11 +190,22 @@ class FilterManager extends React.Component {
 		});
 	};
 
-	setProperty = value => {
-		this.props.onUpdateFilter({
-			...this.currentFilter,
-			property: value
-		});
+	setProperty = property => {
+		if (property.kind == 'level') {
+			if (!this.props.members.hasOwnProperty(property.fullName)) this.props.onLevelChosen(property);
+
+			this.props.onUpdateFilter({
+				...this.currentFilter,
+				property,
+				value: []
+			});
+		} else {
+			this.props.onUpdateFilter({
+				...this.currentFilter,
+				property,
+				value: ''
+			});
+		}
 	};
 
 	setOperator = evt => {
@@ -202,14 +215,27 @@ class FilterManager extends React.Component {
 		});
 	};
 
-	setValue = evt => {
-		let members = this.props.members;
+	setMeasureValue = evt => {
+		let filter = this.currentFilter;
+
+		if (!filter.property) return;
 
 		this.props.onUpdateFilter({
-			...this.currentFilter,
-			value: map(evt.target.selectedOptions, option => members[option.value]).filter(Boolean)
+			...filter,
+			value: evt.target.value
 		});
 	};
+
+	setLevelValue = evt => {
+		let filter = this.currentFilter;
+
+		if (!filter.property) return;
+
+		this.props.onUpdateFilter({
+			...filter,
+			value: map(evt.target.selectedOptions, option => option.value).filter(Boolean)
+		});
+	}
 }
 
 export default FilterManager;

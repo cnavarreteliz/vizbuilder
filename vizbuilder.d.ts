@@ -20,16 +20,11 @@ interface ChartType {
 	icon: string;
 }
 
-interface Cut {
-	level: Level;
-	members: Array<Member>;
-}
-
 interface Filter {
 	key: string;
 	property: Level | Measure;
 	operator: FilterOperatorNumber | FilterOperatorText;
-	value: number | string | Array<any>;
+	value: number | string | Array<Member>;
 }
 
 interface Selectable {

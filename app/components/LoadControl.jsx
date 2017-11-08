@@ -2,7 +2,6 @@ import React from "react";
 import { connect } from "react-redux";
 import isEqual from "lodash/isEqual";
 import union from "lodash/union";
-import differenceBy from 'lodash/differenceBy';
 
 import { resetClient, requestCubes, requestQuery } from "actions/datasource";
 import { buildQuery } from "helpers/mondrian";
@@ -17,7 +16,7 @@ import { ErrorToaster } from "components/ErrorToaster";
  * @prop {Cube} cube Current cube
  * @prop {Array<Level>} drilldowns Drilldowns
  * @prop {Array<Measure>} measures Measures
- * @prop {Array<Cut>} cuts Cuts
+ * @prop {Array<Filter>} cuts Cuts
  * @prop {boolean} loading Loading state
  * @prop {Error} error Last error
  * @prop {(message: ReduxMessage|Promise|Function) => void} [dispatch]
@@ -32,18 +31,15 @@ class LoadControl extends React.Component {
 
 	/** @param {LoadControlProps} prev */
 	componentDidUpdate(prev) {
-		const { cube, drilldowns, measures } = this.props;
-		console.log(prev.measures)
-		console.log(measures)
+		const { cube, drilldowns, measures, cuts } = this.props;
 
 		if (
-			//differenceBy(prev.drilldowns, drilldowns, 'key').length ||
-			//differenceBy(prev.measures, measures, 'key').length ||
 			!isEqual(prev.drilldowns, drilldowns) ||
 			!isEqual(prev.measures, measures) ||
+			!isEqual(prev.cuts, cuts) ||
 			!isEqual(prev.cube, cube)
 		) {
-			let query = buildQuery(cube, drilldowns, measures, []);
+			let query = buildQuery(cube, drilldowns, measures, cuts);
 			query && this.props.dispatch(requestQuery(query));
 		}
 	}
@@ -90,32 +86,40 @@ function mapStateToProps(state) {
 		state.aggregators.groupBy
 	);
 
+	let filters = state.filters.reduce(filterKindReducer, { ms: [], lv: [] });
+
 	let time_dd = pickUnconflictingTimeDrilldown(cube, drilldowns);
 	time_dd && drilldowns.push(time_dd);
 
-	let filters = state.filters.reduce(
-		(all, filter) => {
-			if (filter.property) {
-				let kind = filter.property.kind;
-				all[kind].push(filter.property);
-			}
-			return all;
-		},
-		{ measure: [], level: [] }
-	);
-
 	return {
 		cube,
-		drilldowns: union(drilldowns, filters.level),
-		measures: union(measures, filters.measure),
-		cuts: state.filters.filter(validFilter).map(filter => ({level: filter.property, members: filter.values})),
+		drilldowns,
+		measures: union(measures, filters.ms),
+		cuts: filters.lv,
 		loading: state.cubes.fetching || state.data.fetching,
 		error: state.cubes.error || state.data.error
 	};
 }
 
-function validFilter(filter) {
-	return filter.property && filter.property.kind == 'level' && filter.value;
+/**
+ * 
+ * @param {{ms: Array<Measure>, lv: Array<Filter>}} all 
+ * @param {Filter} filter 
+ */
+function filterKindReducer(all, filter) {
+	if (!filter.property) return all;
+
+	if (filter.property.kind == "level" && filter.value.length) {
+		all.lv.push(filter);
+	} else if (
+		filter.property.kind == "measure" &&
+		filter.operator &&
+		filter.value
+	) {
+		all.ms.push(filter.property);
+	}
+
+	return all;
 }
 
 export default connect(mapStateToProps)(LoadControl);
