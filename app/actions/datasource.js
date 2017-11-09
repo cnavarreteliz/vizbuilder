@@ -20,36 +20,56 @@ export function resetClient(source) {
  * Gets the available cube list from the current database.
  * @param {(message: ReduxMessage) => void} dispatch Redux dispatch function.
  */
-export function requestCubes(dispatch) {
-	dispatch({ type: "CUBES_FETCH" });
+export function requestCubes(params) {
+	// TODO: add routine FETCH/SUCCESS/ERROR
+	return function(dispatch) {
+		dispatch({ type: "CUBES_FETCH" });
 
-	return client
-		.cubes()
-		.then(
-			cubes => {
-				cubes = []
-					.concat(cubes)
-					.filter(Boolean)
-					.map(cb => new Cube(cb));
+		return client
+			.cubes()
+			.then(
+				cubes => {
+					let new_cubes = []
+						.concat(cubes)
+						.filter(Boolean)
+						.map(cb => new Cube(cb));
 
-				dispatch({
-					type: "CUBES_FETCH_SUCCESS",
-					payload: cubes
-				});
-				dispatch({
-					type: "CUBES_SET",
-					payload: pickOne(cubes)
-				});
-			},
-			error =>
-				dispatch({
-					type: "CUBES_FETCH_ERROR",
-					payload: error
-				})
-		)
-		.then(null, error => {
-			console.error(error.stack);
-		});
+					dispatch({
+						type: "CUBES_FETCH_SUCCESS",
+						payload: new_cubes
+					});
+
+					let set_cube_payload = { type: "CUBES_SET" };
+
+					if (params && params.cb) {
+						let main_cube = new_cubes.find(cb => cb.key == params.cb);
+						set_cube_payload.payload = main_cube;
+
+						if (params.dd)
+							set_cube_payload.level = main_cube.stdLevels.find(
+								lv => lv.key == params.dd
+							);
+						if (params.ms)
+							set_cube_payload.measure = main_cube.measures.find(
+								ms => ms.key === params.ms
+							);
+					}
+
+					if (!set_cube_payload.payload)
+						set_cube_payload.payload = pickOne(new_cubes);
+
+					dispatch(set_cube_payload);
+				},
+				error =>
+					dispatch({
+						type: "CUBES_FETCH_ERROR",
+						payload: error
+					})
+			)
+			.then(null, error => {
+				console.error(error.stack);
+			});
+	};
 }
 
 export function requestMembers(level) {

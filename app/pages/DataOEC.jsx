@@ -9,8 +9,7 @@ function DataKsa(props) {
 		<div className="container data-oec">
 			<LoadControl
 				src="http://oec-cube.datawheel.us/"
-				slug={props.params.slug}
-				search={props.location.search}
+				queryString={props.location.search}
 			/>
 			<AreaSidebar />
 			<AreaContent />

@@ -40,3 +40,25 @@ export function applyFilters(items, filters) {
 
 	return intersection(...applied_items);
 }
+
+/**
+ * Use with Array.prototype.reduce
+ * Separates a filter array by the kind of property it uses.
+ * @param {{ms: Array<Measure>, lv: Array<Filter>}} all 
+ * @param {Filter} filter 
+ */
+export function filterKindReducer(all, filter) {
+	if (!filter.property) return all;
+
+	if (filter.property.kind == "level" && filter.value.length) {
+		all.lv.push(filter);
+	} else if (
+		filter.property.kind == "measure" &&
+		filter.operator &&
+		filter.value
+	) {
+		all.ms.push(filter.property);
+	}
+
+	return all;
+}

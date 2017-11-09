@@ -81,6 +81,15 @@ export function flattenDrilldowns(levels, values) {
 }
 
 /**
+ * Use with Array.prototype.filter
+ * Removes levels under the same hierarchy as the level of interest.
+ * @param {Level} level 
+ */
+export function filterSameHierarchyAs(level) {
+	return item => level.hierarchyName !== item.hierarchyName;
+}
+
+/**
  * Returns the first Level from *available* that doesn't belongs to a hierarchy
  * from *excluded*.
  * @param {Cube} cube 
@@ -91,5 +100,5 @@ export function pickUnconflictingTimeDrilldown(cube, excluded) {
 	let available = cube.timeDimensions.reduce(function(all, dimension) {
 		return all.concat(dimension.levels);
 	}, []);
-	return differenceBy(available, excluded, "hierarchy")[0];
+	return differenceBy(available, excluded, "hierarchyName")[0];
 }

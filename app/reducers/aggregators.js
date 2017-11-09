@@ -15,8 +15,8 @@ export default function(state = initialState, action) {
 
 			return {
 				...initialState,
-				drilldowns: cube.stdLevels.slice(0, 1),
-				measures: cube.measures.slice(0, 1)
+				drilldowns: action.level ? [action.level] : cube.stdLevels.slice(0, 1),
+				measures: action.measure ? [action.measure] : cube.measures.slice(0, 1)
 			};
 		}
 
@@ -52,7 +52,7 @@ export default function(state = initialState, action) {
 			let ms = state.measures.some(item => item === action.payload)
 				? state.measures
 				: [].concat(state.measures, action.payload);
-			
+
 			return { ...state, measures: ms };
 		}
 
