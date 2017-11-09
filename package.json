@@ -23,6 +23,7 @@
 		"mondrian-rest-client": "git+https://github.com/Datawheel/mondrian-rest-client.git",
 		"numeral": "^2.0.6",
 		"react-table": "^6.7.4",
-		"shorthash": "^0.0.2"
+		"shorthash": "^0.0.2",
+		"query-string": "^5.0.1"
 	}
 }
