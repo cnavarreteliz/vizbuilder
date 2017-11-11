@@ -9,7 +9,7 @@ import InputTable from "components/InputTable";
 import union from "lodash/union";
 
 import { requestMembers } from "actions/datasource";
-import { generateColorSelector } from "helpers/prepareInput";
+import { colorSelector } from "helpers/selectors";
 import { getCoherentMeasures } from "helpers/manageData";
 
 import { Tag, Intent, Button } from "@blueprintjs/core";
@@ -18,24 +18,12 @@ import "styles/AreaSidebar.css";
 
 function Panel(props) {
 	const measures = getCoherentMeasures(props.viztype, props.all_ms);
-
+	
 	switch (props.viztype) {
 		case "table":
 			return (
 				<div>
 					<span className="label">attributes</span>
-					{/*<p>
-						{union(props.measures, props.drilldowns).map(item => {
-							return (
-								<Tag
-									onRemove={evt => props.removeTag(item)}
-									className={"pt-intent-primary"}
-								>
-									{item.name}
-								</Tag>
-							);
-						})}
-					</p>*/}
 					<p>
 						{union(props.measures, props.drilldowns).map(item => {
 							return (
@@ -229,14 +217,22 @@ function mapStateToProps(state) {
 		currentDd = state.aggregators.drilldowns[0] || {},
 		currentMs = state.aggregators.measures[0] || {},
 		currentGb = state.aggregators.groupBy[0] || {},
+		currentGw = state.aggregators.growthBy[0] || {},
 		currentCl = state.aggregators.colorBy[0] || {};
 
 	let colorMeasureFilter = RegExp("growth|average|median|percent", "i"),
 		treemapMeasureFilter = RegExp("average|median", "i");
 
-	let all_cl = generateColorSelector(currentCb.measures);
-	currentCl = all_cl.find(item => item.measure == currentCl) || all_cl[0];
+	let all_cl = colorSelector(currentCb.measures)
 
+	if(state.aggregators.colorBy.length > 0) {
+		currentCl =all_cl.find(item => item.measure === currentCl && item.type === "standard")
+	} else if(state.aggregators.growthBy.length > 0) {
+		currentCl = all_cl.find(item => item.measure === currentGw && item.type === "growth");
+	} else {
+		currentCl = all_cl[0]
+	}
+		
 	return {
 		cube: currentCb,
 		drilldown: currentDd,
@@ -254,7 +250,7 @@ function mapStateToProps(state) {
 		all_cb: state.cubes.all,
 		all_dd: currentCb.stdLevels,
 		all_ms: currentCb.measures,
-		all_cl: generateColorSelector(currentCb.measures)
+		all_cl: colorSelector(currentCb.measures)
 	};
 }
 
@@ -281,11 +277,22 @@ function mapDispatchToProps(dispatch) {
 		},
 
 		onSetColorIndex(item) {
-			dispatch({
-				type: "COLORBY_SET",
-				payload: item.measure,
-				growth: item.growthType
-			});
+			console.log(item)
+			if (item.type === "standard") {
+				dispatch({
+					type: "COLORBY_SET",
+					payload: item.measure
+				});
+			} else if (item.type === "growth") {
+				dispatch({
+					type: "GROWTHBY_SET",
+					payload: item.measure
+				});
+			} else {
+				dispatch({
+					type: "COLORBY_DELETE"
+				});
+			}
 		},
 
 		onMeasureChange(item) {

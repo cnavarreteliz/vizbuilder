@@ -4,6 +4,7 @@ const initialState = {
 	drilldowns: [],
 	groupBy: [],
 	colorBy: [],
+	growthBy: [],
 	cuts: {}
 };
 
@@ -45,7 +46,17 @@ export default function(state = initialState, action) {
 		case "COLORBY_SET": {
 			let newColor = [];
 			if (action.payload) newColor = [].concat(action.payload);
-			return { ...state, colorBy: newColor };
+			return { ...state, colorBy: newColor, growthBy: [] };
+		}
+
+		case "GROWTHBY_SET": {
+			let newGrowth = [];
+			if (action.payload) newGrowth = [].concat(action.payload);
+			return { ...state, growthBy: newGrowth, colorBy: [] };
+		}
+
+		case "COLORBY_DELETE": {
+			return { ...state, growthBy: [], colorBy: [] };
 		}
 
 		case "MEASURE_ADD": {

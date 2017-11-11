@@ -1,12 +1,23 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Treemap, Donut, Pie, BarChart, StackedArea, Plot, LinePlot } from "d3plus-react";
+import {
+	Treemap,
+	Donut,
+	Pie,
+	BarChart,
+	StackedArea,
+	Plot,
+	LinePlot
+} from "d3plus-react";
 import { max, mean, min, sum } from "d3-array";
 import { Tooltip2, Popover2 } from "@blueprintjs/labs";
 import { Button, Position, PopoverInteractionKind } from "@blueprintjs/core";
 
 import Tooltip from "components/Tooltip";
 import CustomTable from "components/CustomTable";
+
+import uniq from "lodash/uniq";
+import union from "lodash/union";
 
 import { COLORS_RAINFALL, COLORS_DISCRETE } from "helpers/colors";
 import { CHARTCONFIG, LEGENDCONFIG, yearControls } from "helpers/d3plus";
@@ -16,13 +27,14 @@ import {
 	groupLowestCategories,
 	applyHideIsolateFilters
 } from "helpers/manageData";
+import { makeRandomId } from "helpers/random";
 
 import "styles/Chart.css";
 
 function Chart(props) {
 	// Duplicate data before modifiyng
 	let data = props.data.map(attr => ({ ...attr }));
-	
+
 	// Clean data before map in d3plus
 	data = groupLowestCategories(props.data);
 
@@ -40,14 +52,15 @@ function Chart(props) {
 	}
 
 	// Custom Age Buckets
-	if (props.axis_x === "Age") 
-		data = createBuckets(data, props.num_buckets);
+	if (props.axis_x === "Age") data = createBuckets(data, props.num_buckets);
 
 	// Add Custom Growth scale
-	if (props.chart.growthType) {
+	if (props.color.type === "growth") {
 		let attributes = calculateGrowth(
 			data,
-			props.options.colorScale !== "" ? "colorScale" : props.axis_y
+			props.axis_x,
+			props.axis_y,
+			props.axis_time
 		);
 
 		data = data.map(attr => ({
@@ -56,11 +69,17 @@ function Chart(props) {
 		}));
 	}
 
+	// Get max/min (in members)
+	let allYears = uniq(data.map(dm => parseInt(dm[props.axis_time]))) || [],
+		min = Math.min(...allYears),
+		max = Math.max(...allYears);
+
+	console.log(props.color)
 	// Set COLORSCALE properties
 	let COLORSCALE = {
-		colorScale: props.chart.growth ? "Growth" : props.options.colorScale,
+		colorScale: props.color.type === "growth" ? "Growth" : props.options.colorScale,
 		colorScalePosition:
-			props.options.colorScale !== "" || props.chart.growth ? "bottom" : false,
+			props.options.colorScale !== "" || props.color.type === "growth" ? "bottom" : false,
 		colorScaleConfig: {
 			color: COLORS_RAINFALL
 		}
@@ -74,18 +93,15 @@ function Chart(props) {
 		labelPadding: 8
 	};
 
-	console.log(props.axis_x)
-	console.log(props.axis_y)
-	console.log(data)
-
 	let VIZCONFIG = {
 		...COLORSCALE,
 		aggs: {
-			[props.axis_y]: measureType(props.options.type) ? mean : sum
+			[props.axis_y]: measureType(props.options.type) ? mean : sum,
+			Growth: mean
 		},
 		legendConfig: LEGENDCONFIG,
 		tooltipConfig: {
-			body: d => <div>Hello</div>
+			body: d => "<div>Hello</div>"
 		},
 		groupBy: props.options.groupBy
 			? [props.options.groupBy, props.axis_x]
@@ -127,6 +143,10 @@ function Chart(props) {
 			return <Donut config={VIZCONFIG} />;
 		}
 
+		case "pie": {
+			return <Pie config={VIZCONFIG} />;
+		}
+
 		case "bubble": {
 			let BUBBLECONFIG = {
 				...PLOTCONFIG,
@@ -137,11 +157,6 @@ function Chart(props) {
 		}
 
 		case "lineplot": {
-			let AREACONFIG = {
-				...VIZCONFIG,
-				y: props.axis_y,
-				x: "Year"
-			};
 			return <LinePlot config={PLOTCONFIG} />;
 		}
 
@@ -171,6 +186,8 @@ function Chart(props) {
 function measureType(ms) {
 	switch (ms) {
 		case "AVG":
+		case "MEDIAN":
+		case "INDEX":
 			return true;
 		case "SUM":
 		case "UNKNOWN":
@@ -189,13 +206,14 @@ function mapStateToProps(state) {
 	let aggr = state.aggregators;
 
 	let colorBy = aggr.colorBy[0] || fakeSelectable,
+		growthBy = aggr.growthBy[0] || fakeSelectable,
 		groupBy = aggr.groupBy[0] || fakeSelectable;
 
 	let props = {
 		x: state.data.axis.x.name,
 		y: state.data.axis.y.name,
 		type: "",
-		year: state.data.axis.time,
+		time: state.data.axis.time,
 		colorScale: colorBy.name,
 		groupBy: groupBy.levelName
 	};
@@ -206,12 +224,17 @@ function mapStateToProps(state) {
 	let axis = state.data.axis;
 
 	return {
-		axis_x: axis.x.level || '',
-		axis_y: axis.y.name || '',
+		axis_x: axis.x.level || "",
+		axis_y: axis.y.name || "",
+		axis_time: axis.time.level || "",
 		chart: state.visuals.chart,
 		filters: state.data.filters,
 		num_buckets: state.visuals.buckets,
-		options: props
+		options: props,
+		color: {
+			type: aggr.growthBy.length > 0 ? "growth" : "standard",
+			measure: union(colorBy, growthBy)[0]
+		}
 	};
 }
 
@@ -223,6 +246,10 @@ function mapDispatchToProps(dispatch) {
 
 		isolateDimension(evt) {
 			dispatch({ type: "FILTER_ISOLATE_DIMENSION", payload: evt });
+		},
+
+		addTimeFilter(filter) {
+			dispatch({ type: "FILTER_ADD", payload: filter });
 		}
 	};
 }

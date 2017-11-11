@@ -1,14 +1,14 @@
 import { Array1D, Scalar, NDArrayMathGPU } from "deeplearn";
 import { isNumeric } from "helpers/functions";
 
-export function calculateGrowth(data, key = "value") {
+export function calculateGrowth(data, x, y, time) {
 	const result = data.reduce((all, item) => {
-		all[item.id] = all[item.id] || [];
+		all[item[x]] = all[item[x]] || [];
 		// Create custom item
-		if (isNumeric(item[key]) && item[key])
-			all[item.id].push({
-				value: item[key],
-				year: item.year
+		if (isNumeric(item[y]) && item[y])
+			all[item[x]].push({
+				value: item[y],
+				year: item[time]
 			});
 		return all;
 	}, Object.create(null));

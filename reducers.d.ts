@@ -12,6 +12,7 @@ interface AggregatorsState {
 	};
 	groupBy: Array<Level>;
 	colorBy: Array<Measure>;
+	growthBy: Array<Measure>;
 }
 
 interface CubesState {

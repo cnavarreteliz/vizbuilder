@@ -4,8 +4,7 @@ const initialState = {
 		show: false
 	},
 	chart: {
-		type: "treemap",
-		growth: false
+		type: "treemap"
 	},
 	axis: {
 		x: "",
@@ -102,12 +101,12 @@ export default function(state = initialState, action) {
 			return { ...state, axis: { ...state.axis, y: action.payload.name } };
 		}
 
-		case "COLORBY_SET": {
+/*		case "COLORBY_SET": {
 			if ("growth" in action)
 				return { ...state, chart: { ...state.chart, growth: action.growth } };
 
 			return state;
-		}
+		} */
 
 		default:
 			return state;
