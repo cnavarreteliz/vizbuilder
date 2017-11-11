@@ -13,6 +13,8 @@ import { max, mean, min, sum } from "d3-array";
 import { Tooltip2, Popover2 } from "@blueprintjs/labs";
 import { Button, Position, PopoverInteractionKind } from "@blueprintjs/core";
 
+import { NumberRange, RangeSlider, Switch, Slider } from "@blueprintjs/core";
+
 import Tooltip from "components/Tooltip";
 import CustomTable from "components/CustomTable";
 
@@ -74,12 +76,15 @@ function Chart(props) {
 		min = Math.min(...allYears),
 		max = Math.max(...allYears);
 
-	console.log(props.color)
+	console.log(props.color);
 	// Set COLORSCALE properties
 	let COLORSCALE = {
-		colorScale: props.color.type === "growth" ? "Growth" : props.options.colorScale,
+		colorScale:
+			props.color.type === "growth" ? "Growth" : props.options.colorScale,
 		colorScalePosition:
-			props.options.colorScale !== "" || props.color.type === "growth" ? "bottom" : false,
+			props.options.colorScale !== "" || props.color.type === "growth"
+				? "bottom"
+				: false,
 		colorScaleConfig: {
 			color: COLORS_RAINFALL
 		}
@@ -103,6 +108,7 @@ function Chart(props) {
 		tooltipConfig: {
 			body: d => "<div>Hello</div>"
 		},
+		time: props.axis_time ? props.axis_time : false,
 		groupBy: props.options.groupBy
 			? [props.options.groupBy, props.axis_x]
 			: [props.axis_x],
@@ -136,6 +142,7 @@ function Chart(props) {
 
 	switch (props.chart.type) {
 		case "treemap": {
+			//			let range = props.time.length > 0 ? props.time : [2005, 2010]
 			return <Treemap config={TREEMAPCONFIG} />;
 		}
 
@@ -234,7 +241,8 @@ function mapStateToProps(state) {
 		color: {
 			type: aggr.growthBy.length > 0 ? "growth" : "standard",
 			measure: union(colorBy, growthBy)[0]
-		}
+		},
+		time: state.visuals.chart.time
 	};
 }
 
@@ -250,6 +258,10 @@ function mapDispatchToProps(dispatch) {
 
 		addTimeFilter(filter) {
 			dispatch({ type: "FILTER_ADD", payload: filter });
+		},
+
+		onYearChange(item) {
+			dispatch({ type: "VIZ_CHART_TIME_SET", payload: item });
 		}
 	};
 }

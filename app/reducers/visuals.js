@@ -4,7 +4,8 @@ const initialState = {
 		show: false
 	},
 	chart: {
-		type: "treemap"
+		type: "treemap",
+		time: []
 	},
 	axis: {
 		x: "",
@@ -64,6 +65,10 @@ export default function(state = initialState, action) {
 				...state,
 				axis: { ...state.axis, [action.axis]: action.payload }
 			};
+		}
+
+		case "VIZ_CHART_TIME_SET": {
+		 	return { ...state, chart: { ...state.chart, time: action.payload } };
 		}
 
 		// case "VIZ_FULL_UPDATE": {

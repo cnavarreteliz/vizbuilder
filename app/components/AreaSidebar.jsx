@@ -277,7 +277,6 @@ function mapDispatchToProps(dispatch) {
 		},
 
 		onSetColorIndex(item) {
-			console.log(item)
 			if (item.type === "standard") {
 				dispatch({
 					type: "COLORBY_SET",
