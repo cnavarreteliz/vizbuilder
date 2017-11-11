@@ -1,12 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
+import { replace } from "react-router-redux";
 import isEqual from "lodash/isEqual";
 import union from "lodash/union";
-import queryString from 'query-string';
+import queryString from "query-string";
 
 import { resetClient, requestCubes, requestQuery } from "actions/datasource";
 import { buildQuery } from "helpers/mondrian";
 import { filterKindReducer } from "helpers/filters";
+import { generateSearch } from "helpers/functions";
 import { pickUnconflictingTimeDrilldown } from "helpers/manageDimensions";
 
 import { Overlay, ProgressBar } from "@blueprintjs/core";
@@ -36,6 +38,7 @@ class LoadControl extends React.Component {
 
 	/** @param {LoadControlProps} prev */
 	componentDidUpdate(prev) {
+		const dispatch = this.props.dispatch;
 		const { cube, drilldowns, measures, cuts } = this.props;
 
 		if (
@@ -45,7 +48,15 @@ class LoadControl extends React.Component {
 			!isEqual(prev.cube, cube)
 		) {
 			let query = buildQuery(cube, drilldowns, measures, cuts);
-			query && this.props.dispatch(requestQuery(query));
+			if (query)
+				dispatch(requestQuery(query)).then(() =>
+					dispatch(
+						replace({
+							pathname: location.pathname,
+							search: generateSearch(cube, drilldowns[0], measures[0])
+						})
+					)
+				);
 		}
 	}
 

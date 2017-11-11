@@ -1,4 +1,5 @@
 import escapeRegExp from "lodash/escapeRegExp";
+import queryString from 'query-string'
 
 export function stopPropagation(evt) {
 	evt.stopPropagation();
@@ -22,4 +23,18 @@ export function isNumeric(n) {
 export function regexIncludes(string, substring) {
 	substring = escapeRegExp(substring || "");
 	return RegExp(substring, 'i').test(string || "");
+}
+
+/**
+ * Generates a permalink for the current page.
+ * @param {Cube} cube
+ * @param {Level} level
+ * @param {Measure} measure
+ */
+export function generateSearch(cube, level, measure) {
+	return '?' + queryString.stringify({
+		cb: cube.key,
+		dd: level.key,
+		ms: measure.key
+	});
 }
