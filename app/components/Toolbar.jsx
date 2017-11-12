@@ -7,6 +7,7 @@ import { saveAs } from "file-saver";
 import { Icon, Dialog, Button, Intent, Tabs2, Tab2 } from "@blueprintjs/core";
 import CustomTable from "components/CustomTable";
 import PanelInfo from "components/PanelInfo";
+import ToolbarInfo from "components/ToolbarInfo";
 import PanelData from "components/PanelData";
 
 import "styles/Toolbar.css";
@@ -68,10 +69,9 @@ class Toolbar extends React.Component {
 								<Tab2
 									id="rx"
 									title="About"
-									panel={<PanelInfo data={data} axis={axis} />}
+									panel={<ToolbarInfo data={data} />}
 								/>
 								<Tab2 id="ng" title="Data" panel={<CustomTable data={data} />} />
-								<Tab2 id="dt" title="Data2" panel={<PanelData data={data} />} />
 							</Tabs2>
 						</div>
 						<div className="pt-dialog-footer">

@@ -76,7 +76,6 @@ function Chart(props) {
 		min = Math.min(...allYears),
 		max = Math.max(...allYears);
 
-	console.log(props.color);
 	// Set COLORSCALE properties
 	let COLORSCALE = {
 		colorScale:
@@ -109,6 +108,19 @@ function Chart(props) {
 			body: d => "<div>Hello</div>"
 		},
 		time: props.axis_time ? props.axis_time : false,
+		timelineConfig: {
+			on: {
+				end: d => {
+					if (d !== undefined) {
+						let time = Array.isArray(d)
+								? d.map(item => item.getFullYear())
+								: [].concat(d.getFullYear())
+						props.onYearChange(time)
+					}
+					
+				}
+			}
+		},
 		groupBy: props.options.groupBy
 			? [props.options.groupBy, props.axis_x]
 			: [props.axis_x],
