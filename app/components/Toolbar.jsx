@@ -8,6 +8,7 @@ import { Icon, Dialog, Button, Intent, Tabs2, Tab2 } from "@blueprintjs/core";
 import CustomTable from "components/CustomTable";
 import PanelInfo from "components/PanelInfo";
 import ToolbarInfo from "components/ToolbarInfo";
+import ToolbarTable from "components/ToolbarTable";
 import PanelData from "components/PanelData";
 
 import "styles/Toolbar.css";
@@ -59,7 +60,7 @@ class Toolbar extends React.Component {
 				<li className="button" onClick={this.toggleDialog}>
 					<Icon iconName="pt-icon-th" /> View Data
 					<Dialog
-						iconName="inbox"
+						iconName="pt-icon-th"
 						isOpen={this.state.dialogOpen}
 						onClose={this.toggleDialog}
 						title={this.title.toUpperCase()}
@@ -71,7 +72,7 @@ class Toolbar extends React.Component {
 									title="About"
 									panel={<ToolbarInfo data={data} />}
 								/>
-								<Tab2 id="ng" title="Data" panel={<CustomTable data={data} />} />
+								<Tab2 id="ng" title="Data" panel={<ToolbarTable data={data} />} />
 							</Tabs2>
 						</div>
 						<div className="pt-dialog-footer">
