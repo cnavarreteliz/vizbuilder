@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Button } from "@blueprintjs/core";
 
+import { LABELS as OPERATOR_LABELS } from "helpers/operators";
+
 import "styles/FilterItem.css";
 
 /**
@@ -18,7 +20,7 @@ class FilterItem extends React.Component {
 		onEdit: PropTypes.func.isRequired,
 		onRemove: PropTypes.func.isRequired
 	};
-	
+
 	render() {
 		let filter = this.props.item;
 
@@ -27,11 +29,11 @@ class FilterItem extends React.Component {
 		let value = filter.value;
 
 		if (Array.isArray(value)) 
-			value = `[${value.join(', ')}]`;
+		value = `[${value.join(', ')}]`;
 		
 		let operator = '';
 		if (filter.property.kind == 'measure')
-			operator = filter.operator;
+			operator = OPERATOR_LABELS[filter.operator];
 
 		return (
 			<div className="filter-item">

@@ -2,7 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import map from "lodash/map";
 
-import { OPERATOR_NUMBER } from "helpers/operators";
+import OPERATORS, {
+	KIND_NUMBER as NUMBER_OPERATORS,
+	LABELS as OPERATOR_LABELS
+} from "helpers/operators";
 import { makeRandomId } from "helpers/random";
 
 import { Button, Dialog, Intent } from "@blueprintjs/core";
@@ -131,7 +134,9 @@ class FilterManager extends React.Component {
 		let filter = this.currentFilter;
 		return [
 			<select value={filter.operator} onChange={this.setOperator}>
-				{Object.keys(OPERATOR_NUMBER).map(ms => <option value={ms}>{ms}</option>)}
+				{NUMBER_OPERATORS.map(ms => (
+					<option value={OPERATORS[ms]}>{OPERATOR_LABELS[ms]}</option>
+				))}
 			</select>,
 			<input type="number" value={filter.value} onInput={this.setMeasureValue} />
 		];

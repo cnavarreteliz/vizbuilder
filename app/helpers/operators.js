@@ -8,19 +8,33 @@ const OPERATORS = {
 	CONTAINS: 8
 };
 
-export const OPERATOR_NUMBER = {
-	EQUAL:       OPERATORS.EQUAL,
-	LOWER:       OPERATORS.LOWER,
-	LOWEREQUAL:  OPERATORS.LOWEREQUAL,
-	HIGHER:      OPERATORS.HIGHER,
-	HIGHEREQUAL: OPERATORS.HIGHEREQUAL,
-	NOTEQUAL:    OPERATORS.NOTEQUAL
-}
+export const KIND_NUMBER = [
+	"EQUAL",
+	"LOWER",
+	"LOWEREQUAL",
+	"HIGHER",
+	"HIGHEREQUAL",
+	"NOTEQUAL"
+];
 
-export const OPERATOR_TEXT = {
-	EQUAL:    OPERATORS.EQUAL,
-	NOTEQUAL: OPERATORS.NOTEQUAL,
-	CONTAINS: OPERATORS.CONTAINS
-}
+export const KIND_TEXT = ["EQUAL", "NOTEQUAL", "CONTAINS"];
 
-export default OPERATORS
+export const LABELS = {
+	0: 'Undefined',
+	EQUAL: "Equal to",
+	1: "Equal to",
+	LOWER: "Lower than",
+	2: "Lower than",
+	LOWEREQUAL: "Lower than or equal to",
+	3: "Lower than or equal to",
+	HIGHER: "Higher than",
+	4: "Higher than",
+	HIGHEREQUAL: "Higher than or equal to",
+	5: "Higher than or equal to",
+	NOTEQUAL: "Not equal to",
+	6: "Not equal to",
+	CONTAINS: "Contains the term",
+	8: "Contains the term"
+};
+
+export default OPERATORS;
