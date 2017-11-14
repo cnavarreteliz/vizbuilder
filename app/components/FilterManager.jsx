@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import map from "lodash/map";
+import union from "lodash/union";
 
 import OPERATORS, {
 	KIND_NUMBER as NUMBER_OPERATORS,
@@ -11,6 +12,7 @@ import { makeRandomId } from "helpers/random";
 import { Button, Dialog, Intent, NumericInput } from "@blueprintjs/core";
 import FilterItem from "components/FilterItem";
 import CustomSelect from "components/CustomSelect";
+import MembersSelect from "components/MembersSelect";
 
 /**
  * @typedef FilterManagerProps
@@ -63,7 +65,7 @@ class FilterManager extends React.Component {
 		if (filter) {
 			let parent = filter.property;
 
-			let option_handler = [];
+			let option_handler;
 
 			if (parent) {
 				if (parent.kind == "measure") {
@@ -76,7 +78,7 @@ class FilterManager extends React.Component {
 			let parents = [].concat(cube.measures, cube.levels);
 
 			dialogBody = (
-				<div className="pt-dialog-body">
+				<div className="pt-dialog-body dialog-filter-body">
 					<div className="group">
 						<span className="label">Filter by</span>
 						<CustomSelect
@@ -109,6 +111,7 @@ class FilterManager extends React.Component {
 					Add filter
 				</Button>
 				<Dialog
+					className="dialog-filter"
 					iconName="filter"
 					isOpen={this.state.isOpen}
 					onClose={this.dialogCancel}
@@ -132,16 +135,20 @@ class FilterManager extends React.Component {
 
 	renderMeasureOptions() {
 		let filter = this.currentFilter;
-		return [
-			<div className="pt-select">
-				<select value={filter.operator} onChange={this.setOperator}>
-					{NUMBER_OPERATORS.map(ms => (
-						<option value={OPERATORS[ms]}>{OPERATOR_LABELS[ms]}</option>
-					))}
-				</select>
-			</div>,
-			<NumericInput value={filter.value} onValueChange={this.setMeasureValue} />
-		];
+		return (
+			<div className="group">
+				<div className="pt-control-group">
+					<div className="pt-select">
+						<select value={filter.operator} onChange={this.setOperator}>
+							{NUMBER_OPERATORS.map(ms => (
+								<option value={OPERATORS[ms]}>{OPERATOR_LABELS[ms]}</option>
+							))}
+						</select>
+					</div>
+					<NumericInput className="pt-fill" value={filter.value} onValueChange={this.setMeasureValue} />
+				</div>
+			</div>
+		);
 	}
 
 	renderLevelOptions() {
@@ -150,11 +157,16 @@ class FilterManager extends React.Component {
 
 		let members = this.props.members[fullname] || [];
 
-		return [
-			<select multiple={true} value={filter.value} onChange={this.setLevelValue}>
-				{members.map(m => <option key={m.key} value={m.key}>{m.caption}</option>)}
-			</select>
-		];
+		return (
+			<div className="group">
+				<MembersSelect
+					items={members}
+					selectedItems={filter.value}
+					onItemSelect={this.filterValueAdd}
+					onItemRemove={this.filterValueRemove}
+				/>
+			</div>
+		);
 	}
 
 	dialogSave = () => {
@@ -177,7 +189,7 @@ class FilterManager extends React.Component {
 		let newFilter = {
 			key: makeRandomId(),
 			property: undefined,
-			operator: 0,
+			operator: 1,
 			value: undefined
 		};
 
@@ -198,19 +210,22 @@ class FilterManager extends React.Component {
 	};
 
 	setProperty = property => {
-		if (property.kind == 'level') {
-			if (!this.props.members.hasOwnProperty(property.fullName)) this.props.onLevelChosen(property);
+		if (property.kind == "level") {
+			if (!this.props.members.hasOwnProperty(property.fullName))
+				this.props.onLevelChosen(property);
 
 			this.props.onUpdateFilter({
 				...this.currentFilter,
+				kind: property.kind,
 				property,
 				value: []
 			});
 		} else {
 			this.props.onUpdateFilter({
 				...this.currentFilter,
+				kind: property.kind,
 				property,
-				value: ''
+				value: 0
 			});
 		}
 	};
@@ -233,16 +248,22 @@ class FilterManager extends React.Component {
 		});
 	};
 
-	setLevelValue = evt => {
+	filterValueAdd = value => {
 		let filter = this.currentFilter;
-
-		if (!filter.property) return;
-
 		this.props.onUpdateFilter({
 			...filter,
-			value: map(evt.target.selectedOptions, option => option.value).filter(Boolean)
+			value: union(filter.value, [value])
 		});
-	}
+	};
+
+	filterValueRemove = value => {
+		let filter = this.currentFilter;
+		console.log(filter.value, value);
+		this.props.onUpdateFilter({
+			...filter,
+			value: filter.value.filter(item => item == value)
+		});
+	};
 }
 
 export default FilterManager;

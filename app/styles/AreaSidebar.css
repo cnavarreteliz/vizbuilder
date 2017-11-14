@@ -4,16 +4,25 @@
 	& .pt-tag {
 		margin-right: 2px;
 	}
+}
 
+.side-panel,
+.pt-overlay {
 	& .group {
 		margin-bottom: 0.5em;
 
 		& .pt-popover-target {
 			display: block;
 		}
+
+		& .label {
+			margin: 0 0 0.2em;
+		}
 	}
 
-	& .label {
-		margin: 0 0 0.2em;
+	& .pt-popover {
+		& .target-option {
+			display: block;
+		}
 	}
 }

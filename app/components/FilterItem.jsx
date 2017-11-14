@@ -28,11 +28,11 @@ class FilterItem extends React.Component {
 
 		let value = filter.value;
 
-		if (Array.isArray(value)) 
-		value = `[${value.join(', ')}]`;
-		
-		let operator = '';
-		if (filter.property.kind == 'measure')
+		if (Array.isArray(value))
+			value = value.map(member => member.caption).join(", ");
+
+		let operator = "";
+		if (filter.property.kind == "measure")
 			operator = OPERATOR_LABELS[filter.operator];
 
 		return (
@@ -58,11 +58,11 @@ class FilterItem extends React.Component {
 
 	updateHandler = () => {
 		this.props.onEdit(this.props.item);
-	}
+	};
 
 	removeHandler = () => {
 		this.props.onRemove(this.props.item);
-	}
+	};
 }
 
 export default FilterItem;

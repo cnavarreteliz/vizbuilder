@@ -10,7 +10,7 @@ const OPERATORS = {
 };
 
 export const LABELS = {
-	UNDEFINED: "Undefined",
+	undefined: "Undefined",
 	0: "Undefined",
 	EQUAL: "Equal to",
 	1: "Equal to",
@@ -29,7 +29,6 @@ export const LABELS = {
 };
 
 export const KIND_NUMBER = [
-	"UNDEFINED",
 	"EQUAL",
 	"LOWER",
 	"LOWEREQUAL",
@@ -38,6 +37,6 @@ export const KIND_NUMBER = [
 	"NOTEQUAL"
 ];
 
-export const KIND_TEXT = ["UNDEFINED", "EQUAL", "NOTEQUAL", "CONTAINS"];
+export const KIND_TEXT = ["EQUAL", "NOTEQUAL", "CONTAINS"];
 
 export default OPERATORS;

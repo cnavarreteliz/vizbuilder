@@ -22,12 +22,11 @@ export function buildQuery(cube, levels, measures, cuts) {
 		}, query);
 
 		query = cuts.reduce(function(q, ct) {
-			let level = ct.property;
+			/** @type {Level} */
+			let level = ct.property,
+				levelString = `[${level.dimensionName}].[${level.hierarchyName}].[${level.levelName}]`;
 
-			let cut_expression = ct.value.map(
-				key =>
-					`[${level.dimensionName}].[${level.hierarchyName}].[${level.levelName}].&[${key}]`
-			);
+			let cut_expression = ct.value.map(member => `${levelString}.&[${member.key}]`);
 
 			return q.cut(
 				cut_expression.length > 1
