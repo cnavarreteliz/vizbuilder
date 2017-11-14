@@ -33,7 +33,7 @@ import "styles/AreaContent.css";
  */
 function AreaContent(props) {
 	if (!props.axis.x || !props.axis.y) return <ContentDefault />;
-
+	
 	return (
 		<div className="main-panel">
 			<header className="header">
@@ -42,7 +42,7 @@ function AreaContent(props) {
 					{props.cube.name + " by "}
 					<InputPopover
 						value={props.axis.x}
-						options={props.cube.getLevelHierarchy()}
+						options={props.cube.levels}
 						onClick={props.onDrilldownChange}
 					/>
 				</p>
