@@ -116,14 +116,22 @@ class Toolbar extends React.Component {
 		// Very fragile, but right now there's no other way without reestructuring
 		// Must be keep updated with the JSX in the Chart.jsx component
 		const element = document.querySelector(".viz > svg");
-		element && saveElement(element, { filename: this.title, type: "png" });
+		element && saveElement(element, { filename: getTitle(
+			this.props.cube,
+			this.props.axis.x,
+			this.props.axis.y
+		), type: "png" });
 	};
 
 	saveCSV = () => {
 		let blob = new Blob([csvFormat(this.props.data)], {
 			type: "text/plain;charset=utf-8"
 		});
-		saveAs(blob, `${this.title}.csv`);
+		saveAs(blob, `${getTitle(
+			this.props.cube,
+			this.props.axis.x,
+			this.props.axis.y
+		)}.csv`);
 	};
 }
 
