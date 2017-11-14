@@ -8,8 +8,8 @@
 	background-color: #fff;
 	border-collapse: collapse;
 
-	thead,
-	tbody {
+	& thead,
+	& tbody {
 		display: block;
 	}
 
@@ -25,7 +25,7 @@
 		& .table-row:nth-child(odd) td {
 		}
 		& .table-row:nth-child(even) td {
-			background-color: #f0f0f0;
+			background-color: rgba(0, 0, 0, 0.05);
 		}
 	}
 

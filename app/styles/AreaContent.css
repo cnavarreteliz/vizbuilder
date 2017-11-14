@@ -1,6 +1,4 @@
 .main-panel {
-	padding: 15px;
-
 	& .header {
 		text-align: center;
 		margin-bottom: 10px;
@@ -19,7 +17,7 @@
 		& .subtitle {
 			font-size: 18px;
 			color: #949494;
-			text-transform: uppercase;			
+			text-transform: uppercase;
 		}
 
 		& .pt-popover-target {
@@ -31,7 +29,7 @@
 		& .custombuckets-wrapper {
 			display: flex;
 			align-items: center;
-			flex-direction: row; 
+			flex-direction: row;
 			& .pt-label {
 				margin: 0;
 			}
