@@ -1,6 +1,6 @@
 import React from "react";
 import classnames from "classnames";
-import escapeRegExp from 'lodash/escapeRegExp'
+import escapeRegExp from "lodash/escapeRegExp";
 
 import { Icon } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/labs";
@@ -25,7 +25,7 @@ SelectChartType.defaultProps = {
 				})}
 				onClick={handleClick}
 			>
-				<img className="icon" src={item.icon} alt={`[${item.name} icon]`} />
+				<Icon iconName={item.icon} title={`[${item.name} icon]`} />
 				<span className="select-option-label">{item.nllabel}</span>
 			</span>
 		);
@@ -48,11 +48,7 @@ function SelectChartType(props) {
 		Select,
 		props,
 		<div className="select-option current" title={props.value.nllabel}>
-			<img
-				className="icon"
-				src={props.value.icon}
-				alt={`[${props.value.name} icon]`}
-			/>
+			<Icon iconName={props.value.icon} title={`[${props.value.name} icon]`} />
 			<span className="value">{props.value.nllabel}</span>
 			<Icon iconName="double-caret-vertical" />
 		</div>

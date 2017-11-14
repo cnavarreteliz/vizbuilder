@@ -30,9 +30,14 @@
 			width: 0;
 			overflow: hidden;
 			text-overflow: ellipsis;
+			margin-left: 0.3em;
 		}
 		& .pt-icon-standard {
 			flex: 0 0;
+		}
+
+		& .select-option-label {
+			margin-left: 0.3em;
 		}
 
 		&.active {
