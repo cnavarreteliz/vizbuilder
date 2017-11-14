@@ -121,9 +121,6 @@ function Chart(props) {
 				}
 			}
 		},
-		groupBy: props.options.groupBy
-			? [props.options.groupBy, props.axis_x]
-			: [props.axis_x],
 		data: data.map(item => {
 			return { ...item, value: item[props.axis_y] };
 		}),
@@ -136,6 +133,9 @@ function Chart(props) {
 
 	let TREEMAPCONFIG = {
 		...VIZCONFIG,
+		groupBy: props.options.groupBy
+		? [props.options.groupBy, props.axis_x]
+		: [props.axis_x],
 		padding: 2,
 		shapeConfig: SHAPECONFIG
 	};
@@ -144,6 +144,10 @@ function Chart(props) {
 		...VIZCONFIG,
 		y: [props.axis_y], // Y axis option
 		x: [props.axis_x], // X axis option
+		groupBy: props.options.groupBy
+		? [props.options.groupBy]
+		: [props.axis_x],
+		groupPadding: 5,
 		xConfig: {
 			title: props.axis_x
 		},
