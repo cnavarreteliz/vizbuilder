@@ -18,7 +18,7 @@ import "styles/AreaSidebar.css";
 
 function Panel(props) {
 	const measures = getCoherentMeasures(props.viztype, props.all_ms);
-	
+
 	switch (props.viztype) {
 		case "table":
 			return (
@@ -165,11 +165,9 @@ function Panel(props) {
 	}
 }
 
-function Sidebar(props) {
-	const measures = getCoherentMeasures(props.viztype, props.all_ms);
-
-	return (
-		<div className="side-panel">
+function Dataset(props) {
+	if (props.all_cb.length > 1) {
+		return (
 			<div className="group">
 				<span className="label">Dataset</span>
 				<CustomSelect
@@ -178,6 +176,18 @@ function Sidebar(props) {
 					onItemSelect={props.onSetCube}
 				/>
 			</div>
+		);
+	} else {
+		return <div />;
+	}
+}
+
+function Sidebar(props) {
+	const measures = getCoherentMeasures(props.viztype, props.all_ms);
+
+	return (
+		<div className="side-panel">
+			{Dataset(props)}
 			<div className="group">
 				<span className="label">I want to see</span>
 				<CustomSelect
@@ -223,16 +233,20 @@ function mapStateToProps(state) {
 	let colorMeasureFilter = RegExp("growth|average|median|percent", "i"),
 		treemapMeasureFilter = RegExp("average|median", "i");
 
-	let all_cl = colorSelector(currentCb.measures)
+	let all_cl = colorSelector(currentCb.measures);
 
-	if(state.aggregators.colorBy.length > 0) {
-		currentCl =all_cl.find(item => item.measure === currentCl && item.type === "standard")
-	} else if(state.aggregators.growthBy.length > 0) {
-		currentCl = all_cl.find(item => item.measure === currentGw && item.type === "growth");
+	if (state.aggregators.colorBy.length > 0) {
+		currentCl = all_cl.find(
+			item => item.measure === currentCl && item.type === "standard"
+		);
+	} else if (state.aggregators.growthBy.length > 0) {
+		currentCl = all_cl.find(
+			item => item.measure === currentGw && item.type === "growth"
+		);
 	} else {
-		currentCl = all_cl[0]
+		currentCl = all_cl[0];
 	}
-		
+
 	return {
 		cube: currentCb,
 		drilldown: currentDd,
