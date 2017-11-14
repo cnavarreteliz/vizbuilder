@@ -279,7 +279,7 @@ function mapDispatchToProps(dispatch) {
 		},
 
 		onSetViztype(item) {
-			dispatch({ type: "VIZ_TYPE_UPDATE", payload: item.name });
+			dispatch({ type: "VIZ_TYPE_UPDATE", payload: item.key });
 		},
 
 		onSetMeasure(item) {

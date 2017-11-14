@@ -23,7 +23,8 @@ CustomSelect.defaultProps = {
 				})}
 				onClick={handleClick}
 			>
-				{item.name}
+				{item.icon ? <Icon iconName={item.icon} /> : null}
+				<span className="select-option-label">{item.name}</span>
 			</span>
 		);
 	},
@@ -33,29 +34,34 @@ CustomSelect.defaultProps = {
 };
 
 /**
- * @constructor
+ * @class CustomSelect
  * @augments {React.Component<CustomSelectProps>}
  * @static {object} defaultProps
  * @param {object} props 
  * @param {string|Array<any>} [props.className] 
+ * @param {JSX.Element|Array<JSX.Element>} [props.children]
  * @param {Array<Selectable>} props.items
  * @param {(item: Selectable, event?: Event) => void} props.onItemSelect
  * @param {Selectable} props.value
  */
 function CustomSelect(props) {
-	props.className = classnames("custom-select", props.className);
+	props = {
+		...props,
+		className: classnames("custom-select", props.className)
+	};
 
 	if (!props.value || !props.value.name)
 		props.value = { value: null, name: "Select...", disabled: true };
 
-	return React.createElement(
-		Select,
-		props,
-		<div className="select-option current" title={props.value.name}>
-			<span className="value">{props.value.name}</span>
-			<Icon iconName="double-caret-vertical" />
-		</div>
-	);
+	if (!props.children)
+		props.children = (
+			<div className="select-option current" title={props.value.name}>
+				<span className="value">{props.value.name}</span>
+				<Icon iconName="double-caret-vertical" />
+			</div>
+		);
+
+	return React.createElement(Select, props, props.children);
 }
 
 export default CustomSelect;

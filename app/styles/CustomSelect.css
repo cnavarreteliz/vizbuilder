@@ -36,5 +36,18 @@
 		&.disabled {
 			pointer-events: none;
 		}
+
+		& > span {
+			margin-left: 0.2em;
+			margin-right: 0.2em;
+
+			&:first-child {
+				margin-left: 0;
+			}
+
+			&:last-child {
+				margin-right: 0;
+			}
+		}
 	}
 }
