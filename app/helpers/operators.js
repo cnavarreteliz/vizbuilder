@@ -1,4 +1,5 @@
 const OPERATORS = {
+	UNDEFINED: 0,
 	EQUAL: 1,
 	LOWER: 2,
 	LOWEREQUAL: 3,
@@ -8,19 +9,9 @@ const OPERATORS = {
 	CONTAINS: 8
 };
 
-export const KIND_NUMBER = [
-	"EQUAL",
-	"LOWER",
-	"LOWEREQUAL",
-	"HIGHER",
-	"HIGHEREQUAL",
-	"NOTEQUAL"
-];
-
-export const KIND_TEXT = ["EQUAL", "NOTEQUAL", "CONTAINS"];
-
 export const LABELS = {
-	0: 'Undefined',
+	UNDEFINED: "Undefined",
+	0: "Undefined",
 	EQUAL: "Equal to",
 	1: "Equal to",
 	LOWER: "Lower than",
@@ -36,5 +27,17 @@ export const LABELS = {
 	CONTAINS: "Contains the term",
 	8: "Contains the term"
 };
+
+export const KIND_NUMBER = [
+	"UNDEFINED",
+	"EQUAL",
+	"LOWER",
+	"LOWEREQUAL",
+	"HIGHER",
+	"HIGHEREQUAL",
+	"NOTEQUAL"
+];
+
+export const KIND_TEXT = ["UNDEFINED", "EQUAL", "NOTEQUAL", "CONTAINS"];
 
 export default OPERATORS;

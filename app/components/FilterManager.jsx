@@ -8,7 +8,7 @@ import OPERATORS, {
 } from "helpers/operators";
 import { makeRandomId } from "helpers/random";
 
-import { Button, Dialog, Intent } from "@blueprintjs/core";
+import { Button, Dialog, Intent, NumericInput } from "@blueprintjs/core";
 import FilterItem from "components/FilterItem";
 import CustomSelect from "components/CustomSelect";
 
@@ -133,12 +133,14 @@ class FilterManager extends React.Component {
 	renderMeasureOptions() {
 		let filter = this.currentFilter;
 		return [
-			<select value={filter.operator} onChange={this.setOperator}>
-				{NUMBER_OPERATORS.map(ms => (
-					<option value={OPERATORS[ms]}>{OPERATOR_LABELS[ms]}</option>
-				))}
-			</select>,
-			<input type="number" value={filter.value} onInput={this.setMeasureValue} />
+			<div className="pt-select">
+				<select value={filter.operator} onChange={this.setOperator}>
+					{NUMBER_OPERATORS.map(ms => (
+						<option value={OPERATORS[ms]}>{OPERATOR_LABELS[ms]}</option>
+					))}
+				</select>
+			</div>,
+			<NumericInput value={filter.value} onValueChange={this.setMeasureValue} />
 		];
 	}
 
@@ -220,14 +222,14 @@ class FilterManager extends React.Component {
 		});
 	};
 
-	setMeasureValue = evt => {
+	setMeasureValue = value => {
 		let filter = this.currentFilter;
 
 		if (!filter.property) return;
 
 		this.props.onUpdateFilter({
 			...filter,
-			value: evt.target.value
+			value
 		});
 	};
 
