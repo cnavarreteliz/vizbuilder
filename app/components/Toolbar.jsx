@@ -36,7 +36,7 @@ class Toolbar extends React.Component {
 		axis: PropTypes.shape({
 			x: PropTypes.string,
 			y: PropTypes.string,
-			year: PropTypes.string,
+			year: PropTypes.string
 		}).isRequired,
 		data: PropTypes.array.isRequired,
 		cube: PropTypes.string.isRequired
@@ -54,6 +54,7 @@ class Toolbar extends React.Component {
 
 	render() {
 		let { axis, data } = this.props;
+		if (data.length > 0) delete data[0].value;
 
 		return (
 			<ul className="toolbar">
@@ -72,7 +73,11 @@ class Toolbar extends React.Component {
 									title="About"
 									panel={<ToolbarInfo data={data} />}
 								/>
-								<Tab2 id="ng" title="Data" panel={<ToolbarTable data={data} />} />
+								<Tab2
+									id="ng"
+									title="Data"
+									panel={<ToolbarTable data={data} />}
+								/>
 							</Tabs2>
 						</div>
 						<div className="pt-dialog-footer">
@@ -109,12 +114,13 @@ class Toolbar extends React.Component {
 		// Very fragile, but right now there's no other way without reestructuring
 		// Must be keep updated with the JSX in the Chart.jsx component
 		const element = document.querySelector(".viz > svg");
-		element &&
-			saveElement(element, { filename: this.title, type: "png" });
+		element && saveElement(element, { filename: this.title, type: "png" });
 	};
 
 	saveCSV = () => {
-		let blob = new Blob([csvFormat(this.props.data)], { type: "text/plain;charset=utf-8" });
+		let blob = new Blob([csvFormat(this.props.data)], {
+			type: "text/plain;charset=utf-8"
+		});
 		saveAs(blob, `${this.title}.csv`);
 	};
 }
