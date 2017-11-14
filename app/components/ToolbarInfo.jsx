@@ -8,7 +8,6 @@ import groupBy from "lodash/groupBy";
 
 class ToolbarInfo extends React.Component {
 	getBody(topcateg, axis) {
-		console.log(topcateg);
 		switch (topcateg.length) {
 			case 0:
 			case 1:
@@ -57,11 +56,16 @@ class ToolbarInfo extends React.Component {
 		let props = this.props,
 			text,
 			time = this.props.time,
-			body;
+            body;
+        
+        let top_categories = this.getTopCategories(this.props.data, time, this.props.axis)
 
 		switch (props.time.length) {
+            // By default
 			case 0:
-				return <div />;
+                return <div />;
+                
+            // It's selected one year
 			case 1:
 				return (
 					<div>
@@ -71,7 +75,9 @@ class ToolbarInfo extends React.Component {
 							this.props.axis
 						)}
 					</div>
-				);
+                );
+
+            // It's selected a range of years
 			case 2:
 				return (
 					<div>

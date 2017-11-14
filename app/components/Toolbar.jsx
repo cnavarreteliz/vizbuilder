@@ -11,6 +11,8 @@ import ToolbarInfo from "components/ToolbarInfo";
 import ToolbarTable from "components/ToolbarTable";
 import PanelData from "components/PanelData";
 
+import { getTitle } from "helpers/titles";
+
 import "styles/Toolbar.css";
 import "styles/Dialog.css";
 
@@ -64,7 +66,11 @@ class Toolbar extends React.Component {
 						iconName="pt-icon-th"
 						isOpen={this.state.dialogOpen}
 						onClose={this.toggleDialog}
-						title={this.title.toUpperCase()}
+						title={getTitle(
+							this.props.cube,
+							this.props.axis.x,
+							this.props.axis.y
+						)}
 					>
 						<div className="pt-dialog-body">
 							<Tabs2>
@@ -99,10 +105,6 @@ class Toolbar extends React.Component {
 				</li>
 			</ul>
 		);
-	}
-
-	get title() {
-		return `${this.props.cube} - ${this.props.axis.x} vs ${this.props.axis.y}`;
 	}
 
 	toggleDialog = () => {

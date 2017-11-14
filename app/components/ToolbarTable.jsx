@@ -1,29 +1,22 @@
 import React from "react";
+import ReactTable from "react-table";
 
-import "styles/VizTable.css";
+import "react-table/react-table.css";
+import "styles/ToolbarTable.css";
 
-function VizTable(props) {
-	let { data } = props;
-	let keys = Object.keys(data[0] || {});
+function ToolbarTable(props) {
+	let data = props.data;
+	// I don't know why always in the first object there is a "value" key with NaN
+	delete data[0].value;
 
-	return (
-		<div className="viz-table">
-			<table className="table">
-				<thead className="table-header">
-					<tr className="table-row">
-						{keys.map(e => <th className="table-cell">{e}</th>)}
-					</tr>
-				</thead>
-				<tbody className="table-body">
-					{data.map(e => (
-						<tr className="table-row">
-							{keys.map(elm => <td className="table-cell">{e[elm]}</td>)}
-						</tr>
-					))}
-				</tbody>
-			</table>
-		</div>
-	);
+	let columns = Object.keys(data[0] || {}).map(item => {
+		return {
+			Header: item,
+			accessor: item
+		};
+	});
+
+	return <ReactTable data={data} columns={columns} showPagination={false}/>;
 }
 
-export default VizTable;
+export default ToolbarTable;
