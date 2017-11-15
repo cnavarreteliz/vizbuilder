@@ -16,7 +16,7 @@ function ToolbarTable(props) {
 		};
 	});
 
-	return <ReactTable data={data} columns={columns} showPagination={false}/>;
+	return <ReactTable data={data} columns={columns} showPagination={false} pageSize={data.length}/>;
 }
 
 export default ToolbarTable;

@@ -1,4 +1,6 @@
 import React from "react";
+import { connect } from "react-redux";
+
 import PropTypes from "prop-types";
 import { csvFormat } from "d3-dsv";
 import { saveElement } from "d3plus-export";
@@ -12,6 +14,10 @@ import ToolbarTable from "components/ToolbarTable";
 import PanelData from "components/PanelData";
 
 import { getTitle } from "helpers/titles";
+
+import uniq from "lodash/uniq";
+import inRange from "lodash/inRange";
+import groupBy from "lodash/groupBy";
 
 import "styles/Toolbar.css";
 import "styles/Dialog.css";
@@ -54,9 +60,34 @@ class Toolbar extends React.Component {
 		cube: ""
 	};
 
+	timeRange(time, data, axis_time) {
+		switch (time.length) {
+			// By default
+			case 0: {
+				let allYears = uniq(data.map(dm => parseInt(dm[axis_time]))) || [],
+					max = Math.max(...allYears);
+				return [max, max];
+			}
+			case 1: {
+				return [time[0], time[0]]
+			}
+
+			default: {
+				return time;
+			}
+		}
+	}
+
 	render() {
-		let { axis, data } = this.props;
+		let { axis, data } = this.props,
+			timeRange = this.timeRange(this.props.time, data, this.props.axis.time);
+
 		if (data.length > 0) delete data[0].value;
+
+		// Filter data by timeRange
+		data = data.filter(item =>
+			inRange(parseInt(item[axis.time]), timeRange[0], timeRange[1] + 1)
+		);
 
 		return (
 			<ul className="toolbar">
@@ -77,7 +108,8 @@ class Toolbar extends React.Component {
 								<Tab2
 									id="rx"
 									title="About"
-									panel={<ToolbarInfo data={data} />}
+									panel={<ToolbarInfo 
+										data={data} timeRange={timeRange} />}
 								/>
 								<Tab2
 									id="ng"
@@ -116,23 +148,38 @@ class Toolbar extends React.Component {
 		// Very fragile, but right now there's no other way without reestructuring
 		// Must be keep updated with the JSX in the Chart.jsx component
 		const element = document.querySelector(".viz > svg");
-		element && saveElement(element, { filename: getTitle(
-			this.props.cube,
-			this.props.axis.x,
-			this.props.axis.y
-		), type: "png" });
+		element &&
+			saveElement(element, {
+				filename: getTitle(
+					this.props.cube,
+					this.props.axis.x,
+					this.props.axis.y
+				),
+				type: "png"
+			});
 	};
 
 	saveCSV = () => {
 		let blob = new Blob([csvFormat(this.props.data)], {
 			type: "text/plain;charset=utf-8"
 		});
-		saveAs(blob, `${getTitle(
-			this.props.cube,
-			this.props.axis.x,
-			this.props.axis.y
-		)}.csv`);
+		saveAs(
+			blob,
+			`${getTitle(this.props.cube, this.props.axis.x, this.props.axis.y)}.csv`
+		);
 	};
 }
 
-export default Toolbar;
+function mapStateToProps(state) {
+	let axis = state.data.axis;
+	return {
+		time: state.visuals.chart.time,
+		axis: {
+			x: axis.x.level || "",
+			y: axis.y.name || "",
+			time: axis.time.level || ""
+		}
+	};
+}
+
+export default connect(mapStateToProps)(Toolbar);

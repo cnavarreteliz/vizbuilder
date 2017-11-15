@@ -33,11 +33,6 @@ class ToolbarInfo extends React.Component {
 	}
 
 	getTopCategories(data, time, axis) {
-		// Filter data by Year
-		data = data.filter(item =>
-			inRange(parseInt(item[axis.time]), time[0], time[1] + 1)
-		);
-
 		// Group by Dimension
 		data = groupBy(data, axis.x);
 		data = Object.keys(data).map(item => {

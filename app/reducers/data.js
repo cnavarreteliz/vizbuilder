@@ -1,3 +1,5 @@
+import has from "lodash/has";
+
 /** @type {DataState} */
 const initialState = {
 	fetching: false,
@@ -45,9 +47,10 @@ export default function(state = initialState, action) {
 		}
 
 		case "DATA_FETCH_SUCCESS": {
-			let dimensions = action.payload.dimensions,
+			let values = action.payload.values,
+				dimensions = action.payload.dimensions,
 				measure = dimensions.find(dim => dim.type == "measures");
-			
+
 			return {
 				...state,
 				fetching: false,
@@ -59,6 +62,17 @@ export default function(state = initialState, action) {
 					x: dimensions.find(dim => dim.type == "standard"),
 					y: measure.members[0]
 				}
+			};
+		}
+
+		case "DATA_CLEAN_VALUES": {
+			let data = state.values;
+			if (has(data[0], 'value'))
+				delete data[0].value
+
+			return {
+				...state,
+				values: data
 			};
 		}
 
