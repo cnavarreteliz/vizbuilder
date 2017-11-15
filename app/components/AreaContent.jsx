@@ -33,11 +33,12 @@ import "styles/AreaContent.css";
  */
 function AreaContent(props) {
 	if (!props.axis.x || !props.axis.y) return <ContentDefault />;
-	
+
 	return (
 		<div className="main-panel">
 			<header className="header">
 				<Toolbar data={props.data} cube={props.cube.name} axis={props.axis} />
+
 				<p className="title">
 					{props.cube.name + " by "}
 					<InputPopover
@@ -46,6 +47,7 @@ function AreaContent(props) {
 						onClick={props.onDrilldownChange}
 					/>
 				</p>
+
 				<p className="subtitle">
 					{"SIZED BY "}
 					<InputPopover
@@ -70,8 +72,11 @@ function AreaContent(props) {
 function mapStateToProps(state) {
 	let dd = state.aggregators.drilldowns[0] || { name: "" },
 		ms = state.aggregators.measures[0] || { name: "" };
-	
-	let measure_filters = state.filters.filter(filter => filter.property && filter.property.kind == 'measure' && filter.value);
+
+	let measure_filters = state.filters.filter(
+		filter =>
+			filter.property && filter.property.kind == "measure" && filter.value
+	);
 
 	return {
 		axis: {

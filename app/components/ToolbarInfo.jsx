@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import pluralize from "pluralize";
 import numeral from "numeral";
 
+import uniq from "lodash/uniq";
 import inRange from "lodash/inRange";
 import groupBy from "lodash/groupBy";
 
@@ -19,7 +20,7 @@ class ToolbarInfo extends React.Component {
 						value of {topcateg[0].value}.
 					</span>
 				);
-            default:
+			default:
 				return (
 					<span>
 						{axis.x} with the highest {axis.y} was {topcateg[0].name} with a
@@ -56,16 +57,33 @@ class ToolbarInfo extends React.Component {
 		let props = this.props,
 			text,
 			time = this.props.time,
-            body;
-        
-        let top_categories = this.getTopCategories(this.props.data, time, this.props.axis)
+			body;
+
+		let top_categories = this.getTopCategories(
+			this.props.data,
+			time,
+			this.props.axis
+		);
 
 		switch (props.time.length) {
-            // By default
+			// By default
 			case 0:
-                return <div />;
-                
-            // It's selected one year
+				let allYears =
+						uniq(
+							this.props.data.map(dm => parseInt(dm[this.props.axis.time]))
+						) || [],
+					max = Math.max(...allYears);
+				return (
+					<div>
+						In {max},{" "}
+						{this.getBody(
+							this.getTopCategories(this.props.data, [max], this.props.axis),
+							this.props.axis
+						)}
+					</div>
+				);
+
+			// It's selected one year
 			case 1:
 				return (
 					<div>
@@ -75,9 +93,9 @@ class ToolbarInfo extends React.Component {
 							this.props.axis
 						)}
 					</div>
-                );
+				);
 
-            // It's selected a range of years
+			// It's selected a range of years
 			case 2:
 				return (
 					<div>
