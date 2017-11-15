@@ -40,7 +40,7 @@ function Chart(props) {
 	// Clean data before map in d3plus
 	data = groupLowestCategories(props.data);
 
-	let property = props.options.groupBy || props.axis_x;
+	let property = props.config.groupBy || props.axis_x;
 
 	// Hide/isolate Data
 	let filters = props.filters;
@@ -79,9 +79,9 @@ function Chart(props) {
 	// Set COLORSCALE properties
 	let COLORSCALE = {
 		colorScale:
-			props.color.type === "growth" ? "Growth" : props.options.colorScale,
+			props.color.type === "growth" ? "Growth" : props.config.colorScale,
 		colorScalePosition:
-			props.options.colorScale !== "" || props.color.type === "growth"
+			props.config.colorScale !== "" || props.color.type === "growth"
 				? "bottom"
 				: false,
 		colorScaleConfig: {
@@ -100,7 +100,7 @@ function Chart(props) {
 	let VIZCONFIG = {
 		...COLORSCALE,
 		aggs: {
-			[props.axis_y]: measureType(props.options.type) ? mean : sum,
+			[props.axis_y]: measureType(props.config.type) ? mean : sum,
 			Growth: mean
 		},
 		legendConfig: LEGENDCONFIG,
@@ -113,11 +113,10 @@ function Chart(props) {
 				end: d => {
 					if (d !== undefined) {
 						let time = Array.isArray(d)
-								? d.map(item => item.getFullYear())
-								: [].concat(d.getFullYear())
-						props.onYearChange(time)
+							? d.map(item => item.getFullYear())
+							: [].concat(d.getFullYear());
+						props.onYearChange(time);
 					}
-					
 				}
 			}
 		},
@@ -133,20 +132,21 @@ function Chart(props) {
 
 	let TREEMAPCONFIG = {
 		...VIZCONFIG,
-		groupBy: props.options.groupBy
-		? [props.options.groupBy, props.axis_x]
-		: [props.axis_x],
+		groupBy: props.config.groupBy
+			? [props.config.groupBy, props.axis_x]
+			: [props.axis_x],
 		padding: 2,
 		shapeConfig: SHAPECONFIG
 	};
+
+	console.log(props.config.members);
 
 	let PLOTCONFIG = {
 		...VIZCONFIG,
 		y: [props.axis_y], // Y axis option
 		x: [props.axis_x], // X axis option
-		groupBy: props.options.groupBy
-		? [props.options.groupBy]
-		: [props.axis_x],
+		groupBy: props.config.groupBy ? [props.config.groupBy] : [props.axis_x],
+		stacked: props.config.members.length > 5 ? false : true,
 		groupPadding: 5,
 		xConfig: {
 			title: props.axis_x
@@ -238,7 +238,10 @@ function mapStateToProps(state) {
 		type: "",
 		time: state.data.axis.time,
 		colorScale: colorBy.name,
-		groupBy: groupBy.levelName
+		groupBy: groupBy.levelName,
+		members: {
+			groupBy: state.members[groupBy.fullName] || []
+		}
 	};
 
 	let measure = aggr.measures.find(ms => ms.name === props.y);
@@ -253,7 +256,7 @@ function mapStateToProps(state) {
 		chart: state.visuals.chart,
 		filters: state.data.filters,
 		num_buckets: state.visuals.buckets,
-		options: props,
+		config: props,
 		color: {
 			type: aggr.growthBy.length > 0 ? "growth" : "standard",
 			measure: union(colorBy, growthBy)[0]

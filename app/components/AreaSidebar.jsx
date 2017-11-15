@@ -288,6 +288,7 @@ function mapDispatchToProps(dispatch) {
 
 		onSetGrouping(item) {
 			dispatch({ type: "GROUPBY_SET", payload: item });
+			dispatch(requestMembers(item));
 		},
 
 		onSetColorIndex(item) {
