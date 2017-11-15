@@ -147,7 +147,7 @@ function Chart(props) {
 		x: [props.axis_x], // X axis option
 		groupBy: props.config.groupBy ? [props.config.groupBy] : [props.axis_x],
 		stacked:
-			props.config.members.length > 5 && !measureType(props.config.type)
+			props.config.members.groupBy.length < 5 && !measureType(props.config.type)
 				? false
 				: true,
 		groupPadding: 5,
