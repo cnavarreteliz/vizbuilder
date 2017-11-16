@@ -101,6 +101,13 @@ export function requestQuery(query) {
 			.query(query)
 			.then(
 				request => {
+					if (!request.data.values.length) {
+						dispatch({
+							type: "DATA_FETCH_ERROR",
+							payload: Error("This set is empty.")
+						});
+					}
+
 					/**
 					 * flattenDrilldowns inflates the values in the format that comes
 					 * from mondrian, and generates an array where each element is

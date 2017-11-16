@@ -11,7 +11,7 @@ import { filterKindReducer } from "helpers/filters";
 import { generateSearch } from "helpers/functions";
 import { pickUnconflictingTimeDrilldown } from "helpers/manageDimensions";
 
-import { Overlay, ProgressBar } from "@blueprintjs/core";
+import { Overlay, ProgressBar, Intent } from "@blueprintjs/core";
 import { ErrorToaster } from "components/ErrorToaster";
 
 /**
@@ -39,7 +39,7 @@ class LoadControl extends React.Component {
 	/** @param {LoadControlProps} prev */
 	componentDidUpdate(prev) {
 		const dispatch = this.props.dispatch;
-		const { cube, drilldowns, measures, cuts } = this.props;
+		const { cube, drilldowns, measures, cuts, error } = this.props;
 
 		if (
 			!isEqual(prev.drilldowns, drilldowns) ||
@@ -58,6 +58,9 @@ class LoadControl extends React.Component {
 					)
 				);
 		}
+
+		if (!isEqual(prev.error, error))
+			ErrorToaster.show({ intent: Intent.WARNING, message: error.message });
 	}
 
 	render() {
@@ -68,10 +71,6 @@ class LoadControl extends React.Component {
 			cube && dimension
 				? `Loading ${cube.name} by ${dimension.name}`
 				: "Loading...";
-
-		if (this.props.error) {
-			ErrorToaster.show({ message: this.props.error.message });
-		}
 
 		return (
 			<Overlay
