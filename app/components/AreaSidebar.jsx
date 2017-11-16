@@ -9,6 +9,7 @@ import InputTable from "components/InputTable";
 import union from "lodash/union";
 
 import { requestMembers } from "actions/datasource";
+
 import { colorSelector } from "helpers/selectors";
 import { getCoherentMeasures } from "helpers/manageData";
 
@@ -21,11 +22,12 @@ function Panel(props) {
 
 	switch (props.viztype) {
 		case "table":
+			let attributes = union(props.measures, props.drilldowns);
 			return (
 				<div>
 					<span className="label">attributes</span>
 					<p>
-						{union(props.measures, props.drilldowns).map(item => {
+						{attributes.map(item => {
 							return (
 								<div className="filter-item">
 									<span className="filter-content">

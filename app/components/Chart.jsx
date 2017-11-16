@@ -157,12 +157,10 @@ function Chart(props) {
 			title: props.axis_y
 		}
 	};
-	
+
 	var bubbleX = props.bubbleAxis.x ? props.bubbleAxis.x : props.axis_y,
-	bubbleY = props.bubbleAxis.y ? props.bubbleAxis.y : props.axis_y,
-	bubbleSize = props.bubbleAxis.size
-		? props.bubbleAxis.size
-		: props.axis_y;
+		bubbleY = props.bubbleAxis.y ? props.bubbleAxis.y : props.axis_y,
+		bubbleSize = props.bubbleAxis.size ? props.bubbleAxis.size : props.axis_y;
 
 	var allValues = uniq(data.map(dm => parseInt(dm[bubbleSize]))) || [],
 		minValue = Math.min(...allValues),

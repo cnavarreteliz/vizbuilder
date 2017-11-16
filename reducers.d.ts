@@ -51,6 +51,11 @@ interface VisualsState {
 	panel: {
 		show: boolean;
 	};
+	bubbleAxis: {
+		x: string;
+		y: string;
+		size: string;
+	};
 	chart: {
 		type: string;
 		growth: boolean;

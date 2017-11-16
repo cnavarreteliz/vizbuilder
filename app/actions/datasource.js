@@ -111,7 +111,7 @@ export function requestQuery(query) {
 						request.data.axes,
 						request.data.values
 					);
-
+					
 					/**
 					 * this array is basically the same as req.data.axis_dimensions,
 					 * but adds a members property: an array with all the possible 
