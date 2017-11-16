@@ -21,8 +21,6 @@ export function applyFilters(items, filters) {
 			let test = false;
 			let value = item[property.name];
 
-			console.log(property, operator, value)
-
 			if (!value) return test;
 
 			if (operator & OPERATORS.EQUAL) 
