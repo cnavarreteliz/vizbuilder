@@ -140,8 +140,6 @@ function Chart(props) {
 		shapeConfig: SHAPECONFIG
 	};
 
-	console.log(props.config.members);
-
 	let PLOTCONFIG = {
 		...VIZCONFIG,
 		y: [props.axis_y], // Y axis option
@@ -159,6 +157,34 @@ function Chart(props) {
 			title: props.axis_y
 		}
 	};
+	
+	var bubbleX = props.bubbleAxis.x ? props.bubbleAxis.x : props.axis_y,
+	bubbleY = props.bubbleAxis.y ? props.bubbleAxis.y : props.axis_y,
+	bubbleSize = props.bubbleAxis.size
+		? props.bubbleAxis.size
+		: props.axis_y;
+
+	var allValues = uniq(data.map(dm => parseInt(dm[bubbleSize]))) || [],
+		minValue = Math.min(...allValues),
+		maxValue = Math.max(...allValues);
+
+	var BUBBLECONFIG = {
+		...VIZCONFIG,
+		data: data,
+		groupBy: props.axis_x,
+		y: bubbleY,
+		x: bubbleX,
+		timelineConfig: {
+			...VIZCONFIG.timelineConfig,
+			selection: [min, max]
+		},
+		shapeConfig: {
+			Circle: {
+				scale: d =>
+					(d[bubbleSize] - minValue) / (maxValue - minValue) * (10 - 1) + 1
+			}
+		}
+	};
 
 	switch (props.chart.type) {
 		case "treemap": {
@@ -174,39 +200,6 @@ function Chart(props) {
 		}
 
 		case "bubble": {
-			let bubbleX = props.bubbleAxis.x ? props.bubbleAxis.x : props.axis_y,
-				bubbleY = props.bubbleAxis.y ? props.bubbleAxis.y : props.axis_y,
-				bubbleSize = props.bubbleAxis.size
-					? props.bubbleAxis.size
-					: props.axis_y;
-
-			let allValues =
-					uniq(data.map(dm => parseInt(dm[bubbleSize]))) || [],
-				minValue = Math.min(...allValues),
-				maxValue = Math.max(...allValues);
-
-			let BUBBLECONFIG = {
-				...VIZCONFIG,
-				data: data,
-				groupBy: props.axis_x,
-				y: bubbleY,
-				x: bubbleX,
-				timelineConfig: {
-					...VIZCONFIG.timelineConfig,
-					selection: [min, max]
-				},
-				shapeConfig: {
-					Circle: {
-						scale: d =>
-							(d[bubbleSize] - minValue) /
-								(maxValue - minValue) *
-								(10 - 1) +
-							1
-					}
-				}
-			};
-
-			console.log(BUBBLECONFIG);
 			return <Plot config={BUBBLECONFIG} />;
 		}
 
