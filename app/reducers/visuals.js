@@ -12,6 +12,11 @@ const initialState = {
 		y: "",
 		year: ""
 	},
+	bubbleAxis: {
+		x: "",
+		y: "",
+		size: ""
+	},
 	dialogPanel: {
 		show: false
 	},
@@ -104,6 +109,11 @@ export default function(state = initialState, action) {
 
 		case "MEASURE_SET": {
 			return { ...state, axis: { ...state.axis, y: action.payload.name } };
+		}
+
+		case "BUBBLE_SET": {
+			// payload can be the measure object or its name
+			return { ...state, bubbleAxis: { ...state.bubbleAxis, [action.axis]: action.payload.name } };
 		}
 
 /*		case "COLORBY_SET": {

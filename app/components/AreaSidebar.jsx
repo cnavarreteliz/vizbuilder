@@ -137,17 +137,25 @@ function Panel(props) {
 					<div className="group">
 						<span className="label">X Axis</span>
 						<CustomSelect
-							value={props.measure}
+							value={props.bubbleAxis.x}
 							items={measures}
-							onItemSelect={props.onSetMeasure}
+							onItemSelect={evt => props.onSetBubbleAxis(evt, "x")}
 						/>
 					</div>
 					<div className="group">
 						<span className="label">Y Axis</span>
 						<CustomSelect
-							value={props.measure}
+							value={props.bubbleAxis.y}
 							items={measures}
-							onItemSelect={props.onSetMeasure}
+							onItemSelect={evt => props.onSetBubbleAxis(evt, "y")}
+						/>
+					</div>
+					<div className="group">
+						<span className="label">sized by</span>
+						<CustomSelect
+							value={props.bubbleAxis.size}
+							items={measures}
+							onItemSelect={evt => props.onSetBubbleAxis(evt, "size")}
 						/>
 					</div>
 					<div className="group">
@@ -255,6 +263,12 @@ function mapStateToProps(state) {
 		groupBy: currentGb,
 		colorBy: currentCl,
 
+		bubbleAxis: {
+			x: currentCb.measures.find(item => item.name === state.visuals.bubbleAxis.x),
+			y: currentCb.measures.find(item => item.name === state.visuals.bubbleAxis.y),
+			size: currentCb.measures.find(item => item.name === state.visuals.bubbleAxis.size)
+		},
+
 		measures: state.aggregators.measures,
 		drilldowns: state.aggregators.drilldowns,
 
@@ -284,6 +298,11 @@ function mapDispatchToProps(dispatch) {
 
 		onSetMeasure(item) {
 			dispatch({ type: "MEASURE_SET", payload: item });
+		},
+
+		onSetBubbleAxis(item, axis) {
+			dispatch({ type: "MEASURE_ADD", payload: item });
+			dispatch({ type: "BUBBLE_SET", payload: item, axis: axis });
 		},
 
 		onSetGrouping(item) {
