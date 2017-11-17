@@ -282,13 +282,13 @@ function mapStateToProps(state) {
 	let axis = state.data.axis;
 
 	return {
-		bubbleAxis: state.visuals.bubbleAxis,
+		bubbleAxis: state.visuals.axis.bubble,
 		axis_x: axis.x.level || "",
 		axis_y: axis.y.name || "",
 		axis_time: axis.time.level || "",
 		chart: state.visuals.chart,
 		filters: state.data.filters,
-		num_buckets: state.visuals.buckets,
+		num_buckets: state.visuals.chart.buckets,
 		config: props,
 		color: {
 			type: aggr.growthBy.length > 0 ? "growth" : "standard",

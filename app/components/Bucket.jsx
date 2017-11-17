@@ -25,7 +25,7 @@ function mapStateToProps(state) {
 
 	return {
 		show: dim && dim.level === "Age",
-		num: state.visuals.buckets
+		num: state.visuals.chart.buckets
 	};
 }
 

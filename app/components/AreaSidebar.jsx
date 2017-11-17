@@ -266,9 +266,15 @@ function mapStateToProps(state) {
 		colorBy: currentCl,
 
 		bubbleAxis: {
-			x: currentCb.measures.find(item => item.name === state.visuals.bubbleAxis.x),
-			y: currentCb.measures.find(item => item.name === state.visuals.bubbleAxis.y),
-			size: currentCb.measures.find(item => item.name === state.visuals.bubbleAxis.size)
+			x: currentCb.measures.find(
+				item => item.name === state.visuals.axis.bubble.x
+			),
+			y: currentCb.measures.find(
+				item => item.name === state.visuals.axis.bubble.y
+			),
+			size: currentCb.measures.find(
+				item => item.name === state.visuals.axis.bubble.size
+			)
 		},
 
 		measures: state.aggregators.measures,
@@ -304,7 +310,7 @@ function mapDispatchToProps(dispatch) {
 
 		onSetBubbleAxis(item, axis) {
 			dispatch({ type: "MEASURE_ADD", payload: item });
-			dispatch({ type: "BUBBLE_SET", payload: item, axis: axis });
+			dispatch({ type: "VIZ_AXIS_UPDATE", payload: item, axis: axis, property: "bubble" });
 		},
 
 		onSetGrouping(item) {

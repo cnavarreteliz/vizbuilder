@@ -48,28 +48,27 @@ interface MembersState {
 }
 
 interface VisualsState {
-	panel: {
-		show: boolean;
-	};
-	bubbleAxis: {
-		x: string;
-		y: string;
-		size: string;
-	};
 	chart: {
 		type: string;
-		growth: boolean;
+		time: Array<number>;
+		buckets: number;
 	};
 	axis: {
-		x: string;
-		y: string;
-		year: string;
+		standard: {
+			x: string;
+			y: string;
+			time: string;
+		};
+		bubble: {
+			x: string;
+			y: string;
+			size: string;
+			discrete: string;
+		};
 	};
 	dialogPanel: {
 		show: boolean;
 	};
-	buckets: number;
-	timeDimension: boolean;
 }
 
 interface VizbuilderState {

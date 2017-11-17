@@ -1,27 +1,26 @@
 /** @type {VisualsState} */
 const initialState = {
-	panel: {
-		show: false
-	},
 	chart: {
-		type: "treemap",
-		time: []
+		buckets: 10,
+		time: [],
+		type: "treemap"
 	},
 	axis: {
-		x: "",
-		y: "",
-		year: ""
-	},
-	bubbleAxis: {
-		x: "",
-		y: "",
-		size: ""
+		standard: {
+			x: "",
+			y: "",
+			time: ""
+		},
+		bubble: {
+			x: "",
+			y: "",
+			size: "",
+			discrete: ""
+		}
 	},
 	dialogPanel: {
 		show: false
-	},
-	buckets: 10,
-	timeDimension: false
+	}
 };
 
 /**
@@ -42,13 +41,19 @@ export default function(state = initialState, action) {
 		}
 
 		case "VIZ_BUCKET_UPDATE": {
-			return { ...state, buckets: action.payload };
+			return { ...state, chart: { ...state.chart, buckets: action.payload } };
 		}
 
 		case "VIZ_AXIS_UPDATE": {
 			return {
 				...state,
-				axis: { ...state.axis, [action.axis]: action.payload }
+				axis: {
+					...state.axis,
+					[action.property]: {
+						...state.axis[action.property],
+						[action.axis]: action.payload.name
+					}
+				}
 			};
 		}
 
@@ -74,14 +79,12 @@ export default function(state = initialState, action) {
 		}
 
 		case "MEASURE_SET": {
-			return { ...state, axis: { ...state.axis, y: action.payload.name } };
-		}
-
-		case "BUBBLE_SET": {
-			// payload can be the measure object or its name
 			return {
 				...state,
-				bubbleAxis: { ...state.bubbleAxis, [action.axis]: action.payload.name }
+				axis: {
+					...state.axis,
+					standard: { ...state.axis.standard, y: action.payload.name }
+				}
 			};
 		}
 
@@ -97,8 +100,13 @@ export default function(state = initialState, action) {
  * @returns {VisualsState}
  */
 function setAxisX(state, payload) {
-	let newState = { ...state, axis: { ...state.axis, x: payload.levelName } };
-
+	let newState = {
+		...state,
+		axis: {
+			...state.axis,
+			standard: { ...state.axis.standard, x: payload.levelName }
+		}
+	};
 	switch (payload.levelName) {
 		case "Age":
 		case "Age Bucket":
