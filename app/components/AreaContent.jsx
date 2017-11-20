@@ -9,6 +9,8 @@ import ContentDefault from "components/ContentDefault";
 import InputPopover from "components/InputPopover";
 import Toolbar from "components/Toolbar";
 
+import { Button, Dialog } from "@blueprintjs/core";
+
 import "styles/AreaContent.css";
 
 /**
@@ -34,28 +36,52 @@ import "styles/AreaContent.css";
 function AreaContent(props) {
 	if (!props.axis.x || !props.axis.y) return <ContentDefault />;
 
+	let state = {
+		dialogOpen: false
+	};
+
 	return (
 		<div className="main-panel">
 			<header className="header">
-				<Toolbar data={props.data} cube={props.cube.name} axis={props.axis} />
+				<Toolbar
+					data={props.data}
+					cube={props.cube.name}
+					axis={props.axis}
+					queryString={props.queryString}
+				/>
+				<div className="title-wrapper">
+					<p className="title">
+						{props.cube.name + " by "}
+						<InputPopover
+							value={props.axis.x}
+							options={props.cube.levels}
+							onClick={props.onDrilldownChange}
+						/>
+					</p>
 
-				<p className="title">
-					{props.cube.name + " by "}
-					<InputPopover
-						value={props.axis.x}
-						options={props.cube.levels}
-						onClick={props.onDrilldownChange}
-					/>
-				</p>
+					<p className="subtitle">
+						{"SIZED BY "}
+						<InputPopover
+							value={props.axis.y}
+							options={props.cube.measures}
+							onClick={props.onMeasureChange}
+						/>
+					</p>
+				</div>
 
-				<p className="subtitle">
-					{"SIZED BY "}
-					<InputPopover
-						value={props.axis.y}
-						options={props.cube.measures}
-						onClick={props.onMeasureChange}
+				<div className="wrapper-history">
+				<Dialog
+						iconName="pt-icon-th"
+						isOpen={this.state.dialogOpen}
+						onClose={this.toggleDialog}
+						title={"Hoy"}
+					>
+					<Button
+						className="filter-action remove pt-intent-danger pt-minimal"
+						iconName="history"
 					/>
-				</p>
+					</Dialog>
+				</div>
 			</header>
 			<Chart data={props.data} />
 			<div className="chartappearance-wrapper">

@@ -5,6 +5,7 @@ import AreaSidebar from "components/AreaSidebar";
 import LoadControl from "components/LoadControl";
 
 function DataChile(props) {
+	console.log(props)
 	return (
 		<div className="container data-chile">
 			<LoadControl
@@ -12,7 +13,7 @@ function DataChile(props) {
 				queryString={props.location.search}
 			/>
 			<AreaSidebar />
-			<AreaContent />
+			<AreaContent queryString={props.location.search} />
 		</div>
 	);
 }

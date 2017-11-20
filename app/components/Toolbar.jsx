@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { withRouter } from 'react-router'
 
 import PropTypes from "prop-types";
 import { csvFormat } from "d3-dsv";
@@ -16,6 +17,7 @@ import PanelData from "components/PanelData";
 import { getTitle } from "helpers/titles";
 
 import uniq from "lodash/uniq";
+import concat from "lodash/concat";
 import inRange from "lodash/inRange";
 import groupBy from "lodash/groupBy";
 
@@ -69,7 +71,7 @@ class Toolbar extends React.Component {
 				return [max, max];
 			}
 			case 1: {
-				return [time[0], time[0]]
+				return [time[0], time[0]];
 			}
 
 			default: {
@@ -108,8 +110,7 @@ class Toolbar extends React.Component {
 								<Tab2
 									id="rx"
 									title="About"
-									panel={<ToolbarInfo 
-										data={data} timeRange={timeRange} />}
+									panel={<ToolbarInfo data={data} timeRange={timeRange} />}
 								/>
 								<Tab2
 									id="ng"
@@ -134,6 +135,9 @@ class Toolbar extends React.Component {
 				</li>
 				<li className="button" onClick={this.saveCSV}>
 					<Icon iconName="pt-icon-import" /> Download CSV
+				</li>
+				<li className="button" onClick={this.saveHistory}>
+					<Icon iconName="pt-icon-plus" /> Add to History
 				</li>
 			</ul>
 		);
@@ -167,6 +171,23 @@ class Toolbar extends React.Component {
 			blob,
 			`${getTitle(this.props.cube, this.props.axis.x, this.props.axis.y)}.csv`
 		);
+	};
+
+	saveHistory = () => {
+		let history =
+			concat([], JSON.parse(localStorage.getItem("vizbuilder-history"))) || [];
+		
+		const { match, location } = this.props
+		console.log(match)
+			
+		let query = {
+			title: "title of chart",
+			URL: this.props.queryString,
+			chart: "treemap"
+		};
+
+		history.push(query);
+		localStorage.setItem("vizbuilder-history", JSON.stringify(history));
 	};
 }
 

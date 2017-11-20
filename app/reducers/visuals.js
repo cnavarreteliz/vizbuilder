@@ -69,7 +69,7 @@ export default function(state = initialState, action) {
 				measure = cube.measures[0];
 
 			let newState = setAxisX(state, level);
-			newState.axis.y = measure.name;
+			newState.axis.standard.y = measure.name;
 
 			return newState;
 		}

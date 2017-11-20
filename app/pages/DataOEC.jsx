@@ -12,7 +12,7 @@ function DataKsa(props) {
 				queryString={props.location.search}
 			/>
 			<AreaSidebar />
-			<AreaContent />
+			<AreaContent queryString={props.location.search} />
 		</div>
 	);
 }
