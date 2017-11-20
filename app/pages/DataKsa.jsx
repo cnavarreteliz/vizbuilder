@@ -8,7 +8,7 @@ function DataKsa(props) {
 	return (
 		<div className="container data-ksa">
 			<LoadControl
-				src="https://jobsksa-monet.datawheel.us/"
+				src="https://jobsksa.datawheel.us/"
 				queryString={props.location.search}
 			/>
 			<AreaSidebar />
