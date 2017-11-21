@@ -3,7 +3,7 @@ import classnames from "classnames";
 
 import { MultiSelect } from "@blueprintjs/labs";
 
-MembersSelect.defaultProps = {
+SelectMembers.defaultProps = {
 	itemRenderer({ handleClick, item, isActive }) {
 		return (
 			<span
@@ -16,17 +16,15 @@ MembersSelect.defaultProps = {
 	},
 	tagRenderer: item => item.caption,
 	popoverProps: {
-		popoverClassName: "members-select pt-minimal"
-	}
+		popoverClassName: "select-members pt-minimal"
+	},
+	tagInputProps: {},
 };
 
-function MembersSelect(props) {
-	props.className = classnames("members-select", props.className);
-	props.tagInputProps = {
-		onRemove: props.onItemRemove
-	};
-	console.log(props)
+function SelectMembers(props) {
+	props.className = classnames("select-members", props.className);
+	props.tagInputProps.onRemove = props.onItemRemove;
 	return React.createElement(MultiSelect, props);
 }
 
-export default MembersSelect;
+export default SelectMembers;

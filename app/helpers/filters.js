@@ -1,7 +1,7 @@
 import intersection from "lodash/intersection";
 
 import OPERATORS from "helpers/operators";
-import { regexIncludes } from "helpers/functions";
+import { regexIncludes, isNumeric } from "helpers/functions";
 
 /**
  * Applies a list of `Filter`s to an array.
@@ -11,27 +11,34 @@ import { regexIncludes } from "helpers/functions";
  * @returns {Array<T>}
  */
 export function applyFilters(items, filters) {
+	filters = filters.filter(
+		filter =>
+			isNumeric(filter.value) &&
+			filter.property &&
+			filter.property.kind == "measure" &&
+			filter.operator > 0
+	);
+
 	if (!filters.length) return items;
 
 	let applied_items = filters.map(function(filter) {
-		let operator = OPERATORS[filter.operator] || 0,
-			property = filter.property;
-		
+		let operator = filter.operator || 0,
+			property = filter.property.name;
+
 		return items.filter(function(item) {
 			let test = false;
-			let value = item[property.name];
-
+			let value = item[property];
+			
 			if (!value) return test;
-
-			if (operator & OPERATORS.EQUAL) 
+			
+			if (operator & OPERATORS.EQUAL)
 				test = test || value == filter.value;
-			// TODO: implement NOTEQUAL using bitwise
-
-			if (operator & OPERATORS.HIGHER) 
+			
+			if (operator & OPERATORS.HIGHER)
 				test = test || value > filter.value;
 			else if (operator & OPERATORS.LOWER)
 				test = test || value < filter.value;
-
+			
 			return test;
 		});
 	});
@@ -52,8 +59,8 @@ export function filterKindReducer(all, filter) {
 		all.lv.push(filter);
 	} else if (
 		filter.property.kind == "measure" &&
-		filter.operator &&
-		filter.value
+		isNumeric(filter.value) &&
+		filter.operator > 0
 	) {
 		all.ms.push(filter.property);
 	}

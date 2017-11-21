@@ -15,59 +15,56 @@ import { Button, Dialog } from "@blueprintjs/core";
 import "styles/AreaContent.css";
 
 /**
- * @typedef AreaContentState
+ * @typedef AreaContentProps
  * @prop {object} axis The current axis' labels.
  * @prop {Cube} cube The current Cube.
  * @prop {Array} data The raw dataset.
+ * @prop {(ms: Measure) => void} onMeasureChange
+ * @prop {(evt: Event) => void} onBucketUpdate
+ * @prop {(lv: Level) => void} onLevelChange
  */
 
 /**
- * @typedef AreaContentDispatch
- * @prop {Function} dispatch
- * @prop {Function} onMeasureChange
- * @prop {Function} onBucketUpdate
- * @prop {Function} onDrilldownChange
+ * @typedef AreaContentState
+ * @prop {boolean} dialogOpen
  */
 
-/**
- * AreaContent component
- * @param {AreaContentState & AreaContentDispatch} props
- * @returns {JSX.Element}
- */
+/** @augments {React.Component<AreaContentProps, AreaContentState>} */
 class AreaContent extends React.Component {
 	state = {
 		dialogOpen: false
 	};
 
 	render() {
-		const props = this.props;
-		if (!props.axis.x || !props.axis.y) return <ContentDefault />;
+		const { axis, cube, data } = this.props;
+
+		if (!axis.x || !axis.y) return <ContentDefault />;
 
 		return (
 			<div className="main-panel">
 				<header className="header">
 					<Toolbar
-						data={props.data}
-						cube={props.cube.name}
-						axis={props.axis}
-						queryString={props.queryString}
+						data={data}
+						cube={cube.name}
+						axis={axis}
+						queryString={this.props.queryString}
 					/>
 					<div className="title-wrapper">
 						<p className="title">
-							{props.cube.name + " by "}
+							{cube.name + " by "}
 							<InputPopover
-								value={props.axis.x}
-								options={props.cube.levels}
-								onClick={props.onDrilldownChange}
+								value={axis.x}
+								options={cube.levels}
+								onClick={this.props.onLevelChange}
 							/>
 						</p>
 
 						<p className="subtitle">
 							{"SIZED BY "}
 							<InputPopover
-								value={props.axis.y}
-								options={props.cube.measures}
-								onClick={props.onMeasureChange}
+								value={axis.y}
+								options={cube.measures}
+								onClick={this.props.onMeasureChange}
 							/>
 						</p>
 					</div>
@@ -90,7 +87,7 @@ class AreaContent extends React.Component {
 						</Dialog>
 					</div>
 				</header>
-				<Chart data={props.data} />
+				<Chart data={data} />
 				<div className="chartappearance-wrapper">
 					<AgeBucket />
 				</div>
@@ -103,18 +100,10 @@ class AreaContent extends React.Component {
 	};
 }
 
-/** 
- * @param {VizbuilderState} state
- * @returns {AreaContentState} 
- */
+/** @param {VizbuilderState} state */
 function mapStateToProps(state) {
 	let dd = state.aggregators.drilldowns[0] || { name: "" },
 		ms = state.aggregators.measures[0] || { name: "" };
-
-	let measure_filters = state.filters.filter(
-		filter =>
-			filter.property && filter.property.kind == "measure" && filter.value
-	);
 
 	return {
 		axis: {
@@ -123,25 +112,22 @@ function mapStateToProps(state) {
 			y: ms.name
 		},
 		cube: state.cubes.current,
-		data: applyFilters(state.data.values, measure_filters)
+		data: applyFilters(state.data.values, state.filters)
 	};
 }
 
-/** @returns {AreaContentDispatch} */
 function mapDispatchToProps(dispatch) {
 	return {
-		dispatch,
-
-		onMeasureChange(measure) {
-			dispatch({ type: "MEASURE_SET", payload: measure });
-		},
-
 		onBucketUpdate(evt) {
 			dispatch({ type: "VIZ_BUCKET_UPDATE", payload: evt.target.value });
 		},
 
-		onDrilldownChange(dim) {
-			dispatch({ type: "DRILLDOWN_SET", payload: dim });
+		onLevelChange(level) {
+			dispatch({ type: "DRILLDOWN_SET", payload: level });
+		},
+
+		onMeasureChange(measure) {
+			dispatch({ type: "MEASURE_SET", payload: measure });
 		}
 	};
 }

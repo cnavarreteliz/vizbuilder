@@ -9,7 +9,11 @@
 .side-panel,
 .pt-overlay {
 	& .group {
-		margin-bottom: 0.5em;
+		margin-top: 0.5em;
+
+		&:first-child {
+			margin-top: 0;
+		}
 
 		& .pt-popover-target {
 			display: block;

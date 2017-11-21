@@ -16,7 +16,7 @@
 			align-items: center;
 
 			color: #555;
-			background: #f0f0f0;
+			background: rgba(0,0,0,0.075);
 
 			& .value {
 				flex: 1 1;

@@ -216,15 +216,7 @@ function Sidebar(props) {
 
 			{Panel(props)}
 
-			<FilterManager
-				cube={props.cube}
-				filters={props.filters}
-				members={props.members}
-				onAddFilter={props.addFilter}
-				onUpdateFilter={props.updateFilter}
-				onRemoveFilter={props.removeFilter}
-				onLevelChosen={props.requestMembers}
-			/>
+			<FilterManager />
 		</div>
 	);
 }

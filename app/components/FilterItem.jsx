@@ -1,67 +1,153 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { Button } from "@blueprintjs/core";
 
-import { LABELS as OPERATOR_LABELS } from "helpers/operators";
+import union from "lodash/union";
 
-import "styles/FilterItem.css";
+import CustomSelect from "components/CustomSelect";
+import FilterItemClosed from "components/FilterItemClosed";
+import FilterItemMeasure from "components/FilterItemMeasure";
+import FilterItemLevel from "components/FilterItemLevel";
 
 /**
  * @typedef FilterItemProps
- * @prop {Filter} item
- * @prop {Function} onEdit
- * @prop {Function} onRemove
+ * @prop {Filter} filter
+ * @prop {MembersState} members
+ * @prop {Array} properties
+ * @prop {(filter: Filter) => void} onEdit
+ * @prop {(filter: Filter) => void} onRemove
+ * @prop {(level: Level) => void} onLevelSelected
  */
 
-/** @augments {React.Component<FilterItemProps>} */
+/**
+ * @typedef FilterItemState
+ * @prop {boolean} isOpen
+ * @prop {Filter} prevFilter
+ */
+
+/** @augments {React.Component<FilterItemProps, FilterItemState>} */
 class FilterItem extends React.Component {
-	propTypes = {
-		item: PropTypes.object.isRequired,
-		onEdit: PropTypes.func.isRequired,
-		onRemove: PropTypes.func.isRequired
+	state = {
+		isOpen: true,
+		prevFilter: null
 	};
 
 	render() {
-		let filter = this.props.item;
+		const { filter, properties } = this.props;
 
-		if (!filter.property) return null;
+		if (!this.state.isOpen) {
+			return React.createElement(FilterItemClosed, {
+				filter: filter,
+				onEdit: this.editFilter,
+				onRemove: this.removeFilter
+			});
+		}
 
-		let value = filter.value;
+		if (!filter.property) {
+			return (
+				<div className="filter-item">
+					<div className="group">
+						<span className="label">Select a Property</span>
+						<CustomSelect
+							value={filter.property}
+							items={properties}
+							onItemSelect={this.setProperty}
+						/>
+					</div>
+				</div>
+			);
+		}
 
-		if (Array.isArray(value))
-			value = value.map(member => member.caption).join(", ");
+		let props = {
+			filter,
+			properties,
+			onSetProperty: this.setProperty,
+			onSave: this.saveFilter,
+			onReset: this.resetFilter
+		};
 
-		let operator = "";
-		if (filter.property.kind == "measure")
-			operator = OPERATOR_LABELS[filter.operator];
+		if (filter.property.kind == "measure") {
+			props.onSetOperator = this.setOperator;
+			props.onSetValue = this.measureSetValue;
 
-		return (
-			<div className="filter-item">
-				<span className="filter-content">
-					<span className="filter-prop">{filter.property.name}</span>
-					<span className="filter-oper">{operator}</span>
-					<span className="filter-value">{value}</span>
-				</span>
-				<Button
-					className="filter-action remove pt-intent-danger pt-minimal"
-					iconName="trash"
-					onClick={this.removeHandler}
-				/>
-				<Button
-					className="filter-action update pt-intent-primary pt-minimal"
-					iconName="cog"
-					onClick={this.updateHandler}
-				/>
-			</div>
-		);
+			return React.createElement(FilterItemMeasure, props);
+		}
+
+		if (filter.property.kind == "level") {
+			let propertyName = filter.property.fullName;
+
+			props.members = this.props.members[propertyName] || [];
+			props.onAddValue = this.levelAddValue;
+			props.onRemoveValue = this.levelRemoveValue;
+
+			return React.createElement(FilterItemLevel, props);
+		}
 	}
 
-	updateHandler = () => {
-		this.props.onEdit(this.props.item);
+	editFilter = () => {
+		this.setState({
+			isOpen: true,
+			prevFilter: this.props.filter
+		});
 	};
 
-	removeHandler = () => {
-		this.props.onRemove(this.props.item);
+	removeFilter = () => {
+		this.props.onRemove(this.props.filter);
+	};
+
+	resetFilter = () => {
+		const prevFilter = this.state.prevFilter;
+
+		if (prevFilter) {
+			this.props.onEdit(prevFilter);
+			this.setState({ isOpen: false, prevFilter: null });
+		} else {
+			this.props.onRemove(this.props.filter);
+		}
+	};
+
+	saveFilter = () => {
+		this.setState({ isOpen: false, prevFilter: null });
+	};
+
+	setProperty = property => {
+		let isLevel = property.kind == "level";
+
+		if (isLevel) this.props.onLevelSelected(property);
+
+		this.props.onEdit({
+			...this.props.filter,
+			property,
+			value: isLevel ? [] : 0
+		});
+	};
+
+	setOperator = evt => {
+		this.props.onEdit({
+			...this.props.filter,
+			operator: (evt.target.value * 1) || 1
+		});
+	};
+
+	measureSetValue = value => {
+		this.props.onEdit({
+			...this.props.filter,
+			value
+		});
+	};
+
+	levelAddValue = value => {
+		let filter = this.props.filter;
+		this.props.onEdit({
+			...filter,
+			value: union(filter.value, [value])
+		});
+	};
+
+	levelRemoveValue = value => {
+		let filter = this.props.filter;
+		this.props.onEdit({
+			...filter,
+			value: filter.value.filter(item => item == value)
+		});
 	};
 }
 
