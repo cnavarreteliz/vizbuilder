@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { withRouter } from 'react-router'
+import { withRouter } from "react-router";
 
 import PropTypes from "prop-types";
 import { csvFormat } from "d3-dsv";
@@ -39,7 +39,10 @@ import "styles/Dialog.css";
 /** @augments {React.Component<ToolbarProps, ToolbarState>} */
 class Toolbar extends React.Component {
 	state = {
-		dialogOpen: false
+		dialogOpen: false,
+		history: concat([], JSON.parse(localStorage.getItem("vizbuilder-history"))).filter(
+			Boolean
+		) || []
 	};
 
 	propTypes = {
@@ -91,6 +94,7 @@ class Toolbar extends React.Component {
 			inRange(parseInt(item[axis.time]), timeRange[0], timeRange[1] + 1)
 		);
 
+
 		return (
 			<ul className="toolbar">
 				<li className="button" onClick={this.toggleDialog}>
@@ -137,7 +141,10 @@ class Toolbar extends React.Component {
 					<Icon iconName="pt-icon-import" /> Download CSV
 				</li>
 				<li className="button" onClick={this.saveHistory}>
-					<Icon iconName="pt-icon-plus" /> Add to History
+					<Icon iconName="pt-icon-plus" />{" "}
+					{this.state.history.some(item => item.queryString === this.props.queryString)
+						? "Remove from History"
+						: "Add to History"}
 				</li>
 			</ul>
 		);
@@ -174,12 +181,13 @@ class Toolbar extends React.Component {
 	};
 
 	saveHistory = () => {
-
 		let history =
-			concat([], JSON.parse(localStorage.getItem("vizbuilder-history"))).filter(Boolean) || [];
-		
-		const { match, location } = this.props
-				
+			concat([], JSON.parse(localStorage.getItem("vizbuilder-history"))).filter(
+				Boolean
+			) || [];
+
+		const { match, location } = this.props;
+
 		let query = {
 			title: getTitle(this.props.cube, this.props.axis.x, this.props.axis.y),
 			queryString: this.props.queryString,
@@ -187,10 +195,14 @@ class Toolbar extends React.Component {
 			datetime: new Date().toLocaleString()
 		};
 
-		if ( !history.some(item => item.queryString === this.props.queryString ) ) {
+		if (!history.some(item => item.queryString === this.props.queryString)) {
 			history.push(query);
+		} else {
+			history = history.filter(item => item.queryString !== this.props.queryString)
 		}
-		
+
+		this.setState(state => ({ history: history }));
+
 		localStorage.setItem("vizbuilder-history", JSON.stringify(history));
 	};
 }
