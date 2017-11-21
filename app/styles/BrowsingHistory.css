@@ -7,14 +7,24 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        padding: 5px 20px;
+        padding: 5px;
+
+        & a {
+            display: flex;
+            align-items: center;
+            color: #212121;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
 
         & .icon {
             font-size: 32px;
+            margin-right: 5px;
         }
 
         & .content {
-            padding: 5px 10px;
             & h5 {
                 padding: 0px;
                 margin: 0px;
