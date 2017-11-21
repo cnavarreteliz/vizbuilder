@@ -40,9 +40,10 @@ import "styles/Dialog.css";
 class Toolbar extends React.Component {
 	state = {
 		dialogOpen: false,
-		history: concat([], JSON.parse(localStorage.getItem("vizbuilder-history"))).filter(
-			Boolean
-		) || []
+		history:
+			concat([], JSON.parse(localStorage.getItem("vizbuilder-history"))).filter(
+				Boolean
+			) || []
 	};
 
 	propTypes = {
@@ -92,8 +93,7 @@ class Toolbar extends React.Component {
 		// Filter data by timeRange
 		data = data.filter(item =>
 			inRange(parseInt(item[axis.time]), timeRange[0], timeRange[1] + 1)
-		);
-
+		);		
 
 		return (
 			<ul className="toolbar">
@@ -137,12 +137,14 @@ class Toolbar extends React.Component {
 				<li className="button" onClick={this.saveImage}>
 					<Icon iconName="pt-icon-media" /> Save Image
 				</li>
-				<li className="button" onClick={this.saveCSV}>
+				<li className="button" onClick={evt => this.saveCSV(data)}>
 					<Icon iconName="pt-icon-import" /> Download CSV
 				</li>
 				<li className="button" onClick={this.saveHistory}>
 					<Icon iconName="pt-icon-plus" />{" "}
-					{this.state.history.some(item => item.queryString === this.props.queryString)
+					{this.state.history.some(
+						item => item.queryString === this.props.queryString
+					)
 						? "Remove from History"
 						: "Add to History"}
 				</li>
@@ -170,8 +172,8 @@ class Toolbar extends React.Component {
 			});
 	};
 
-	saveCSV = () => {
-		let blob = new Blob([csvFormat(this.props.data)], {
+	saveCSV(data) {
+		let blob = new Blob([csvFormat(data)], {
 			type: "text/plain;charset=utf-8"
 		});
 		saveAs(
@@ -198,7 +200,9 @@ class Toolbar extends React.Component {
 		if (!history.some(item => item.queryString === this.props.queryString)) {
 			history.push(query);
 		} else {
-			history = history.filter(item => item.queryString !== this.props.queryString)
+			history = history.filter(
+				item => item.queryString !== this.props.queryString
+			);
 		}
 
 		this.setState(state => ({ history: history }));
