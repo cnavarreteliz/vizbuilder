@@ -20,11 +20,12 @@ import CustomTable from "components/CustomTable";
 
 import uniq from "lodash/uniq";
 import union from "lodash/union";
+import inRange from "lodash/inRange";
 
 import { COLORS_RAINFALL, COLORS_DISCRETE } from "helpers/colors";
 import { CHARTCONFIG, LEGENDCONFIG, yearControls } from "helpers/d3plus";
 import { createBuckets } from "helpers/buckets";
-import { calculateGrowth } from "helpers/prepareViz";
+import { calculateGrowth } from "helpers/growth";
 import {
 	groupLowestCategories,
 	applyHideIsolateFilters
@@ -56,8 +57,54 @@ function Chart(props) {
 	// Custom Age Buckets
 	if (props.axis_x === "Age") data = createBuckets(data, props.num_buckets);
 
+	// Get max/min (in members)
+	let allYears =
+			uniq(data.map(dm => parseInt(dm[props.axis_time]))).sort((a, b) => {
+				return a - b;
+			}) || [],
+		min = Math.min(...allYears),
+		max = Math.max(...allYears);
+
 	// Add Custom Growth scale
 	if (props.color.type === "growth") {
+		// Select range where calculate growth
+		switch (props.time.length) {
+			// By default
+			case 0:
+				data = data.filter(item =>
+					inRange(
+						parseInt(item[props.axis_time]),
+						allYears[allYears.length - 2],
+						allYears[allYears.length - 1] + 1
+					)
+				);
+				break;
+				
+			// It's selected one year
+			case 1:
+				if (allYears.indexOf(props.time[0]) === 0) {
+					data = data.filter(item =>
+						inRange(
+							parseInt(item[props.axis_time]),
+							allYears[allYears.indexOf(props.time[0]) - 1],
+							props.time[0] + 1
+						)
+					);
+				}
+				break;
+			// It's selected a range of years
+			case 2:
+				data = data.filter(item =>
+					inRange(
+						parseInt(item[props.axis_time]),
+						props.time[0],
+						props.time[1] + 1
+					)
+				);
+				break;
+		}
+
+		console.log(data)
 		let attributes = calculateGrowth(
 			data,
 			props.axis_x,
@@ -65,16 +112,13 @@ function Chart(props) {
 			props.axis_time
 		);
 
+		console.log(attributes)
+
 		data = data.map(attr => ({
 			...attr,
 			Growth: attributes[attr[props.axis_x]]
 		}));
 	}
-
-	// Get max/min (in members)
-	let allYears = uniq(data.map(dm => parseInt(dm[props.axis_time]))) || [],
-		min = Math.min(...allYears),
-		max = Math.max(...allYears);
 
 	// Set COLORSCALE properties
 	let COLORSCALE = {
