@@ -174,19 +174,23 @@ class Toolbar extends React.Component {
 	};
 
 	saveHistory = () => {
+
 		let history =
-			concat([], JSON.parse(localStorage.getItem("vizbuilder-history"))) || [];
+			concat([], JSON.parse(localStorage.getItem("vizbuilder-history"))).filter(Boolean) || [];
 		
 		const { match, location } = this.props
-		console.log(match)
-			
+				
 		let query = {
-			title: "title of chart",
-			URL: this.props.queryString,
-			chart: "treemap"
+			title: getTitle(this.props.cube, this.props.axis.x, this.props.axis.y),
+			queryString: this.props.queryString,
+			chart: this.props.viztype,
+			datetime: new Date().toLocaleString()
 		};
 
-		history.push(query);
+		if ( !history.some(item => item.queryString === this.props.queryString ) ) {
+			history.push(query);
+		}
+		
 		localStorage.setItem("vizbuilder-history", JSON.stringify(history));
 	};
 }
@@ -195,6 +199,7 @@ function mapStateToProps(state) {
 	let axis = state.data.axis;
 	return {
 		time: state.visuals.chart.time,
+		viztype: state.visuals.chart.type,
 		axis: {
 			x: axis.x.level || "",
 			y: axis.y.name || "",
