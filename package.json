@@ -15,15 +15,15 @@
 	"author": "Carlos Navarrete & Francisco Abarzúa",
 	"license": "MIT",
 	"devDependencies": {
-		"@blueprintjs/core": "^1.25.1",
+		"@blueprintjs/core": "^1.33.0",
 		"@blueprintjs/labs": "^0.10.0",
-		"@blueprintjs/table": "^1.22.0",
-		"datawheel-canon": "^0.11.5",
+		"@blueprintjs/table": "^1.30.0",
+		"datawheel-canon": "^0.11.7",
 		"deeplearn": "^0.2.3",
 		"mondrian-rest-client": "git+https://github.com/Datawheel/mondrian-rest-client.git",
 		"numeral": "^2.0.6",
+		"query-string": "^5.0.1",
 		"react-table": "^6.7.4",
-		"shorthash": "^0.0.2",
-		"query-string": "^5.0.1"
+		"shorthash": "^0.0.2"
 	}
 }
