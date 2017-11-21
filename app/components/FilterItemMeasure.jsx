@@ -35,8 +35,8 @@ function FilterItemMeasure(props) {
 				/>
 			</div>
 			<div className="group filter-actions">
-				<Button className="pt-small" onClick={props.onReset} text="Reset" />
-				<Button className="pt-small pt-intent-primary" onClick={props.onSave} text="Save" />
+				<Button text="Cancel" className="pt-small" onClick={props.onReset} />
+				<Button text="Apply" className="pt-small pt-intent-primary" onClick={props.onSave} />
 			</div>
 		</div>
 	);

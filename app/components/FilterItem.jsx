@@ -2,6 +2,7 @@ import React from "react";
 
 import union from "lodash/union";
 
+import { Button } from "@blueprintjs/core";
 import CustomSelect from "components/CustomSelect";
 import FilterItemClosed from "components/FilterItemClosed";
 import FilterItemMeasure from "components/FilterItemMeasure";
@@ -50,6 +51,18 @@ class FilterItem extends React.Component {
 							value={filter.property}
 							items={properties}
 							onItemSelect={this.setProperty}
+						/>
+					</div>
+					<div className="group filter-actions">
+						<Button
+							text="Cancel"
+							className="pt-small"
+							onClick={this.removeFilter}
+						/>
+						<Button
+							text="Apply"
+							className="pt-small pt-intent-primary"
+							disabled={true}
 						/>
 					</div>
 				</div>
@@ -123,7 +136,7 @@ class FilterItem extends React.Component {
 	setOperator = evt => {
 		this.props.onEdit({
 			...this.props.filter,
-			operator: (evt.target.value * 1) || 1
+			operator: evt.target.value * 1 || 1
 		});
 	};
 
