@@ -34,12 +34,15 @@ import "styles/AreaContent.css";
 /** @augments {React.Component<AreaContentProps, AreaContentState>} */
 class AreaContent extends React.Component {
 	state = {
-		dialogOpen: false,
-		history:
-			concat([], JSON.parse(localStorage.getItem("vizbuilder-history"))).filter(
-				Boolean
-			) || []
+		dialogOpen: false
 	};
+
+	componentDidMount() {
+		let history = concat([], JSON.parse(localStorage.getItem("vizbuilder-history"))).filter(
+			Boolean
+		) || []
+		this.props.onSetHistory(history);
+	}
 
 	render() {
 		const { axis, cube, data } = this.props;
@@ -77,7 +80,7 @@ class AreaContent extends React.Component {
 
 					<div className="wrapper-history" onClick={this.toggleDialog}>
 						<div className="history-size">
-							{this.state.history.length}
+							{this.props.history.length}
 						</div>
 						<Button
 							className="filter-action remove pt-intent-danger pt-minimal"
@@ -119,6 +122,7 @@ function mapStateToProps(state) {
 			x: dd.name,
 			y: ms.name
 		},
+		history: state.visuals.history,
 		cube: state.cubes.current,
 		data: applyFilters(state.data.values, state.filters)
 	};
@@ -136,6 +140,10 @@ function mapDispatchToProps(dispatch) {
 
 		onMeasureChange(measure) {
 			dispatch({ type: "MEASURE_SET", payload: measure });
+		},
+
+		onSetHistory(history) {
+			dispatch({ type: "HISTORY_SET", payload: history });
 		}
 	};
 }

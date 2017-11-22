@@ -1,3 +1,5 @@
+import concat from "lodash/concat";
+
 /** @type {VisualsState} */
 const initialState = {
 	chart: {
@@ -20,7 +22,8 @@ const initialState = {
 	},
 	dialogPanel: {
 		show: false
-	}
+	},
+	history: []
 };
 
 /**
@@ -85,6 +88,13 @@ export default function(state = initialState, action) {
 					...state.axis,
 					standard: { ...state.axis.standard, y: action.payload.name }
 				}
+			};
+		}
+
+		case "HISTORY_SET": {
+			return {
+				...state,
+				history: action.payload
 			};
 		}
 

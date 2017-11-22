@@ -50,11 +50,12 @@ class BrowsingHistory extends React.Component {
 	}
 
 	deleteHistory(history) {
+		let newHistory = this.state.history.filter(item => item !== history)
 		this.setState(state => ({
-			history: this.state.history.filter(item => item !== history)
+			history: newHistory
 		}));
 
-		localStorage.setItem("vizbuilder-history", JSON.stringify(history));
+		localStorage.setItem("vizbuilder-history", JSON.stringify(newHistory));
 	}
 }
 

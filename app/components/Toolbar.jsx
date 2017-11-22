@@ -39,11 +39,7 @@ import "styles/Dialog.css";
 /** @augments {React.Component<ToolbarProps, ToolbarState>} */
 class Toolbar extends React.Component {
 	state = {
-		dialogOpen: false,
-		history:
-			concat([], JSON.parse(localStorage.getItem("vizbuilder-history"))).filter(
-				Boolean
-			) || []
+		dialogOpen: false
 	};
 
 	propTypes = {
@@ -141,7 +137,7 @@ class Toolbar extends React.Component {
 					<Icon iconName="pt-icon-import" /> Download CSV
 				</li>
 				<li className="button" onClick={this.saveHistory}>
-					{this.state.history.some(
+					{this.props.history.some(
 						item => item.queryString === this.props.queryString
 					)
 						? <div><Icon iconName="pt-icon-remove" /> <span> Remove from History </span></div>
@@ -204,7 +200,7 @@ class Toolbar extends React.Component {
 			);
 		}
 
-		this.setState(state => ({ history: history }));
+		this.props.onSetHistory(history);
 
 		localStorage.setItem("vizbuilder-history", JSON.stringify(history));
 	};
@@ -215,6 +211,7 @@ function mapStateToProps(state) {
 	return {
 		time: state.visuals.chart.time,
 		viztype: state.visuals.chart.type,
+		history: state.visuals.history,
 		axis: {
 			x: axis.x.level || "",
 			y: axis.y.name || "",
@@ -223,4 +220,12 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps)(Toolbar);
+function mapDispatchToProps(dispatch) {
+	return {
+		onSetHistory(history) {
+			dispatch({ type: "HISTORY_SET", payload: history });
+		}
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Toolbar);
