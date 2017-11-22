@@ -68,10 +68,11 @@ function Chart(props) {
 	// Add Custom Growth scale
 	if (props.color.type === "growth") {
 		// Select range where calculate growth
+		let growth_data;
 		switch (props.time.length) {
 			// By default
 			case 0:
-				data = data.filter(item =>
+				growth_data = data.filter(item =>
 					inRange(
 						parseInt(item[props.axis_time]),
 						allYears[allYears.length - 2],
@@ -79,11 +80,11 @@ function Chart(props) {
 					)
 				);
 				break;
-				
+
 			// It's selected one year
 			case 1:
 				if (allYears.indexOf(props.time[0]) === 0) {
-					data = data.filter(item =>
+					growth_data = data.filter(item =>
 						inRange(
 							parseInt(item[props.axis_time]),
 							allYears[allYears.indexOf(props.time[0]) - 1],
@@ -94,7 +95,7 @@ function Chart(props) {
 				break;
 			// It's selected a range of years
 			case 2:
-				data = data.filter(item =>
+				growth_data = data.filter(item =>
 					inRange(
 						parseInt(item[props.axis_time]),
 						props.time[0],
@@ -104,15 +105,12 @@ function Chart(props) {
 				break;
 		}
 
-		console.log(data)
 		let attributes = calculateGrowth(
-			data,
+			growth_data,
 			props.axis_x,
 			props.axis_y,
 			props.axis_time
 		);
-
-		console.log(attributes)
 
 		data = data.map(attr => ({
 			...attr,

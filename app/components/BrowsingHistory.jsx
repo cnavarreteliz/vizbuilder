@@ -35,6 +35,7 @@ class BrowsingHistory extends React.Component {
 								</a>
 								<div>
 									<Icon
+										className="remove pt-intent-danger"
 										iconName="trash"
 										onClick={evt => this.deleteHistory(item)}
 									/>

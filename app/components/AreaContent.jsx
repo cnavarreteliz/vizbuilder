@@ -10,6 +10,8 @@ import InputPopover from "components/InputPopover";
 import Toolbar from "components/Toolbar";
 import BrowsingHistory from "components/BrowsingHistory";
 
+import concat from "lodash/concat";
+
 import { Button, Dialog } from "@blueprintjs/core";
 
 import "styles/AreaContent.css";
@@ -32,7 +34,11 @@ import "styles/AreaContent.css";
 /** @augments {React.Component<AreaContentProps, AreaContentState>} */
 class AreaContent extends React.Component {
 	state = {
-		dialogOpen: false
+		dialogOpen: false,
+		history:
+			concat([], JSON.parse(localStorage.getItem("vizbuilder-history"))).filter(
+				Boolean
+			) || []
 	};
 
 	render() {
@@ -69,11 +75,13 @@ class AreaContent extends React.Component {
 						</p>
 					</div>
 
-					<div className="wrapper-history">
+					<div className="wrapper-history" onClick={this.toggleDialog}>
+						<div className="history-size">
+							{this.state.history.length}
+						</div>
 						<Button
 							className="filter-action remove pt-intent-danger pt-minimal"
 							iconName="history"
-							onClick={this.toggleDialog}
 						/>
 						<Dialog
 							iconName="pt-icon-history"

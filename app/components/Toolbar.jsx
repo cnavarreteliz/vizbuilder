@@ -141,12 +141,11 @@ class Toolbar extends React.Component {
 					<Icon iconName="pt-icon-import" /> Download CSV
 				</li>
 				<li className="button" onClick={this.saveHistory}>
-					<Icon iconName="pt-icon-plus" />{" "}
 					{this.state.history.some(
 						item => item.queryString === this.props.queryString
 					)
-						? "Remove from History"
-						: "Add to History"}
+						? <div><Icon iconName="pt-icon-remove" /> <span> Remove from History </span></div>
+						: <div><Icon iconName="pt-icon-add" /> <span> Add to History </span></div>}
 				</li>
 			</ul>
 		);

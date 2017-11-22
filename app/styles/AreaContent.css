@@ -25,7 +25,17 @@
 		}
 
 		& .wrapper-history {
+			display: inline-flex;
+			align-items: flex-start;
 			flex: 0 0;
+			background-color: #EEEEEE;
+			height: 38px;
+			border-radius: 15px;
+			padding: 5px;
+
+			& .history-size {
+				padding: 6px;
+			}
 		}
 
 		& .pt-popover-target {
