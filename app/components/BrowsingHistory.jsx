@@ -1,4 +1,6 @@
 import React from "react";
+import { connect } from "react-redux";
+
 import { Icon } from "@blueprintjs/core";
 import { Link } from "react-router";
 
@@ -8,14 +10,9 @@ import CHARTS from "helpers/charts";
 import "styles/Browsinghistory.css";
 
 class BrowsingHistory extends React.Component {
-	state = {
-		history:
-			concat([], JSON.parse(localStorage.getItem("vizbuilder-history"))).filter(
-				Boolean
-			) || []
-	};
+
 	render() {
-		let history = this.state.history;
+		let history = this.props.history;
 
 		if (history)
 			return (
@@ -37,7 +34,7 @@ class BrowsingHistory extends React.Component {
 									<Icon
 										className="remove pt-intent-danger"
 										iconName="trash"
-										onClick={evt => this.deleteHistory(item)}
+										onClick={evt => this.props.onSetHistory(item, history)}
 									/>
 								</div>
 							</div>
@@ -48,15 +45,24 @@ class BrowsingHistory extends React.Component {
 
 		return <div />;
 	}
-
-	deleteHistory(history) {
-		let newHistory = this.state.history.filter(item => item !== history)
-		this.setState(state => ({
-			history: newHistory
-		}));
-
-		localStorage.setItem("vizbuilder-history", JSON.stringify(newHistory));
-	}
 }
 
-export default BrowsingHistory;
+function mapStateToProps(state) {
+	let axis = state.data.axis;
+	return {
+		history: state.visuals.history
+	};
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		onSetHistory(property, history) {
+
+			let newHistory = history.filter(item => item !== property)	
+			localStorage.setItem("vizbuilder-history", JSON.stringify(newHistory));
+			dispatch({ type: "HISTORY_SET", payload: newHistory });
+		}
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BrowsingHistory);
