@@ -3,6 +3,8 @@ import classnames from "classnames";
 
 import { MultiSelect } from "@blueprintjs/labs";
 
+import "styles/SelectMembers.css";
+
 SelectMembers.defaultProps = {
 	itemRenderer({ handleClick, item, isActive }) {
 		return (

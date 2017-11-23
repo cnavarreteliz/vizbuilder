@@ -159,7 +159,7 @@ class FilterItem extends React.Component {
 		let filter = this.props.filter;
 		this.props.onEdit({
 			...filter,
-			value: filter.value.filter(item => item == value)
+			value: filter.value.filter(item => item.caption != value)
 		});
 	};
 }
