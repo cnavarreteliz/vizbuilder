@@ -7,7 +7,7 @@ import { Link } from "react-router";
 import concat from "lodash/concat";
 import CHARTS from "helpers/charts";
 
-import "styles/Browsinghistory.css";
+import "styles/BrowsingHistory.css";
 
 class BrowsingHistory extends React.Component {
 
