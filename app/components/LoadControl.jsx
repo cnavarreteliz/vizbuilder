@@ -59,7 +59,7 @@ class LoadControl extends React.Component {
 				);
 		}
 
-		if (!isEqual(prev.error, error))
+		if (error && !isEqual(prev.error, error))
 			ErrorToaster.show({ intent: Intent.WARNING, message: error.message });
 	}
 
