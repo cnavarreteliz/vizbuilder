@@ -47,6 +47,14 @@ interface MembersState {
 	[x]: Array<Member>;
 }
 
+interface ChartsState {
+	table: {
+		attributes: Array<Object>,
+		groupBy: any,
+		sorted: Array<Object>
+	}
+}
+
 interface VisualsState {
 	chart: {
 		type: string;
@@ -73,6 +81,7 @@ interface VisualsState {
 
 interface VizbuilderState {
 	aggregators: AggregatorsState;
+	charts: ChartsState;
 	cubes: CubesState;
 	data: DataState;
 	filters: Array<Filter>;

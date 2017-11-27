@@ -93,6 +93,8 @@ function Chart(props) {
 					);
 				}
 				break;
+
+				
 			// It's selected a range of years
 			case 2:
 				growth_data = data.filter(item =>

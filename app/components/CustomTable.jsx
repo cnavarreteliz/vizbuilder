@@ -1,5 +1,6 @@
 import React from "react";
 import ReactTable from "react-table";
+import { connect } from "react-redux";
 
 import "react-table/react-table.css";
 
@@ -15,7 +16,30 @@ function CustomTable(props) {
 		};
 	});
 	
-	return <ReactTable data={data} columns={columns} />;
+	return <ReactTable 
+		data={data} columns={columns}
+
+		// Callbacks
+		onSortedChange={(newSorted, column, shiftKey) => {
+			console.log(newSorted)
+			console.log(column)
+			console.log(shiftKey)
+		}}
+	/>;
 }
 
-export default CustomTable;
+function mapStateToProps(state) {
+	return {
+		//sorted: state.charts.sorted
+	}
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		onSortedUpdate(newSorted) {
+			dispatch({ type: "CHART_TABLE_SET_SORTED", payload: newSorted });
+		}
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CustomTable);
