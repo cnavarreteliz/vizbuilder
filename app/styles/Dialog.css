@@ -1,0 +1,12 @@
+.pt-dialog {
+	background-color: #ffffff;
+
+	& .pt-dialog-body {
+		height: auto;
+
+		& .viz-table {
+			height: 50vh;
+			overflow: auto;
+		}
+	}
+}
