@@ -41,31 +41,28 @@ export class Cube extends DataStructure {
 
 	get measures() {
 		if (!this._measures.length)
-			this._measures = this.source.measures.map(item => new Measure(item));
+			this._measures = this.source.measures.map((item) => new Measure(item));
 
 		return this._measures;
 	}
 
 	get dimensions() {
 		if (!this._dimensions.length)
-			this._dimensions = this.source.dimensions.map(
-				item => new Dimension(item)
-			);
+			this._dimensions = this.source.dimensions.map((item) => new Dimension(item));
 
 		return this._dimensions;
 	}
 
 	get stdDimensions() {
-		return this.dimensions.filter(dim => dim.type === 0);
+		return this.dimensions.filter((dim) => dim.type === 0);
 	}
 
 	get timeDimensions() {
-		return this.dimensions.filter(dim => dim.type === 1);
+		return this.dimensions.filter((dim) => dim.type === 1);
 	}
 
 	get levels() {
-		if (!this._levels.length)
-			this._levels = this.dimensions.reduce(reduceDrilldowns, []);
+		if (!this._levels.length) this._levels = this.dimensions.reduce(reduceDrilldowns, []);
 
 		return this._levels;
 	}
@@ -96,7 +93,7 @@ export class Dimension extends DataStructure {
 
 	get hierarchies() {
 		if (!this._hierarchies.length)
-			this._hierarchies = this.source.hierarchies.map(h => new Hierarchy(h));
+			this._hierarchies = this.source.hierarchies.map((h) => new Hierarchy(h));
 
 		return this._hierarchies;
 	}
@@ -113,7 +110,7 @@ export class Dimension extends DataStructure {
 				all.push({
 					key: hr.key,
 					label: hr.name,
-					value: levels.map(lv => ({ key: lv.key, label: lv.level, value: lv }))
+					value: levels.map((lv) => ({ key: lv.key, label: lv.level, value: lv }))
 				});
 			} else if (levels.length === 1) {
 				let level = levels[0];
@@ -138,7 +135,7 @@ export class Hierarchy extends DataStructure {
 		if (!this._levels.length)
 			this._levels = this.source.levels
 				.filter((item, index) => index > 0)
-				.map(item => new Level(item));
+				.map((item) => new Level(item));
 
 		return this._levels;
 	}

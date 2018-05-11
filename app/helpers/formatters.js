@@ -34,7 +34,7 @@ export function abbreviate(n, forceRounding = false) {
 export const FORMATTERS = {
 	commas: format(","),
 	date: timeFormat("%B %d, %Y"),
-	ordinal: n => {
+	ordinal: (n) => {
 		if (n > 3 && n < 21) return `${n}th`; // thanks kennebec
 		switch (n % 10) {
 			case 1:
@@ -47,11 +47,11 @@ export const FORMATTERS = {
 				return `${n}th`;
 		}
 	},
-	dollarCommas: d => `$${format(",")(d)}`,
-	ratio: d => format(".2%")(d / 100),
+	dollarCommas: (d) => `$${format(",")(d)}`,
+	ratio: (d) => format(".2%")(d / 100),
 	round2,
 	round: format(",.0f"),
 	share: format(".2%"),
 	shareWhole: format(".0%"),
-	year: y => (y < 0 ? `${Math.abs(y)} BC` : y)
+	year: (y) => (y < 0 ? `${Math.abs(y)} BC` : y)
 };
