@@ -1,14 +1,17 @@
-import React, {Component} from "react";
-//import "./Home.css";
+import React from "react";
 
-export default class Home extends Component {
+import AreaContent from "components/AreaContent";
+import AreaSidebar from "components/AreaSidebar";
+import LoadControl from "components/LoadControl";
 
-  render() {
-    return (
-      <div id="Home">
-        Hello Home
-      </div>
-    );
-  }
-
+function DataChile(props) {
+	return (
+		<div className="container data-chile">
+			<LoadControl src="https://chilecube.datawheel.us/" queryString={props.location.search} />
+			<AreaSidebar />
+			<AreaContent queryString={props.location.search} />
+		</div>
+	);
 }
+
+export default DataChile;
