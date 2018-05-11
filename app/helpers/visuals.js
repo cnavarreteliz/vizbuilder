@@ -18,9 +18,9 @@ export function setChartOptions(aggr, measure) {
 		output.x = aggr.drilldowns[0].level;
 	}
 
-	if (aggr.measures.filter(ms => ms.name === measure).length > 0) {
-		output.y = aggr.measures.filter(ms => ms.name === measure)[0].name
-		output.type = aggr.measures.filter(ms => ms.name === measure)[0].type
+	if (aggr.measures.filter((ms) => ms.name === measure).length > 0) {
+		output.y = aggr.measures.filter((ms) => ms.name === measure)[0].name;
+		output.type = aggr.measures.filter((ms) => ms.name === measure)[0].type;
 	}
 
 	return output;

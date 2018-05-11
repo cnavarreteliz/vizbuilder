@@ -28,14 +28,7 @@ export const LABELS = {
 	8: "Contains the term"
 };
 
-export const KIND_NUMBER = [
-	"EQUAL",
-	"LOWER",
-	"LOWEREQUAL",
-	"HIGHER",
-	"HIGHEREQUAL",
-	"NOTEQUAL"
-];
+export const KIND_NUMBER = ["EQUAL", "LOWER", "LOWEREQUAL", "HIGHER", "HIGHEREQUAL", "NOTEQUAL"];
 
 export const KIND_TEXT = ["EQUAL", "NOTEQUAL", "CONTAINS"];
 

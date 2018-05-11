@@ -1,4 +1,3 @@
-import { Array1D, Scalar, NDArrayMathGPU } from "deeplearn";
 import { isNumeric } from "helpers/functions";
 
 export function calculateGrowth(data, x, y, time) {
@@ -23,7 +22,7 @@ export function calculateGrowth(data, x, y, time) {
 /**
  * Calculate Yearly Growth
  * @param {Array} data
- * @param {Boolean} peryear 
+ * @param {Boolean} peryear
  * @param {Boolean} debugMode
  */
 function calculateYearlyGrowth(data, peryear = false, debugMode = false) {
@@ -31,10 +30,10 @@ function calculateYearlyGrowth(data, peryear = false, debugMode = false) {
 	data = data.sort((a, b) => {
 		return a.year - b.year;
 	});
-	const tensor = data.map(e => e.value);
+	const tensor = data.map((e) => e.value);
 
 	if (debugMode) {
-		debug(data.map(e => e.year));
+		debug(data.map((e) => e.year));
 	}
 
 	const period = tensor.slice(1);
@@ -55,7 +54,7 @@ function calculateYearlyGrowth(data, peryear = false, debugMode = false) {
 }
 
 /**
- * Verify if data is 
+ * Verify if data is
  */
 function debug(tensor) {
 	const period = tensor.slice(1);
@@ -66,38 +65,4 @@ function debug(tensor) {
 	});
 
 	alert(Array.from(new Set(interval)).length);
-}
-
-function calculateCategoryGrowth(obj) {
-	// Verify if data is sorted by year
-	obj = obj.sort((a, b) => {
-		return a.year - b.year;
-	});
-
-	const math = new NDArrayMathGPU();
-	const tensor = obj.map(e => e.value);
-
-	// Create Arrays1D
-	const YEARS = Array1D.new(obj.map(e => e.year));
-	// Generate Arrays
-	const period = Array1D.new(tensor.slice(1));
-	const lastperiod = Array1D.new(tensor.slice(0, -1));
-	const ONE = Scalar.new(1);
-	let value;
-
-	math.scope(() => {
-		let max = math.max(YEARS),
-			min = math.min(YEARS);
-
-		if (period.shape[0] !== 0) {
-			value =
-				math
-					.sum(math.arrayMinusScalar(math.divide(period, lastperiod), ONE))
-					.getValues() / period.shape;
-		} else {
-			value = 0;
-		}
-	});
-
-	return value;
 }
