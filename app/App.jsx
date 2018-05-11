@@ -1,13 +1,15 @@
-import React from "react";
+import React, {Component} from "react";
+import {Canon} from "datawheel-canon";
+import "./App.css";
 
-import "styles/App.css";
+export default class App extends Component {
 
-function App(props) {
-	return (
-		<div className="wrapper">
-			{props.children}
-		</div>
-	);
+  render() {
+    return (
+      <Canon>
+        { this.props.children }
+      </Canon>
+    );
+  }
+
 }
-
-export default App;

@@ -1,36 +1,14 @@
-import React from "react";
-import { Link } from "react-router";
+import React, {Component} from "react";
+import "./Home.css";
 
-import "styles/Home.css";
-import logo_datachile from "assets/logo-datachile.svg";
+export default class Home extends Component {
 
-function Home(props) {
-	return (
-		<div className="home">
-			<ul className="menu">
-				<li className="menu-item">
-					<Link to="/ksa" className="site">
-						Jobs KSA
-					</Link>
-				</li>
-				<li className="menu-item">
-					<Link to="/chile" className="site">
-						<img src={logo_datachile} alt="DataChile" />
-					</Link>
-				</li>
-				<li className="menu-item">
-					<Link to="/cny" className="site">
-						CNY Vitals
-					</Link>
-				</li>
-				<li className="menu-item">
-					<Link to="/oec" className="site">
-						OEC
-					</Link>
-				</li>
-			</ul>
-		</div>
-	);
+  render() {
+    return (
+      <div id="Home">
+        Hello Home
+      </div>
+    );
+  }
+
 }
-
-export default Home;
