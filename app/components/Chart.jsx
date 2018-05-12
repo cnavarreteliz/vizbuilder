@@ -11,9 +11,6 @@ import {
 } from "d3plus-react";
 import { max, mean, min, sum } from "d3-array";
 import { Tooltip2, Popover2 } from "@blueprintjs/labs";
-import { Button, Position, PopoverInteractionKind } from "@blueprintjs/core";
-
-import { NumberRange, RangeSlider, Switch, Slider } from "@blueprintjs/core";
 
 import Tooltip from "components/Tooltip";
 import CustomTable from "components/CustomTable";
@@ -23,9 +20,9 @@ import union from "lodash/union";
 import inRange from "lodash/inRange";
 
 import { COLORS_RAINFALL, COLORS_DISCRETE } from "helpers/colors";
-import { CHARTCONFIG, LEGENDCONFIG, yearControls } from "helpers/d3plus";
+//import { CHARTCONFIG, LEGENDCONFIG, yearControls } from "helpers/d3plus";
 import { createBuckets } from "helpers/buckets";
-import { calculateGrowth } from "helpers/growth";
+//import { calculateGrowth } from "helpers/growth";
 import {
 	groupLowestCategories,
 	applyHideIsolateFilters
@@ -94,7 +91,6 @@ function Chart(props) {
 				}
 				break;
 
-				
 			// It's selected a range of years
 			case 2:
 				growth_data = data.filter(item =>
@@ -107,7 +103,7 @@ function Chart(props) {
 				break;
 		}
 
-		let attributes = calculateGrowth(
+		/*let attributes = calculateGrowth(
 			growth_data,
 			props.axis_x,
 			props.axis_y,
@@ -117,7 +113,7 @@ function Chart(props) {
 		data = data.map(attr => ({
 			...attr,
 			Growth: attributes[attr[props.axis_x]]
-		}));
+		}));*/
 	}
 
 	// Set COLORSCALE properties
@@ -148,7 +144,7 @@ function Chart(props) {
 			Growth: mean
 		},
 		groupBy: [props.axis_x],
-		legendConfig: LEGENDCONFIG,
+		//legendConfig: LEGENDCONFIG,
 		tooltipConfig: {
 			body: d => "<div></div>"
 		},
