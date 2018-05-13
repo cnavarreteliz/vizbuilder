@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"module": "commonjs",
 		"allowSyntheticDefaultImports": true,
 		"baseUrl": "./app/",
 		"checkJs": true,
