@@ -6,20 +6,12 @@ import filtersReducer from "./filters";
 import membersReducer from "./members";
 import visualsReducer from "./visuals";
 
-const initialState = {
-	table: {
-		attributes: [],
-		groupBy: [],
-		sorted: []
-	}
-};
-
 export default {
-	aggregators: aggregatorsReducer,
-	charts: initialState,
-	cubes: cubesReducer,
-	data: dataReducer,
-	filters: filtersReducer,
-	members: membersReducer,
-	visuals: visualsReducer
+  aggregators: aggregatorsReducer,
+  charts: chartsReducer,
+  cubes: cubesReducer,
+  data: dataReducer,
+  filters: filtersReducer,
+  members: membersReducer,
+  visuals: visualsReducer
 };
